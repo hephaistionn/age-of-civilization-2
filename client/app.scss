@@ -1,0 +1,28 @@
+@import "./View/UI/ui";
+
+body {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.container {
+  position: relative;
+  margin: auto;
+  width: 80%;
+  height: 100%;
+}
+
+#D3 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: black
+}
+
+#UI {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}

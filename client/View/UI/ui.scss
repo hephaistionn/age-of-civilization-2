@@ -1,0 +1,40 @@
+div {
+  position: relative;
+}
+
+.button {
+  border: solid 1px black;
+  background-color: grey;
+  margin: 30px;
+  cursor: pointer;
+  text-align: center;
+  width: 250px;
+  padding: 5px 10px;
+}
+
+.panel {
+  border: solid 1px black;
+  background-color: gainsboro;
+  margin: 30px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.picture {
+  background-size: cover;
+}
+
+.text {
+  margin: 5px 10px;
+  &.v1 {
+    font-size: small;
+  }
+  &.v2 {
+    font-size: medium;
+  }
+  &.v3 {
+    font-size: large;
+  }
+}
