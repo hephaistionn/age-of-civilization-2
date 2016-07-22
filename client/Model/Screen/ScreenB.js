@@ -19,15 +19,21 @@ class ScreenB {
         light.moveTargetTo(camera.targetX, camera.targetY, camera.targetZ);
         light.scaleOffset(-camera.offsetY);
 
-        const panel = new Panel({width: 350, height: 100, x: 800, y: 30});
+        const panel = new Panel({width: 200, height: 200, x: 0, y: 0});
         const text = new Text({text: 'Screen B', size: 3});
-        const button = new Button({text: 'Change Screen'});
+        const buttonScreen = new Button({text: 'Change Screen'});
+        const buttonHouse = new Button({text: 'Build House'});
 
         panel.setChild(text);
-        panel.setChild(button);
+        panel.setChild(buttonScreen);
+        panel.setChild(buttonHouse);
 
-        button.onClick(function() {
+        buttonScreen.onClick(function() {
             ee.emit('screen', 'ScreenA');
+        }.bind(this));
+
+        buttonHouse.onClick(function() {
+            //new house
         }.bind(this));
 
         this.camera = camera;

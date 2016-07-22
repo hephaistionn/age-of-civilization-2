@@ -8,14 +8,14 @@ div {
   margin: 30px;
   cursor: pointer;
   text-align: center;
-  width: 250px;
+  max-width: 250px;
   padding: 5px 10px;
 }
 
 .panel {
   border: solid 1px black;
   background-color: gainsboro;
-  margin: 30px;
+  margin: 5px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
