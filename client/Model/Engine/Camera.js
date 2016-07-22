@@ -6,7 +6,7 @@ class Camera {
         this.z = 60; //camera position
         this.iX = 0; //camera position before drag
         this.iZ = 0; //camera position before drag
-        this.offsetX = 0; //target positio relative too camera position
+        this.offsetX = -60; //target positio relative too camera position
         this.offsetY = -100; //target position relative to camera position
         this.offsetZ = -60; //target position relative to camera position
         this.targetX = 0; //target position
@@ -31,8 +31,18 @@ class Camera {
     }
 
     mouseMovePress(x, z) {
-        let newX = this.iX + (this.pressX - x) / 20;
-        let newZ = this.iZ + (this.pressZ - z) / 20;
+
+        //Transformation of space. Apply a rotation of PI/4 at  direction vector.
+        //screen space to camera space
+        let dx = this.pressX - x;
+        let dz = this.pressZ - z;
+        let module = Math.sqrt(dx * dx + dz * dz);
+        let a = -Math.atan2(dx, dz)+ Math.PI/4;
+        dx = module * Math.cos(a);
+        dz = module * Math.sin(a);
+
+        let newX = this.iX + dx / 20;
+        let newZ = this.iZ + dz / 20;
         this.moveTo(newX, this.y, newZ);
     }
 
