@@ -75,7 +75,7 @@ const fragShader = "" +
     "    if ( frustumTest ) { \n" +
     "        return max(texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ),0.5); \n" +
     "    } \n" +
-    "    return 0.5; \n" +
+    "    return 1.0; \n" +
     "} \n" +
     "#endif      \n" +
 
