@@ -5,7 +5,7 @@ module.exports = class Camera {
     constructor(model) {
         const canvas = document.getElementById('D3');
 
-        this.element = new THREE.PerspectiveCamera(40, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+        this.element = new THREE.PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
         this.target = new THREE.Vector3();
 
         this.updateState(model);

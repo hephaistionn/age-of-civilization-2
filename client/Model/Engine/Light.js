@@ -32,15 +32,14 @@ class Light {
         this.z = this.targetZ - this.offsetZ;
     }
 
-    incOffset(factor) {
+    scaleOffset(factor) {
         let length = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
         this.offsetX /= length;
         this.offsetY /= length;
         this.offsetZ /= length;
-        length += factor;
-        this.offsetX *= length;
-        this.offsetY *= length;
-        this.offsetZ *= length;
+        this.offsetX *= factor;
+        this.offsetY *= factor;
+        this.offsetZ *= factor;
     }
 
     dismount() {

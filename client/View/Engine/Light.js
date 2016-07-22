@@ -12,7 +12,7 @@ module.exports = class Light {
         this.directionalLight = new THREE.DirectionalLight(model.directionalColor);
         this.directionalLight.matrixAutoUpdate = false;
         this.directionalLight.castShadow = true;
-        this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-90, 90, 90, -90, 1, 500));
+        this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-120, 90, 90, -120, 1, 500));
         this.directionalLight.shadow.bias = 0.00001;
         this.directionalLight.shadow.mapSize.width = 1024;
         this.directionalLight.shadow.mapSize.height = 1024;
@@ -25,7 +25,7 @@ module.exports = class Light {
 
     updateState(model) {
 
-        this.directionalLight.shadow.camera.zoom = 100 / model.y;
+        this.directionalLight.shadow.camera.zoom = 90 / model.y;
         this.directionalLight.shadow.camera.updateProjectionMatrix();
 
         this.directionalLight.matrix.elements[12] = model.x;

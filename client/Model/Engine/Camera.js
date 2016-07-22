@@ -6,9 +6,9 @@ class Camera {
         this.z = 60; //camera position
         this.iX = 0; //camera position before drag
         this.iZ = 0; //camera position before drag
-        this.offsetX = -60; //target positio relative too camera position
+        this.offsetX = -75; //target positio relative too camera position
         this.offsetY = -100; //target position relative to camera position
-        this.offsetZ = -60; //target position relative to camera position
+        this.offsetZ = -75; //target position relative to camera position
         this.targetX = 0; //target position
         this.targetY = 0; //target position
         this.targetZ = 0; //target position
@@ -54,6 +54,8 @@ class Camera {
     }
 
     mouseWheel(delta) {
+
+        if(-this.offsetY<40 && delta<0 ) return;
         let length = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
         this.offsetX /= length;
         this.offsetY /= length;
@@ -62,7 +64,14 @@ class Camera {
         this.offsetX *= length;
         this.offsetY *= length;
         this.offsetZ *= length;
-        this.moveTo(this.x, this.targetY - this.offsetY, this.targetZ - this.offsetZ);
+
+        let x = this.targetX - this.offsetX;
+        let y = this.targetY - this.offsetY;
+        let z = this.targetZ - this.offsetZ;
+
+
+
+        this.moveTo(x, y, z);
     }
 
     dismount() {

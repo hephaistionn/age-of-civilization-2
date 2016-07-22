@@ -17,6 +17,7 @@ class ScreenB {
         const camera = new Camera({x: 100, z: 100});
         const light = new Light({});
         light.moveTargetTo(camera.targetX, camera.targetY, camera.targetZ);
+        light.scaleOffset(-camera.offsetY);
 
         const panel = new Panel({width: 350, height: 100, x: 800, y: 30});
         const text = new Text({text: 'Screen B', size: 3});
@@ -63,7 +64,7 @@ class ScreenB {
 
     mouseWheel(delta) {
         this.camera.mouseWheel(delta * 2);
-        this.light.incOffset(delta * 2);
+        this.light.scaleOffset(-this.camera.offsetY);
         this.light.moveTargetTo(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
