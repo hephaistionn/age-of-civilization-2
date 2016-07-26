@@ -16,24 +16,24 @@ class ScreenB {
 
     constructor() {
 
-        const camera = new Camera({x: 100, z: 100});
-        const light = new Light({});
-        light.moveTargetTo(camera.targetX, camera.targetY, camera.targetZ);
-        light.scaleOffset(-camera.offsetY);
+        this.camera = new Camera({x: 100, z: 100});
+        this.light = new Light({x: -35, y:100, z: 25});
+        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
+        this.light.scaleOffset(-this.camera.offsetY);
 
-        const panel = new Panel({width: 200, height: 250, x: 0, y: 0});
+
         const text = new Text({text: 'Screen B', size: 3});
         const buttonScreen = new Button({text: 'Change Screen'});
         const buttonHouse = new Button({text: 'Build House'});
         const buttonChurch = new Button({text: 'Build Church'});
         const buttonRemove = new Button({text: 'Remove'});
 
-
-        panel.setChild(text);
-        panel.setChild(buttonScreen);
-        panel.setChild(buttonHouse);
-        panel.setChild(buttonChurch);
-        panel.setChild(buttonRemove);
+        this.panel = new Panel({width: 200, height: 250, x: 0, y: 0});
+        this.panel.setChild(text);
+        this.panel.setChild(buttonScreen);
+        this.panel.setChild(buttonHouse);
+        this.panel.setChild(buttonChurch);
+        this.panel.setChild(buttonRemove);
 
         buttonScreen.onClick(() => {
             ee.emit('screen', 'ScreenA');
@@ -54,17 +54,14 @@ class ScreenB {
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
-        this.camera = camera;
-        this.light = light;
-        this.panel = panel;
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
             dataMap.tileSize = 4;
             dataMap.maxHeight = 10;
             this.map = new Map(dataMap);
-            ee.emit('onUpdate', 'map', this.map);
             this.positioner = new Positioner(dataMap);
+            ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
 
         });
@@ -85,14 +82,12 @@ class ScreenB {
         if(this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, 0, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
-        } else {
-            this.positioner.setCurrentPosition(x, z);
         }
     }
 
     mouseMovePress(x, z) {
         this.camera.mouseMovePress(x, z);
-        this.light.moveTargetTo(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
+        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
     }
@@ -108,7 +103,6 @@ class ScreenB {
     }
 
     mouseDown(x, z) {
-
         this.camera.mouseDown(x, z);
         ee.emit('onUpdate', 'camera', this.camera);
     }
@@ -123,7 +117,7 @@ class ScreenB {
     mouseWheel(delta) {
         this.camera.mouseWheel(delta * 2);
         this.light.scaleOffset(-this.camera.offsetY);
-        this.light.moveTargetTo(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
+        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
     }
