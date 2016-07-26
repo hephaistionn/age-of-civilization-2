@@ -1,31 +1,24 @@
 const THREE = require('../../../services/threejs');
 
-const Entities = require('../Entity/list').resources;
+const Entities = require('../Entity/list').buildings;
 
 module.exports = Map=> {
 
-    Map.prototype.initResource = function initResource(model) {
-
-        this.resources = {};
-        for(let type in Entities) {
-            this.resources[type] = [];
+    Map.prototype.initBuilding = function initBuilding(model) {
+        this.buildings = {};
+        for(let id in Entities) {
+            this.buildings[id] = [];
         }
-
-        Entities['EntityTree'].ready = () => {
-            this.updateResource(model, 'EntityTree');
-        };
-        if(!this.resources.trees)
-            Entities['EntityTree'].ready();
-
     };
 
-    Map.prototype.updateResource = function updateResource(model, forceId) {
 
-        const entityId = model.lastEntityIdUpdated || forceId;
+    Map.prototype.updateBuilding = function updateBuilding(model) {
 
-        const groupView = this.resources[entityId];
+        const entityId = model.lastEntityIdUpdated;
+
+        const groupView = this.buildings[entityId];
         if(!groupView) return;
-        const groupModel = model.resources[entityId];
+        const groupModel = model.buildings[entityId];
 
         let lengthModel = groupModel.length;
 
@@ -35,7 +28,7 @@ module.exports = Map=> {
             let entityModel = groupModel[i];
 
             if(!entityView) {
-                let entityView = new Entities[entityId](entityModel, this.tileSize, this.maxHeight);
+                let entityView = new Entities[entityId](entityModel, this.tileSize);
                 groupView[i] = entityView;
                 let chunkX = Math.floor(entityModel.x / this.tileByChunk);
                 let chunkZ = Math.floor(entityModel.z / this.tileByChunk);
@@ -57,4 +50,5 @@ module.exports = Map=> {
         }
 
     };
+
 };

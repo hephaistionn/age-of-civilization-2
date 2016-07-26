@@ -50,6 +50,7 @@ module.exports = Map=> {
         }
 
         this.chunks = [];
+        this.chunksList = [];
         for(x = 0; x < length; x++) {
             this.chunks[x] = [];
             for(z = 0; z < length; z++) {
@@ -66,13 +67,14 @@ module.exports = Map=> {
 
                 this.element.add(chunkMesh);
                 chunkMesh.updateMatrixWorld();
-                chunkMesh.frustumCulled = false;
+                //chunkMesh.frustumCulled = false;
                 chunkMesh.matrixAutoUpdate = false;
                 chunkMesh.matrixWorldNeedsUpdate = false;
                 chunkMesh.castShadow = true;
                 chunkMesh.receiveShadow = true;
 
                 this.chunks[x][z] = chunkMesh;
+                this.chunksList.push(chunkMesh);
             }
         }
 

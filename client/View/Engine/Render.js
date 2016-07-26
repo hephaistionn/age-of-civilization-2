@@ -24,7 +24,11 @@ module.exports = class Scene {
     }
 
     addChild(component) {
-        this.scene.add(component.element);
+        if(component.element) {
+            this.scene.add(component.element);
+        } else {
+            this.scene.add(component);
+        }
         if(component.constructor.name === 'Camera') {
             this.camera = component.element;
         }
@@ -40,4 +44,4 @@ module.exports = class Scene {
     dismount() {
         this.canvas.removeEventListener('resize', this._resize);
     }
-}
+};

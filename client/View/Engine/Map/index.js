@@ -9,14 +9,20 @@ class Map {
         this.element.frustumCulled = false;
 
         this.tileByChunk = 10;
-        this.tileSize = 4;
-        this.maxHeight = 10;
+        this.tileSize = model.tileSize;
+        this.maxHeight = model.maxHeight;
         this.tileXcount = model.tile_nx;
         this.tileZcount = model.tile_nz;
 
         this.initGround(model);
         this.initResource(model);
+        this.initBuilding(model);
 
+    }
+
+    updateState(model) {
+        this.updateBuilding(model);
+        this.updateResource(model);
     }
 
     update(dt) {
@@ -30,5 +36,6 @@ class Map {
 
 require('./MapGround')(Map);
 require('./MapResource')(Map);
+require('./MapBuilding')(Map);
 
 module.exports = Map;

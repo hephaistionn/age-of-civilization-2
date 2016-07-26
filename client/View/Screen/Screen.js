@@ -6,6 +6,7 @@ const COMPONENTS = {
     Light: require('./../Engine/Light'),
     Camera: require('./../Engine/Camera'),
     Render: require('./../Engine/Render'),
+    Positioner: require('./../Engine/Positioner'),
     Panel: require('../UI/Panel'),
     Text: require('../UI/Text'),
     Button: require('../UI/Button'),
@@ -19,6 +20,19 @@ module.exports = class Screen {
         this.dom = document.getElementById('UI');
         this.render = new COMPONENTS.Render(this.canvas);
         this.mousePress = false;
+        this.mouse = new THREE.Vector3();
+        this.raycaster = new THREE.Raycaster();
+        this.collisionSize = 1000;
+        this.collisionArea = new THREE.Mesh(
+            new THREE.PlaneGeometry(this.collisionSize, this.collisionSize, 1, 1),
+            new THREE.MeshBasicMaterial({visible: false, alphaTest: 0})
+        );
+        this.collisionArea.position.set(this.collisionSize / 2, 0, this.collisionSize / 2);
+        this.collisionArea.rotation.x = -Math.PI / 2;
+        this.collisionArea.updateMatrixWorld();
+        this.collisionArea.matrixAutoUpdate = false;
+        this.collisionArea.frustumCulled = false;
+        this.render.addChild(this.collisionArea);
 
         this.initObservers();
 
@@ -34,6 +48,7 @@ module.exports = class Screen {
         for(let id in model) {
             this.removeComponent(id)
         }
+        this.render.removeChild(this.collisionArea);
     }
 
     newComponent(id, model) {
@@ -96,25 +111,56 @@ module.exports = class Screen {
 
     _mouseDown(e) {
         this.mousePress = true;
-        ee.emit('mouseDown', e.clientX, e.clientY);
+        ee.emit('mouseDown', e.offsetX, e.offsetY);
+        this._mouseCheckCollision(e.offsetX, e.offsetY);
     }
 
     _mouseUp(e) {
         this.mousePress = false;
-        ee.emit('mouseUp', e.clientX, e.clientY);
+        ee.emit('mouseUp', e.offsetX, e.offsetY);
     }
 
     _mouseMove(e) {
         if(this.mousePress) {
-            ee.emit('mouseMovePress', e.clientX, e.clientY);
+            ee.emit('mouseMovePress', e.offsetX, e.offsetY);
         } else {
-            ee.emit('mouseMove', e.clientX, e.clientY);
+            ee.emit('mouseMove', e.offsetX, e.offsetY);
+            this._mouseOnMap(e.offsetX, e.offsetY);
         }
     }
 
     _mouseWheel(e) {
         const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
         ee.emit('mouseWheel', -delta);
+    }
+
+    _mouseOnMap(screenX, screenY) {
+        if(!this.camera)return;
+        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
+        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        const intersects = this.raycaster.intersectObjects([this.collisionArea], false);
+        if(intersects.length) {
+            const point = intersects[0].point;
+            ee.emit('mouseMoveOnMap', point.x, point.z);
+        }
+    }
+
+    _mouseCheckCollision(screenX, screenY) {
+        if(!this.map || !this.camera)return;
+        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
+        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        const intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+
+        if(intersects.length) {
+            const mesh = intersects[0].object;
+            if(mesh.model) {
+                ee.emit('mouseTouchEntity', mesh.model);
+            }
+        }
+
+
     }
 
 };

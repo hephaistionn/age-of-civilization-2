@@ -17,6 +17,10 @@ class Camera {
         this.moveTo(config.x || this.x, this.y, config.z || this.z);
     }
 
+    hasMoved(x, z) {
+        return x !== this.pressX || z !== this.pressZ;
+    }
+
     moveTo(x, y, z) {
         this.x = x;
         this.y = y;
@@ -37,7 +41,7 @@ class Camera {
         let dx = this.pressX - x;
         let dz = this.pressZ - z;
         let module = Math.sqrt(dx * dx + dz * dz);
-        let a = -Math.atan2(dx, dz)+ Math.PI/4;
+        let a = -Math.atan2(dx, dz) + Math.PI / 4;
         dx = module * Math.cos(a);
         dz = module * Math.sin(a);
 
@@ -55,7 +59,7 @@ class Camera {
 
     mouseWheel(delta) {
 
-        if(-this.offsetY<40 && delta<0 ) return;
+        if(-this.offsetY < 40 && delta < 0) return;
         let length = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
         this.offsetX /= length;
         this.offsetY /= length;
@@ -68,8 +72,6 @@ class Camera {
         let x = this.targetX - this.offsetX;
         let y = this.targetY - this.offsetY;
         let z = this.targetZ - this.offsetZ;
-
-
 
         this.moveTo(x, y, z);
     }

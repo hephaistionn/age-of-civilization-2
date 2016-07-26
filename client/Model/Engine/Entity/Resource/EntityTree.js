@@ -1,6 +1,6 @@
 const Entity = require('../Entity.js');
 
-module.exports = class EntityTree extends Entity {
+class EntityTree extends Entity {
 
     constructor(x, z, y, a) {
         super(x, z, a);
@@ -8,4 +8,9 @@ module.exports = class EntityTree extends Entity {
         this.wood = 100;
     }
 
-};
+}
+
+EntityTree.tile_x = 1;
+EntityTree.tile_z = 1;
+EntityTree.type = 'resource';
+module.exports = EntityTree;
