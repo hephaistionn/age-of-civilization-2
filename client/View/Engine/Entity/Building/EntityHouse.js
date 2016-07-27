@@ -2,14 +2,14 @@ const THREE = require('../../../../services/threejs');
 
 class EntityHouse {
 
-    constructor(model, tileSize, maxHeight) {
+    constructor(model, tileSize) {
         this.model = model;
         this.element = EntityHouse.referenceMesh.clone();
         this.element.model = model;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
-        this.updateState(model, tileSize, maxHeight);
+        this.updateState(model, tileSize);
     }
 
     updateState(model, tileSize) {
@@ -25,5 +25,4 @@ class EntityHouse {
 }
 
 require('./../async')(EntityHouse, 'obj/buildingA.obj');
-EntityHouse.type = 'building';
 module.exports = EntityHouse;

@@ -12,5 +12,4 @@ class EntityTree extends Entity {
 
 EntityTree.tile_x = 1;
 EntityTree.tile_z = 1;
-EntityTree.type = 'resource';
 module.exports = EntityTree;

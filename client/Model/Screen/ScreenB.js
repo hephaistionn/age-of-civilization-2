@@ -76,9 +76,7 @@ class ScreenB {
 
     }
 
-
     mouseMoveOnMap(x, z) {
-
         if(this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, 0, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
@@ -94,7 +92,6 @@ class ScreenB {
 
     mouseTouchEntity(model) {
         if(this.positioner.removeMode) {
-            console.log('must remove');
             this.map.removeEntity(model);
         } else {
             //select entity

@@ -1,4 +1,5 @@
 const THREE = require('../../../services/threejs');
+const ENTITIES = require('../Entity/list');
 
 class Map {
 
@@ -11,31 +12,38 @@ class Map {
         this.tileByChunk = 10;
         this.tileSize = model.tileSize;
         this.maxHeight = model.maxHeight;
-        this.tileXcount = model.tile_nx;
-        this.tileZcount = model.tile_nz;
+
+        this.entityGroups = {};
+        for(let id in ENTITIES) {
+            this.entityGroups[id] = [];
+        }
 
         this.initGround(model);
-        this.initResource(model);
-        this.initBuilding(model);
+
+        ENTITIES['EntityTree'].ready = () => {
+            this.updateEntities(model, 'EntityTree');
+        };
+        if(!this.entityGroups['EntityTree'].length)
+            ENTITIES['EntityTree'].ready();
 
     }
 
     updateState(model) {
-        this.updateBuilding(model);
-        this.updateResource(model);
+        this.updateEntities(model);
     }
+
 
     update(dt) {
 
     }
 
     remove() {
+
     }
 
 }
 
 require('./MapGround')(Map);
-require('./MapResource')(Map);
-require('./MapBuilding')(Map);
+require('./MapEntities')(Map);
 
 module.exports = Map;

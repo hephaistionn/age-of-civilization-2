@@ -26,5 +26,4 @@ class EntityTree {
 }
 
 require('./../async')(EntityTree, 'obj/treeA.obj');
-EntityTree.type = 'resource';
 module.exports = EntityTree;

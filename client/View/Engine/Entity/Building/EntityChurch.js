@@ -2,14 +2,14 @@ const THREE = require('../../../../services/threejs');
 
 class EntityChurch {
 
-    constructor(model, tileSize, maxHeight) {
+    constructor(model, tileSize) {
         this.model = model;
         this.element = EntityChurch.referenceMesh.clone();
         this.element.model = model;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
-        this.updateState(model, tileSize, maxHeight);
+        this.updateState(model, tileSize);
     }
 
     updateState(model, tileSize) {
@@ -25,5 +25,4 @@ class EntityChurch {
 }
 
 require('./../async')(EntityChurch, 'obj/buildingB.obj');
-EntityChurch.type = 'building';
 module.exports = EntityChurch;

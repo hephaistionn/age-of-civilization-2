@@ -1,5 +1,4 @@
-const BUILDINGS = require('./Entity/list').buildings;
-const RESOURCES = require('./Entity/list').resources;
+const ENTITIES = require('./Entity/list');
 
 module.exports = class Positioner {
 
@@ -53,11 +52,7 @@ module.exports = class Positioner {
 
     selectEnity(id) {
         if(!this.selected || this.selected.constructor.name !== id) {
-            if(BUILDINGS[id]) {
-                this.selected = new BUILDINGS[id](0, 0, 0);
-            } else if(RESOURCES[id]) {
-                this.selected = new RESOURCES[id](0, 0, 0);
-            }
+            this.selected = new ENTITIES[id](0, 0, 0);
         } else {
             this.selected = null;
         }
@@ -73,7 +68,6 @@ module.exports = class Positioner {
         this.removeMode = !this.removeMode;
         this.selected = null;
     }
-
 
     dismount() {
         this.selected = null;

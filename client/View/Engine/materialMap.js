@@ -151,7 +151,6 @@ const mat = new THREE.ShaderMaterial({
     vertexShader: vertShader,
     fragmentShader: fragShader,
     lights: true,
-    depthTest: false,
     transparent: false
 });
 

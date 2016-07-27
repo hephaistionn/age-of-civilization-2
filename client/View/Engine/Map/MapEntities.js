@@ -1,38 +1,28 @@
 const THREE = require('../../../services/threejs');
-
-const Entities = require('../Entity/list').buildings;
+const ENTITIES = require('../Entity/list');
+const materialMap = require('./../materialMap');
 
 module.exports = Map=> {
 
-    Map.prototype.initBuilding = function initBuilding(model) {
-        this.buildings = {};
-        for(let id in Entities) {
-            this.buildings[id] = [];
-        }
-    };
+    Map.prototype.updateEntities = function updateEntities(model, id) {
 
+        const entityId = model.lastEntityGroupUpdated||id;
 
-    Map.prototype.updateBuilding = function updateBuilding(model) {
-
-        const entityId = model.lastEntityIdUpdated;
-
-        const groupView = this.buildings[entityId];
-        if(!groupView) return;
-        const groupModel = model.buildings[entityId];
+        const groupView = this.entityGroups[entityId];
+        const groupModel = model.entityGroups[entityId];
 
         let lengthModel = groupModel.length;
-
         for(let i = 0; i < lengthModel; i++) {
 
             let entityView = groupView[i];
             let entityModel = groupModel[i];
 
             if(!entityView) {
-                let entityView = new Entities[entityId](entityModel, this.tileSize);
-                groupView[i] = entityView;
+                let newEntityView = new ENTITIES[entityId](entityModel, this.tileSize, this.maxHeight);
+                groupView[i] = newEntityView;
                 let chunkX = Math.floor(entityModel.x / this.tileByChunk);
                 let chunkZ = Math.floor(entityModel.z / this.tileByChunk);
-                this.chunks[chunkX][chunkZ].add(entityView.element);
+                this.chunks[chunkX][chunkZ].add(newEntityView.element);
             } else if(entityView.model !== entityModel) {
                 groupView.splice(i, 1);
                 entityView.element.parent.remove(entityView.element);
@@ -49,6 +39,6 @@ module.exports = Map=> {
             groupView.splice(lengthModel - 1, lengthView);
         }
 
-    };
+    }
 
 };

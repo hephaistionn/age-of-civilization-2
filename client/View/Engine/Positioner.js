@@ -1,7 +1,5 @@
 const THREE = require('../../services/threejs');
-const BUILDINGS = require('./Entity/list').buildings;
-const RESOURCES = require('./Entity/list').resources;
-
+const ENTITIES = require('./Entity/list');
 
 module.exports = class Positioner {
 
@@ -18,12 +16,7 @@ module.exports = class Positioner {
             this.element.remove(this.selected.element);
             this.selected = null;
         } else if(!this.selected || model.selected.constructor.name !== this.selected.constructor.name) {
-            const constructorName = model.selected.constructor.name;
-            if(BUILDINGS[constructorName]) {
-                this.selected = new BUILDINGS[model.selected.constructor.name](model.selected, model.tileSize);
-            } else if(RESOURCES[constructorName]) {
-                this.selected = new RESOURCES[model.selected.constructor.name](model.selected, model.tileSize);
-            }
+            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, model.tileSize);
             this.element.add(this.selected.element);
         } else {
             this.selected.updateState(model.selected, model.tileSize);

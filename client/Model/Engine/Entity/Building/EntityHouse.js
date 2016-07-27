@@ -11,5 +11,4 @@ class EntityHouse extends Entity {
 
 EntityHouse.tile_x = 1;
 EntityHouse.tile_z = 1;
-EntityHouse.type = 'building';
 module.exports = EntityHouse;
