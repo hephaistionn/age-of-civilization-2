@@ -70,7 +70,7 @@ module.exports = Map=> {
                 //chunkMesh.frustumCulled = false;
                 chunkMesh.matrixAutoUpdate = false;
                 chunkMesh.matrixWorldNeedsUpdate = false;
-                chunkMesh.castShadow = true;
+                //chunkMesh.castShadow = true;
                 chunkMesh.receiveShadow = true;
 
                 this.chunks[x][z] = chunkMesh;

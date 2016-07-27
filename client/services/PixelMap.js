@@ -38,16 +38,29 @@ module.exports = class PixelMap {
 
         for(let i = 0; i < size; i++) {
             color = ImageData.slice(i * 4, i * 4 + 4);
-            dataSurfaces[i] = color[0]; //set height type
-            dataHeights[i] = color[1]; //set surface type
+            dataSurfaces[i] = color[0]; //set surface type
+            dataHeights[i] = color[1]; //set surface height
             dataForests[i] = color[2]; //set forest type
         }
 
-        data.ySize = context.height;
-        data.xSize = context.width;
+        data.tile_nz = context.height;
+        data.tile_nx = context.width;
+
+        const dataTrees = [];
+        for(let i = 0; i < size; i++) {
+            let value = dataForests[i];
+            if(value === 0) continue;
+            let x = i % data.tile_nz;
+            let z = Math.floor(i / data.tile_nz);
+            let y = dataHeights[z * data.tile_nx + x] / 255;
+            dataTrees.push(x);
+            dataTrees.push(y);
+            dataTrees.push(z);
+        }
+
         data.dataHeights = dataHeights;
         data.dataSurfaces = dataSurfaces;
-        data.dataForests = dataForests;
+        data.dataTrees = dataTrees;
         return data;
     }
 };

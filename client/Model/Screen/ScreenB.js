@@ -17,7 +17,7 @@ class ScreenB {
     constructor() {
 
         this.camera = new Camera({x: 100, z: 100});
-        this.light = new Light({x: -35, y:100, z: 25});
+        this.light = new Light({x: -35, y: 100, z: 25});
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         this.light.scaleOffset(-this.camera.offsetY);
 
@@ -93,10 +93,11 @@ class ScreenB {
     mouseTouchEntity(model) {
         if(this.positioner.removeMode) {
             this.map.removeEntity(model);
+            ee.emit('onUpdate', 'map', this.map);
         } else {
             //select entity
         }
-        ee.emit('onUpdate', 'map', this.map);
+
     }
 
     mouseDown(x, z) {

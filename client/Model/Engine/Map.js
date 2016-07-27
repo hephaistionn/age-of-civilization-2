@@ -5,8 +5,8 @@ class Map {
 
     constructor(config) {
 
-        this.tile_nx = config.xSize;
-        this.tile_nz = config.ySize;
+        this.tile_nx = config.tile_nx;
+        this.tile_nz = config.tile_nz;
         this.tileSize = config.tileSize || 4;
         this.maxHeight = config.maxHeight || 10;
         this.tile_type = config.dataSurfaces;
@@ -19,7 +19,7 @@ class Map {
             this.entityGroups[id] = [];
         }
 
-        this.initEntities(config.dataForests, 'EntityTree' );
+        this.initEntities(config.dataTrees, 'EntityTree');
     }
 
     newEntity(entityRef) {
@@ -38,16 +38,12 @@ class Map {
     initEntities(list, id) {
         const group = this.entityGroups[id];
         let length = list.length;
-        for(let i = 0; i < length; i++) {
-            if(list[i] !== 0) {
-                let z = Math.floor(i / this.tile_nx);
-                let x = i % this.tile_nx;
-                let y = this.tile_height[z * this.tile_nx + x] / 255;
-                let entity = new ENTITIES[id](x, z, y, 0);
-                group.push(entity);
-            }
+        for(let i = 0; i < length; i += 3) {
+            group.push(new ENTITIES[id](list[i], list[i + 2], list[i + 1], 0)); //x , z , y , a
         }
-    };
+    }
+
+;
 
     update(dt) {
 
