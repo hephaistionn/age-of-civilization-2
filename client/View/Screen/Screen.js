@@ -96,6 +96,7 @@ module.exports = class Screen {
         this.dom.addEventListener('mouseup', this._mouseUp.bind(this));
         this.dom.addEventListener('mousemove', this._mouseMove.bind(this));
         this.dom.addEventListener('mousewheel', this._mouseWheel.bind(this));
+        this.dom.addEventListener('mouseleave', this._mouseLeave.bind(this));
 
         window.addEventListener('resize', this._resize.bind(this), false);
         ee.on('onUpdate', this.updateComponent.bind(this));
@@ -127,6 +128,10 @@ module.exports = class Screen {
             ee.emit('mouseMove', e.offsetX, e.offsetY);
             this._mouseOnMap(e.offsetX, e.offsetY);
         }
+    }
+
+    _mouseLeave(e) {
+        this._mouseUp(e);
     }
 
     _mouseWheel(e) {

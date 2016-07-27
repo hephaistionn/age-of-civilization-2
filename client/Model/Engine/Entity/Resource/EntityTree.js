@@ -12,4 +12,5 @@ class EntityTree extends Entity {
 
 EntityTree.tile_x = 1;
 EntityTree.tile_z = 1;
+EntityTree.walkable = false;
 module.exports = EntityTree;
