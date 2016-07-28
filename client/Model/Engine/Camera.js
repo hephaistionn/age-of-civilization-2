@@ -59,7 +59,7 @@ class Camera {
 
     mouseWheel(delta) {
 
-        if(-this.offsetY < 40 && delta < 0) return;
+        if(-this.offsetY < 20 && delta < 0) return;
         let length = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
         this.offsetX /= length;
         this.offsetY /= length;
