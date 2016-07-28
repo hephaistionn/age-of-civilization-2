@@ -17,10 +17,6 @@ class Camera {
         this.moveTo(config.x || this.x, this.y, config.z || this.z);
     }
 
-    hasMoved(x, z) {
-        return x !== this.pressX || z !== this.pressZ;
-    }
-
     moveTo(x, y, z) {
         this.x = x;
         this.y = y;

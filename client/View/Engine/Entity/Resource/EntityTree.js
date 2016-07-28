@@ -13,7 +13,7 @@ class EntityTree {
     }
 
     updateState(model, tileSize, maxHeight) {
-
+        maxHeight = maxHeight||0;
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = model.x * tileSize;
         matrixWorld[14] = model.z * tileSize;

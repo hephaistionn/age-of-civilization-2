@@ -13,55 +13,33 @@ module.exports = class Positioner {
 
     placeSelectedEntity(x, z, a, map) {
 
-        x = x / this.tileSize;
-        z = z / this.tileSize;
+        this.selected.moveTo(x, z, a);
 
-        const entityClass = this.selected.constructor;
+        const tiles = this.selected.getTiles();
 
-        ///number of tile
-        let sizeX = entityClass.tile_x;
-        let sizeZ = entityClass.tile_z;
-
-        if(a !== 0 && a !== Math.PI) {
-            sizeX = entityClass.tile_z;
-            sizeZ = entityClass.tile_x;
-        }
-
-        //get first tiles
-        const xFirstTile = Math.round((x - sizeX / 2));
-        const zFirstTile = Math.round((z - sizeZ / 2));
-
-        //get center of entity
-        this.selected.x = xFirstTile + sizeX / 2;
-        this.selected.z = zFirstTile + sizeZ / 2;
-        this.selected.a = a;
-        //the reference model is placed on the screen
-
-        //check if space is available
         this.undroppable = false;
 
-        for(let xi = xFirstTile; xi < xFirstTile + sizeX; xi++) {
-            for(let zi = zFirstTile; zi < zFirstTile + sizeZ; zi++) {
-                if(!map.grid.isWalkableAt(xi, zi)) {
-                    this.undroppable = true;
-                    return;
-                }
+        for(let i = 0; i < tiles.length; i += 2) {
+            if(!map.grid.isWalkableAt(tiles[i], tiles[i + 1])) {
+                this.undroppable = true;
+                return;
             }
+        }
+    }
+
+    getSelectedEntity() {
+        if(this.selected && !this.undroppable) {
+            return this.selected;
         }
     }
 
     selectEnity(id) {
         if(!this.selected || this.selected.constructor.name !== id) {
-            this.selected = new ENTITIES[id](0, 0, 0);
+            this.selected = new ENTITIES[id](0, 0, 0, 0);
         } else {
             this.selected = null;
         }
         this.removeMode = false;
-    }
-
-    setCurrentPosition(x, z) {
-        this.x = x / this.tileSize;
-        this.z = z / this.tileSize;
     }
 
     removeEnable() {

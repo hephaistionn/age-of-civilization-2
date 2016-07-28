@@ -2,8 +2,8 @@ const Entity = require('../Entity.js');
 
 class EntityChurch extends Entity {
 
-    constructor(x, z, a) {
-        super(x, z, a);
+    constructor(x, z, y, a) {
+        super(x, z, y, a);
         this.space = 4;
     }
 

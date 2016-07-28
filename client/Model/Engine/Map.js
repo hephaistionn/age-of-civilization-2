@@ -24,7 +24,7 @@ class Map {
 
     newEntity(entityRef) {
         const entityId = entityRef.constructor.name;
-        const entity = new ENTITIES[entityId](entityRef.x, entityRef.z, entityRef.a);
+        const entity = new ENTITIES[entityId](entityRef.x, entityRef.z, entityRef.y, entityRef.a);
         this.entityGroups[entityId].push(entity);
         this.lastEntityGroupUpdated = entityId;
         this.updateGrid(entity);
@@ -42,8 +42,8 @@ class Map {
         const group = this.entityGroups[id];
         let length = list.length;
         for(let i = 0; i < length; i += 3) {
-            let entity = new ENTITIES[id](list[i], list[i + 2], list[i + 1], 0) //x , z , y , a
-            group.push(entity); //x , z , y , a
+            let entity = new ENTITIES[id](list[i], list[i + 2], list[i + 1], 0); //x , z , y , a
+            group.push(entity);
             this.updateGrid(entity);
         }
     }
@@ -52,24 +52,11 @@ class Map {
 
         let walkable = entity.constructor.walkable;
         if(forceFree) walkable = walkable;
-        let nx = entity.constructor.tile_x;
-        let nz = entity.constructor.tile_z;
-        let a = entity.a;
-        let x = entity.x;
-        let z = entity.z;
 
-        if(a !== 0 && a !== Math.PI) {
-            nx = entity.constructor.tile_z;
-            nz = entity.constructor.tile_x;
-        }
+        const tiles = entity.getTiles();
 
-        let xFirstTile = Math.round((x - nx / 2));
-        let zFirstTile = Math.round((z - nz / 2));
-
-        for(let xi = xFirstTile; xi < xFirstTile + nx; xi++) {
-            for(let zi = zFirstTile; zi < zFirstTile + nz; zi++) {
-                this.grid.setWalkableAt(xi, zi, walkable);
-            }
+        for(let i = 0; i < tiles.length; i += 2) {
+            this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkable);
         }
     }
 

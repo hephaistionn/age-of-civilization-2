@@ -33,6 +33,8 @@ module.exports = class Screen {
         this.collisionArea.matrixAutoUpdate = false;
         this.collisionArea.frustumCulled = false;
         this.render.addChild(this.collisionArea);
+        this.pressX = 0;
+        this.pressZ = 0;
 
         this.initObservers();
 
@@ -112,13 +114,17 @@ module.exports = class Screen {
 
     _mouseDown(e) {
         this.mousePress = true;
+        this.pressX = e.offsetX;
+        this.pressZ = e.offsetY;
         ee.emit('mouseDown', e.offsetX, e.offsetY);
         this._mouseCheckCollision(e.offsetX, e.offsetY);
     }
 
     _mouseUp(e) {
         this.mousePress = false;
-        ee.emit('mouseUp', e.offsetX, e.offsetY);
+        if( this.pressX === e.offsetX && this.pressZ === e.offsetY){
+            ee.emit('mouseClick', e.offsetX, e.offsetY);
+        }
     }
 
     _mouseMove(e) {
@@ -147,7 +153,8 @@ module.exports = class Screen {
         const intersects = this.raycaster.intersectObjects([this.collisionArea], false);
         if(intersects.length) {
             const point = intersects[0].point;
-            ee.emit('mouseMoveOnMap', point.x, point.z);
+            const tileSize = this.map.tileSize;
+            ee.emit('mouseMoveOnMap', point.x / tileSize, point.z / tileSize);
         }
     }
 

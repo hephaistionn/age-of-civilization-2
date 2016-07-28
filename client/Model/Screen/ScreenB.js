@@ -105,8 +105,8 @@ class ScreenB {
         ee.emit('onUpdate', 'camera', this.camera);
     }
 
-    mouseUp(x, z) {
-        if(this.positioner.selected && !this.camera.hasMoved(x, z)) {
+    mouseClick(x, z) {
+        if(this.positioner.selected && !this.positioner.undroppable) {
             this.map.newEntity(this.positioner.selected);
             ee.emit('onUpdate', 'map', this.map);
         }

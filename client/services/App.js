@@ -18,7 +18,7 @@ class App {
         ee.on('mouseDown', this.mouseDown.bind(this));
         ee.on('mouseMovePress', this.mouseMovePress.bind(this));
         ee.on('mouseMove', this.mouseMove.bind(this));
-        ee.on('mouseUp', this.mouseUp.bind(this));
+        ee.on('mouseClick', this.mouseClick.bind(this));
         ee.on('mouseWheel', this.mouseWheel.bind(this));
         ee.on('mouseMoveOnMap', this.mouseMoveOnMap.bind(this));
         ee.on('mouseTouchEntity', this.mouseTouchEntity.bind(this));
@@ -66,9 +66,9 @@ class App {
             this.model.mouseDown(x, z);
     }
 
-    mouseUp(x, z) {
-        if(this.model.mouseUp)
-            this.model.mouseUp(x, z);
+    mouseClick(x, z) {
+        if(this.model.mouseClick)
+            this.model.mouseClick(x, z);
     }
 
     mouseMovePress(x, z) {

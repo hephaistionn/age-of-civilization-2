@@ -3,8 +3,7 @@ const Entity = require('../Entity.js');
 class EntityTree extends Entity {
 
     constructor(x, z, y, a) {
-        super(x, z, a);
-        this.y = y;
+        super(x, z, y, a);
         this.wood = 100;
     }
 
