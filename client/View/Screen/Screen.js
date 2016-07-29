@@ -135,7 +135,7 @@ module.exports = class Screen {
     }
 
     _mouseOnMap(screenX, screenY) {
-        if(!this.camera)return;
+        if(!this.camera || !this.map)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this.camera.element);
