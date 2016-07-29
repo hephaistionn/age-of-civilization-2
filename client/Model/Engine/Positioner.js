@@ -11,17 +11,18 @@ module.exports = class Positioner {
         this.nbPointX = config.nbPointX;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
+        this.rotation = 0;
         this.removeMode = false;
         this.undroppable = false;
         this.x = 0;
         this.z = 0;
     }
 
-    placeSelectedEntity(x, z, a, map) {
+    placeSelectedEntity(x, z, map) {
 
         const y = this.getHeightTile(x, z);
 
-        this.selected.moveTo(x, z, y, a);
+        this.selected.moveTo(x, z, y, this.rotation);
 
         const tiles = this.selected.getTiles();
 
@@ -37,7 +38,7 @@ module.exports = class Positioner {
 
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
-        return this.tilesHeight[index]/255;
+        return this.tilesHeight[index] / 255;
     }
 
     getSelectedEntity() {
@@ -48,11 +49,19 @@ module.exports = class Positioner {
 
     selectEnity(id) {
         if(!this.selected || this.selected.constructor.name !== id) {
-            this.selected = new ENTITIES[id](0, 0, 0, 0);
+            this.selected = new ENTITIES[id](0, 0, 0, this.rotation);
         } else {
             this.selected = null;
         }
+        this.rotation = 0;
         this.removeMode = false;
+    }
+
+    increaseRotation() {
+        this.rotation += Math.PI / 2;
+        if(this.rotation >= Math.PI * 2) {
+            this.rotation = 0;
+        }
     }
 
     removeEnable() {

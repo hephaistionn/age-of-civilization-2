@@ -110,7 +110,8 @@ module.exports = class Screen {
 
     _mouseUp(e) {
         this.mousePress = false;
-        if( this.pressX === e.offsetX && this.pressZ === e.offsetY){
+        //filter: detect if the user is moving the camera.
+        if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 250) {
             ee.emit('mouseClick', e.offsetX, e.offsetY);
         }
     }

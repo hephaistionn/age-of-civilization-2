@@ -27,6 +27,7 @@ class ScreenB {
         const buttonHouse = new Button({text: 'Build House'});
         const buttonChurch = new Button({text: 'Build Church'});
         const buttonRemove = new Button({text: 'Remove'});
+        const buttonRotate = new Button({text: 'Rotate'});
 
         this.panel = new Panel({width: 200, height: 250, x: 0, y: 0});
         this.panel.setChild(text);
@@ -34,6 +35,7 @@ class ScreenB {
         this.panel.setChild(buttonHouse);
         this.panel.setChild(buttonChurch);
         this.panel.setChild(buttonRemove);
+        this.panel.setChild(buttonRotate);
 
         buttonScreen.onClick(() => {
             ee.emit('screen', 'ScreenA');
@@ -51,6 +53,11 @@ class ScreenB {
 
         buttonRemove.onClick(() => {
             this.positioner.removeEnable();
+            ee.emit('onUpdate', 'positioner', this.positioner);
+        });
+
+        buttonRotate.onClick(() => {
+            this.positioner.increaseRotation();
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
@@ -78,7 +85,7 @@ class ScreenB {
 
     mouseMoveOnMap(x, z) {
         if(this.positioner.selected) {
-            this.positioner.placeSelectedEntity(x, z, 0, this.map);
+            this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }
