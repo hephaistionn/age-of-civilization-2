@@ -58,7 +58,7 @@ class ScreenB {
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
             dataMap.tileSize = 4;
-            dataMap.maxHeight = 10;
+            dataMap.tileHeight = 10;
             this.map = new Map(dataMap);
             this.positioner = new Positioner(dataMap);
             ee.emit('onUpdate', 'map', this.map);
@@ -76,9 +76,9 @@ class ScreenB {
 
     }
 
-    mouseMoveOnMap(x, z) {
+    mouseMoveOnMap(x, z, y) {
         if(this.positioner.selected) {
-            this.positioner.placeSelectedEntity(x, z, 0, this.map);
+            this.positioner.placeSelectedEntity(x, z, y, 0, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }

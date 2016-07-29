@@ -8,7 +8,7 @@ class Map {
         this.tile_nx = config.tile_nx;
         this.tile_nz = config.tile_nz;
         this.tileSize = config.tileSize || 4;
-        this.maxHeight = config.maxHeight || 10;
+        this.tileHeight = config.tileHeight || 10;
         this.tile_type = config.dataSurfaces;
         this.tile_height = config.dataHeights;
         this.lastEntityGroupUpdated = null;
@@ -20,6 +20,7 @@ class Map {
         }
 
         this.initEntities(config.dataTrees, 'EntityTree');
+        this.initGridByHeight();
     }
 
     newEntity(entityRef) {
@@ -58,6 +59,11 @@ class Map {
         for(let i = 0; i < tiles.length; i += 2) {
             this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkable);
         }
+    }
+
+    initGridByHeight(){
+       // this.tile_height
+       // this.grid
     }
 
     update(dt) {

@@ -5,15 +5,16 @@ module.exports = class Positioner {
     constructor(config) {
         this.selected = null;
         this.tileSize = config.tileSize;
+        this.tileHeight = config.tileHeight;
         this.removeMode = false;
         this.undroppable = false;
         this.x = 0;
         this.z = 0;
     }
 
-    placeSelectedEntity(x, z, a, map) {
+    placeSelectedEntity(x, z, y, a, map) {
 
-        this.selected.moveTo(x, z, a);
+        this.selected.moveTo(x, z, y, a);
 
         const tiles = this.selected.getTiles();
 

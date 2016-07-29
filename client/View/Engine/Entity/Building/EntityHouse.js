@@ -2,21 +2,21 @@ const THREE = require('../../../../services/threejs');
 
 class EntityHouse {
 
-    constructor(model, tileSize) {
+    constructor(model, tileSize, tileHeight) {
         this.model = model;
         this.element = EntityHouse.referenceMesh.clone();
         this.element.model = model;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
-        this.updateState(model, tileSize);
+        this.updateState(model, tileSize, tileHeight);
     }
 
-    updateState(model, tileSize) {
+    updateState(model, tileSize, tileHeight) {
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = model.x * tileSize;
         matrixWorld[14] = model.z * tileSize;
-        matrixWorld[13] = 0;
+        matrixWorld[13] = model.y * tileHeight;
         matrixWorld[0] = Math.cos(model.a);
         matrixWorld[2] = Math.sin(model.a);
         matrixWorld[8] = -matrixWorld[2];

@@ -2,22 +2,22 @@ const THREE = require('../../../../services/threejs');
 
 class EntityTree {
 
-    constructor(model, tileSize, maxHeight) {
+    constructor(model, tileSize, tileHeight) {
         this.model = model;
         this.element = EntityTree.referenceMesh.clone();
         this.element.model = model;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
-        this.updateState(model, tileSize, maxHeight);
+        this.updateState(model, tileSize, tileHeight);
     }
 
-    updateState(model, tileSize, maxHeight) {
-        maxHeight = maxHeight||0;
+    updateState(model, tileSize, tileHeight) {
+        tileHeight = tileHeight||0;
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = model.x * tileSize;
         matrixWorld[14] = model.z * tileSize;
-        matrixWorld[13] = model.y * maxHeight;
+        matrixWorld[13] = model.y * tileHeight;
         matrixWorld[0] = Math.cos(model.a);
         matrixWorld[2] = Math.sin(model.a);
         matrixWorld[8] = -matrixWorld[2];

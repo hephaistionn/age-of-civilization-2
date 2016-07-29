@@ -22,17 +22,6 @@ module.exports = class Screen {
         this.mousePress = false;
         this.mouse = new THREE.Vector3();
         this.raycaster = new THREE.Raycaster();
-        this.collisionSize = 1000;
-        this.collisionArea = new THREE.Mesh(
-            new THREE.PlaneGeometry(this.collisionSize, this.collisionSize, 1, 1),
-            new THREE.MeshBasicMaterial({visible: false, alphaTest: 0})
-        );
-        this.collisionArea.position.set(this.collisionSize / 2, 0, this.collisionSize / 2);
-        this.collisionArea.rotation.x = -Math.PI / 2;
-        this.collisionArea.updateMatrixWorld();
-        this.collisionArea.matrixAutoUpdate = false;
-        this.collisionArea.frustumCulled = false;
-        this.render.addChild(this.collisionArea);
         this.pressX = 0;
         this.pressZ = 0;
 
@@ -50,7 +39,6 @@ module.exports = class Screen {
         for(let id in model) {
             this.removeComponent(id)
         }
-        this.render.removeChild(this.collisionArea);
     }
 
     newComponent(id, model) {
@@ -150,11 +138,12 @@ module.exports = class Screen {
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this.camera.element);
-        const intersects = this.raycaster.intersectObjects([this.collisionArea], false);
+        const intersects = this.raycaster.intersectObjects(this.map.chunksList, false);
         if(intersects.length) {
             const point = intersects[0].point;
             const tileSize = this.map.tileSize;
-            ee.emit('mouseMoveOnMap', point.x / tileSize, point.z / tileSize);
+            const tileHeight = this.map.tileHeight;
+            ee.emit('mouseMoveOnMap', point.x / tileSize, point.z / tileSize, point.y / tileHeight);
         }
     }
 

@@ -18,7 +18,7 @@ module.exports = Map=> {
             let entityModel = groupModel[i];
 
             if(!entityView) {
-                let newEntityView = new ENTITIES[entityId](entityModel, this.tileSize, this.maxHeight);
+                let newEntityView = new ENTITIES[entityId](entityModel, this.tileSize, this.tileHeight);
                 groupView[i] = newEntityView;
                 let chunkX = Math.floor(entityModel.x / this.tileByChunk);
                 let chunkZ = Math.floor(entityModel.z / this.tileByChunk);

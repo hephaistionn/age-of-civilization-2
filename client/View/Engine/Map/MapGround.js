@@ -104,7 +104,7 @@ module.exports = Map=> {
             let tile_type = model.tile_type[index] || 0;
             let tile_height = model.tile_height[index] || 0;
             grounds[i] = tile_type / 255;
-            posArray[i * 3 + 2] = tile_height / 255 * this.maxHeight;
+            posArray[i * 3 + 2] = tile_height / 255 * this.tileHeight;
         }
 
         chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(grounds, 1));

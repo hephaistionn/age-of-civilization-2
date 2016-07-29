@@ -1,11 +1,10 @@
 module.exports = class Entity {
 
     constructor(x, z, y, a) {
-        this.moveTo(x, z, a);
-        this.y = y;
+        this.moveTo(x, z, y, a);
     }
 
-    moveTo(x, z, a) {
+    moveTo(x, z, y, a) {
 
         if(a !== undefined) {
             this.a = a;
@@ -24,6 +23,7 @@ module.exports = class Entity {
 
         this.x = xFirstTile + xNbTile / 2;
         this.z = zFirstTile + zNbTile / 2;
+        this.y = y;
 
     }
 

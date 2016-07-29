@@ -86,9 +86,9 @@ class App {
             this.model.mouseWheel(delta);
     }
 
-    mouseMoveOnMap(x, z) {
+    mouseMoveOnMap(x, z, y) {
         if(this.model.mouseMoveOnMap)
-            this.model.mouseMoveOnMap(x, z);
+            this.model.mouseMoveOnMap(x, z, y);
     }
 
     mouseTouchEntity(model) {
