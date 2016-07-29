@@ -58,7 +58,7 @@ class ScreenB {
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
             dataMap.tileSize = 4;
-            dataMap.tileHeight = 10;
+            dataMap.tileMaxHeight = 10;
             this.map = new Map(dataMap);
             this.positioner = new Positioner(dataMap);
             ee.emit('onUpdate', 'map', this.map);

@@ -6,14 +6,16 @@ module.exports = Map=> {
     Map.prototype.initGround = function initGround(model) {
 
         this.materialMap = materialMap;
-        //this.materialMap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true}
+        //this.materialMap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
         //this.materialMap = new THREE.MeshPhongMaterial( { color: 0x555555 } );
 
-        const nx = model.tile_nx;
-        const nz = model.tile_nz;
+        const nbPointX = model.nbPointX;
+        const nbPointZ = model.nbPointZ;
+        const nbTileX = model.nbTileX;
+        const nbTileZ = model.nbTileZ;
 
         const chunksTiles = [0];
-        for(let x = 0; x < nx; x++) {
+        for(let x = 0; x < nbTileX; x++) {
             if(chunksTiles[chunksTiles.length - 1] === this.tileByChunk) {
                 chunksTiles.push(1);
             } else {
@@ -40,12 +42,16 @@ module.exports = Map=> {
         //smooth normals of chunks
         for(x = 0; x < length; x++) {
             for(z = 0; z < length; z++) {
-                nbXTiles = chunksTiles[x];
-                nbZTiles = chunksTiles[z];
                 let chunkX1Z1 = chunks[x][z];
                 let chunkX2Z1 = chunks[x + 1] ? chunks[x + 1][z] : undefined;
                 let chunkX1Z2 = chunks[x][z + 1];
-                this.smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTiles, nbZTiles);
+
+                let nbXTilesX1Z1 = chunksTiles[x];
+                let nbZTilesX1Z1 = chunksTiles[z];
+                let nbXTilesX2Z1 = chunksTiles[x+1];
+                let nbXTilesX1Z2 = chunksTiles[x];
+
+                this.smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTilesX1Z1, nbZTilesX1Z1, nbXTilesX2Z1, nbXTilesX1Z2);
             }
         }
 
@@ -99,12 +105,12 @@ module.exports = Map=> {
         for(let i = 0; i < length; i++) {
             let tilex = offsetXTiles + posArray[i * 3] / this.tileSize + correctionX;
             let tiley = offsetZTiles + nbZTiles - (posArray[i * 3 + 1] / this.tileSize + correctionZ); //begin at top, not to 0
-            let index = tiley * model.tile_nz + tilex;
+            let index = tiley * model.nbPointX + tilex;
 
-            let tile_type = model.tile_type[index] || 0;
-            let tile_height = model.tile_height[index] || 0;
-            grounds[i] = tile_type / 255;
-            posArray[i * 3 + 2] = tile_height / 255 * this.tileHeight;
+            let pointsType = model.pointsType[index] || 0;
+            let pointsHeights = model.pointsHeights[index] || 0;
+            grounds[i] = pointsType / 255;
+            posArray[i * 3 + 2] = pointsHeights / 255 * this.tileMaxHeight;
         }
 
         chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(grounds, 1));
@@ -115,17 +121,16 @@ module.exports = Map=> {
         return chunkGeometry;
     };
 
-    Map.prototype.smoothNormals = function smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTiles, nbZTiles) {
-
+    Map.prototype.smoothNormals = function smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTilesX1Z1, nbZTilesX1Z1, nbXTilesX2Z1 , nbXTilesX1Z2) {
         let normalX1Z1 = chunkX1Z1.attributes.normal.array;
         let normalX2Z1 = chunkX2Z1 ? chunkX2Z1.attributes.normal.array : [];
         let normalX1Z2 = chunkX1Z2 ? chunkX1Z2.attributes.normal.array : [];
         let x, z;
         //(3*(Nx+1))*z+3*x //index of common borders
         if(normalX1Z2.length) {
-            for(x = 0; x < nbXTiles + 1; x++) {
-                let indexX1Z1 = (3 * (nbXTiles + 1)) * (nbZTiles) + 3 * x;
-                let indexX1Z2 = (3 * (nbXTiles + 1)) * 0 + 3 * x;
+            for(x = 0; x < nbXTilesX1Z1 + 1; x++) {
+                let indexX1Z1 = (3 * (nbXTilesX1Z1 + 1)) * (nbZTilesX1Z1) + 3 * x;
+                let indexX1Z2 = (3 * (nbXTilesX1Z2 + 1)) * 0 + 3 * x;
 
                 let n1x = normalX1Z1[indexX1Z1];
                 let n1y = normalX1Z1[indexX1Z1 + 1];
@@ -144,10 +149,10 @@ module.exports = Map=> {
         }
 
         if(normalX2Z1.length) {
-            for(z = 0; z < nbZTiles + 1; z++) {
+            for(z = 0; z < nbZTilesX1Z1 + 1; z++) {
 
-                let indexX1Z1 = (3 * (nbXTiles + 1)) * z + 3 * nbXTiles;
-                let indexX2Z1 = (3 * (nbXTiles + 1)) * z;
+                let indexX1Z1 = (3 * (nbXTilesX1Z1 + 1)) * z + 3 * nbZTilesX1Z1;
+                let indexX2Z1 = (3 * (nbXTilesX2Z1 + 1)) * z;
 
                 let n1x = normalX1Z1[indexX1Z1];
                 let n1y = normalX1Z1[indexX1Z1 + 1];
@@ -160,6 +165,7 @@ module.exports = Map=> {
                 normalX1Z1[indexX1Z1] = normalX2Z1[indexX2Z1] = (n1x + n2x) / 2;
                 normalX1Z1[indexX1Z1 + 1] = normalX2Z1[indexX2Z1 + 1] = (n1y + n2y) / 2;
                 normalX1Z1[indexX1Z1 + 2] = normalX2Z1[indexX2Z1 + 2] = (n1z + n2z) / 2;
+
             }
             chunkX2Z1.attributes.normal.needsUpdate = true;
         }

@@ -20,12 +20,12 @@ module.exports = class Positioner {
             if(this.selected) {
                 this.element.remove(this.selected.element);
             }
-            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, model.tileSize, model.tileHeight);
+            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, model.tileSize, model.tileMaxHeight);
             this.selected.element.material = this.material;
             this.element.add(this.selected.element);
         } else {
             this.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
-            this.selected.updateState(model.selected, model.tileSize, model.tileHeight);
+            this.selected.updateState(model.selected, model.tileSize, model.tileMaxHeight);
         }
     }
 

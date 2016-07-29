@@ -5,22 +5,28 @@ class Map {
 
     constructor(config) {
 
-        this.tile_nx = config.tile_nx;
-        this.tile_nz = config.tile_nz;
+        this.nbPointX = config.nbPointX;
+        this.nbPointZ = config.nbPointZ;
+        this.nbTileX = config.nbTileX;
+        this.nbTileZ = config.nbTileZ;
         this.tileSize = config.tileSize || 4;
-        this.tileHeight = config.tileHeight || 10;
-        this.tile_type = config.dataSurfaces;
-        this.tile_height = config.dataHeights;
+        this.tileMaxHeight = config.tileMaxHeight || 10;
+        this.tiltMax = config.tiltMax || 100;
+        this.pointsType = config.pointsType;
+        this.pointsHeights = config.pointsHeights;
+        this.tilesHeight = config.tilesHeight;
+        this.tilesTilt = config.tilesTilt;
+        this.tilesType = config.tilesType;
         this.lastEntityGroupUpdated = null;
-        this.grid = new pathFinding.Grid(this.tile_nx, this.tile_nz);
+        this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ);
         this.entityGroups = {};
 
         for(let id in ENTITIES) {
             this.entityGroups[id] = [];
         }
 
-        this.initEntities(config.dataTrees, 'EntityTree');
-        this.initGridByHeight();
+        this.initEntitiesResource(config.tilesResource, 'EntityTree');
+        this.initGridByHeight(this.tilesTilt);
     }
 
     newEntity(entityRef) {
@@ -39,11 +45,20 @@ class Map {
         this.updateGrid(entity, true);
     }
 
-    initEntities(list, id) {
+    initEntitiesResource(resources, id) {
         const group = this.entityGroups[id];
-        let length = list.length;
-        for(let i = 0; i < length; i += 3) {
-            let entity = new ENTITIES[id](list[i], list[i + 2], list[i + 1], 0); //x , z , y , a
+        let length = resources.length;
+        for(let i = 0; i < length; i++) {
+            let value = resources[i];
+
+            if(value === 0){
+                continue;
+            }
+            let z = Math.floor(i/this.nbTileX);
+            let x = i%this.nbTileX;
+            let y = this.tilesHeight[i]/255;
+
+            let entity = new ENTITIES[id](x,z,y, 0); //x , z , y , a
             group.push(entity);
             this.updateGrid(entity);
         }
@@ -61,9 +76,21 @@ class Map {
         }
     }
 
+    getTile(tiles, x, z) {
+        const index = z * this.nbTileX + x;
+        return tiles[index];
+    }
+
     initGridByHeight(){
-       // this.tile_height
-       // this.grid
+        let length = this.tilesTilt.length;
+        for(let i=0; i<length; i++){
+            let x = i%this.nbTileX;
+            let z = Math.floor(i/this.nbTileX);
+            let tilt = this.tilesTilt[i];
+            if(tilt>this.tiltMax){
+                this.grid.setWalkableAt(x, z, false);
+            }
+        }
     }
 
     update(dt) {

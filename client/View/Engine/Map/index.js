@@ -11,7 +11,9 @@ class Map {
 
         this.tileByChunk = 10;
         this.tileSize = model.tileSize;
-        this.tileHeight = model.tileHeight;
+        this.tileMaxHeight = model.tileMaxHeight;
+        this.nbPointX = model.nbPointX;
+        this.nbPointZ = model.nbPointZ;
 
         this.entityGroups = {};
         for(let id in ENTITIES) {
