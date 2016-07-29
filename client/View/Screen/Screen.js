@@ -142,8 +142,7 @@ module.exports = class Screen {
         if(intersects.length) {
             const point = intersects[0].point;
             const tileSize = this.map.tileSize;
-            const tileHeight = this.map.tileHeight;
-            ee.emit('mouseMoveOnMap', point.x / tileSize, point.z / tileSize, point.y / tileHeight);
+            ee.emit('mouseMoveOnMap', point.x / tileSize, point.z / tileSize);
         }
     }
 

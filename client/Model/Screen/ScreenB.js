@@ -76,9 +76,9 @@ class ScreenB {
 
     }
 
-    mouseMoveOnMap(x, z, y) {
+    mouseMoveOnMap(x, z) {
         if(this.positioner.selected) {
-            this.positioner.placeSelectedEntity(x, z, y, 0, this.map);
+            this.positioner.placeSelectedEntity(x, z, 0, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }
