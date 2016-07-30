@@ -20,6 +20,7 @@ class Map {
         this.lastEntityGroupUpdated = null;
         this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ);
         this.entityGroups = {};
+        this.entityDynamicList = [];
 
         for(let id in ENTITIES) {
             this.entityGroups[id] = [];
@@ -34,15 +35,26 @@ class Map {
         const entity = new ENTITIES[entityId](entityRef.x, entityRef.z, entityRef.y, entityRef.a);
         this.entityGroups[entityId].push(entity);
         this.lastEntityGroupUpdated = entityId;
-        this.updateGrid(entity);
+        if(!entity.constructor.walkable) {
+            this.setWalkableTile(entity, false);
+        }
+        if(entity.update) {
+            this.entityDynamicList.push(entity);
+        }
     }
 
     removeEntity(entity) {
         const entityId = entity.constructor.name;
-        const index = this.entityGroups[entityId].indexOf(entity);
+        let index = this.entityGroups[entityId].indexOf(entity);
         this.entityGroups[entityId].splice(index, 1);
         this.lastEntityGroupUpdated = entityId;
-        this.updateGrid(entity, true);
+        if(!entity.constructor.walkable) {
+            this.setWalkableTile(entity, true);
+        }
+        if(entity.update) {
+            index = this.entityDynamicList.indexOf(entity);
+            this.entityDynamicList.splice(index, 1);
+        }
     }
 
     initEntitiesResource(resources, id) {
@@ -51,26 +63,21 @@ class Map {
         for(let i = 0; i < length; i++) {
             let value = resources[i];
 
-            if(value === 0){
+            if(value === 0) {
                 continue;
             }
-            let z = Math.floor(i/this.nbTileX);
-            let x = i%this.nbTileX;
-            let y = this.tilesHeight[i]/255;
+            let z = Math.floor(i / this.nbTileX);
+            let x = i % this.nbTileX;
+            let y = this.tilesHeight[i] / 255;
 
-            let entity = new ENTITIES[id](x,z,y, 0); //x , z , y , a
+            let entity = new ENTITIES[id](x, z, y, 0); //x , z , y , a
             group.push(entity);
-            this.updateGrid(entity);
+            this.setWalkableTile(entity, false);
         }
     }
 
-    updateGrid(entity, forceFree) {
-
-        let walkable = entity.constructor.walkable;
-        if(forceFree) walkable = walkable;
-
+    setWalkableTile(entity, walkable) {
         const tiles = entity.getTiles();
-
         for(let i = 0; i < tiles.length; i += 2) {
             this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkable);
         }
@@ -81,20 +88,23 @@ class Map {
         return tiles[index];
     }
 
-    initGridByHeight(){
+    initGridByHeight() {
         let length = this.tilesTilt.length;
-        for(let i=0; i<length; i++){
-            let x = i%this.nbTileX;
-            let z = Math.floor(i/this.nbTileX);
+        for(let i = 0; i < length; i++) {
+            let x = i % this.nbTileX;
+            let z = Math.floor(i / this.nbTileX);
             let tilt = this.tilesTilt[i];
-            if(tilt>this.tiltMax){
+            if(tilt > this.tiltMax) {
                 this.grid.setWalkableAt(x, z, false);
             }
         }
     }
 
     update(dt) {
-
+        let l = this.entityDynamicList.length;
+        while(l--) {
+            this.entityDynamicList[l].updateTimer(dt);
+        }
     }
 
     dismount() {

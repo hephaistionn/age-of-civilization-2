@@ -76,7 +76,9 @@ class ScreenB {
     }
 
     update(dt) {
-        //this.map.update(dt);
+        if(this.map) {
+            this.map.update(dt);
+        }
     }
 
     dismount() {

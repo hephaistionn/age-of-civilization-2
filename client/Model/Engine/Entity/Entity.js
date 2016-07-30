@@ -51,4 +51,12 @@ module.exports = class Entity {
         return tiles;
     }
 
+    updateTimer(dt) {
+        this.timer -= dt;
+        if(this.timer <= 0) {
+            this.update();
+            this.timer = this.constructor.cycle;
+        }
+    }
+
 };
