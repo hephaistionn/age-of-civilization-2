@@ -30,9 +30,10 @@ class Map {
         this.initGridByHeight(this.tilesTilt);
     }
 
-    newEntity(entityRef) {
-        const entityId = entityRef.constructor.name;
-        const entity = new ENTITIES[entityId](entityRef.x, entityRef.z, entityRef.y, entityRef.a);
+    newEntity(params) {
+
+        const entityId = params.entityId;
+        const entity = new ENTITIES[entityId](params);
         this.entityGroups[entityId].push(entity);
         this.lastEntityGroupUpdated = entityId;
         if(!entity.constructor.walkable) {
@@ -58,21 +59,16 @@ class Map {
     }
 
     initEntitiesResource(resources, id) {
-        const group = this.entityGroups[id];
         let length = resources.length;
+        const params = {x: 0, y: 0, z: 0, a: 0, entityId: id};
         for(let i = 0; i < length; i++) {
             let value = resources[i];
-
-            if(value === 0) {
-                continue;
-            }
-            let z = Math.floor(i / this.nbTileX);
-            let x = i % this.nbTileX;
-            let y = this.tilesHeight[i] / 255;
-
-            let entity = new ENTITIES[id](x, z, y, 0); //x , z , y , a
-            group.push(entity);
-            this.setWalkableTile(entity, false);
+            if(value === 0) continue;
+            params.z = Math.floor(i / this.nbTileX);
+            params.x = i % this.nbTileX;
+            params.y = this.tilesHeight[i] / 255;
+            params.a = 0;
+            this.newEntity(params);
         }
     }
 

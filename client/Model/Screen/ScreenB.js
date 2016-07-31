@@ -116,7 +116,9 @@ class ScreenB {
 
     mouseClick(x, z) {
         if(this.positioner.selected && !this.positioner.undroppable) {
-            this.map.newEntity(this.positioner.selected);
+            const entity = this.positioner.selected;
+            const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
+            this.map.newEntity(params);
             ee.emit('onUpdate', 'map', this.map);
         }
     }
@@ -127,6 +129,11 @@ class ScreenB {
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
+    }
+
+    newEntity(params) {
+        this.map.newEntity(params);
+        ee.emit('onUpdate', 'map', this.map);
     }
 
 }

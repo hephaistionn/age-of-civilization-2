@@ -1,10 +1,10 @@
 module.exports = class Entity {
 
-    constructor(x, z, y, a) {
-        this.moveTo(x, z, y, a);
+    constructor(params) {
+        this.moveTo(params.x, params.y, params.z, params.a);
     }
 
-    moveTo(x, z, y, a) {
+    moveTo(x, y, z, a) {
 
         if(a !== undefined) {
             this.a = a;

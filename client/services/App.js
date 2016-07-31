@@ -22,6 +22,8 @@ class App {
         ee.on('mouseWheel', this.mouseWheel.bind(this));
         ee.on('mouseMoveOnMap', this.mouseMoveOnMap.bind(this));
         ee.on('mouseTouchEntity', this.mouseTouchEntity.bind(this));
+        ee.on('newEntity', this.newEntity.bind(this))
+
 
     }
 
@@ -94,6 +96,11 @@ class App {
     mouseTouchEntity(model) {
         if(this.model.mouseTouchEntity)
             this.model.mouseTouchEntity(model);
+    }
+
+    newEntity(id, config){
+        if(this.model.newEntity)
+            this.model.newEntity(id, config);
     }
 }
 

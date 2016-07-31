@@ -22,7 +22,7 @@ module.exports = class Positioner {
 
         const y = this.getHeightTile(x, z);
 
-        this.selected.moveTo(x, z, y, this.rotation);
+        this.selected.moveTo(x, y, z, this.rotation);
 
         const tiles = this.selected.getTiles();
 
@@ -49,7 +49,7 @@ module.exports = class Positioner {
 
     selectEnity(id) {
         if(!this.selected || this.selected.constructor.name !== id) {
-            this.selected = new ENTITIES[id](0, 0, 0, this.rotation);
+            this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: this.rotation});
         } else {
             this.selected = null;
         }
