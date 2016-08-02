@@ -22,8 +22,8 @@ class App {
         ee.on('mouseWheel', this.mouseWheel.bind(this));
         ee.on('mouseMoveOnMap', this.mouseMoveOnMap.bind(this));
         ee.on('mouseTouchEntity', this.mouseTouchEntity.bind(this));
-        ee.on('newEntity', this.newEntity.bind(this))
-
+        ee.on('newEntity', this.newEntity.bind(this));
+        ee.on('removeEntity', this.removeEntity.bind(this));
 
     }
 
@@ -98,9 +98,14 @@ class App {
             this.model.mouseTouchEntity(model);
     }
 
-    newEntity(id, config){
+    newEntity(config){
         if(this.model.newEntity)
-            this.model.newEntity(id, config);
+            this.model.newEntity(config);
+    }
+
+    removeEntity(entity){
+        if(this.model.removeEntity)
+            this.model.removeEntity(entity);
     }
 }
 

@@ -9,8 +9,6 @@ class Map {
         this.nbPointZ = config.nbPointZ;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.tileSize = config.tileSize || 4;
-        this.tileMaxHeight = config.tileMaxHeight || 10;
         this.tiltMax = config.tiltMax || 100;
         this.pointsType = config.pointsType;
         this.pointsHeights = config.pointsHeights;
@@ -82,6 +80,25 @@ class Map {
     getTile(tiles, x, z) {
         const index = z * this.nbTileX + x;
         return tiles[index];
+    }
+
+
+    getNearestEntities(EntityId, x, z, max) {
+        max = max || 20;
+        function filterNearest(entity) {
+            return Math.abs(entity.x - x) < max && Math.abs(entity.z - z) < max;
+        }
+
+        function sortNearest(entityA, entityB) {
+            let dA = Math.abs(entityA.x - x) + Math.abs(entityA.z - z);
+            let dB = Math.abs(entityB.x - x) + Math.abs(entityB.z - z);
+            return dA - dB;
+        }
+
+        const group = this.entityGroups[EntityId];
+        const nearest = group.filter(filterNearest);
+        nearest.sort(sortNearest);
+        return nearest.splice(0, 3);
     }
 
     initGridByHeight() {

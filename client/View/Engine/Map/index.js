@@ -1,5 +1,6 @@
 const THREE = require('../../../services/threejs');
 const ENTITIES = require('../Entity/list');
+const config = require('../config');
 
 class Map {
 
@@ -9,12 +10,13 @@ class Map {
         this.element.matrixAutoUpdate = false;
         this.element.frustumCulled = false;
 
-        this.tileByChunk = 10;
-        this.tileSize = model.tileSize;
-        this.tileMaxHeight = model.tileMaxHeight;
+        this.tileByChunk = config.tileByChunk;
+        this.tileSize = config.tileSize;
+        this.tileMaxHeight = config.tileMaxHeight;
         this.nbPointX = model.nbPointX;
         this.nbPointZ = model.nbPointZ;
 
+        this.entityDynamicList = [];
         this.entityGroups = {};
         for(let id in ENTITIES) {
             this.entityGroups[id] = [];
@@ -36,7 +38,10 @@ class Map {
 
 
     update(dt) {
-
+        let l = this.entityDynamicList.length;
+        while(l--) {
+            this.entityDynamicList[l].update(dt);
+        }
     }
 
     remove() {

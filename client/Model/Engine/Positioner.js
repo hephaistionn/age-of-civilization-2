@@ -4,8 +4,6 @@ module.exports = class Positioner {
 
     constructor(config) {
         this.selected = null;
-        this.tileSize = config.tileSize;
-        this.tileMaxHeight = config.tileMaxHeight;
         this.tilesHeight = config.tilesHeight;
         this.nbPointZ = config.nbPointZ;
         this.nbPointX = config.nbPointX;
@@ -22,7 +20,7 @@ module.exports = class Positioner {
 
         const y = this.getHeightTile(x, z);
 
-        this.selected.moveTo(x, y, z, this.rotation);
+        this.selected.move(x, y, z, this.rotation);
 
         const tiles = this.selected.getTiles();
 

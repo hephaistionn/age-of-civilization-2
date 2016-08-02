@@ -9,6 +9,8 @@ module.exports = class Positioner {
         this.element.frustumCulled = false;
         this.selected = null;
         this.material = new THREE.MeshPhongMaterial({color: 0x0000ff});
+        this.tileSize = 4;
+        this.tileMaxHeight = 10;
     }
 
     updateState(model) {
@@ -20,12 +22,12 @@ module.exports = class Positioner {
             if(this.selected) {
                 this.element.remove(this.selected.element);
             }
-            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, model.tileSize, model.tileMaxHeight);
+            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, this.tileSize, this.tileMaxHeight);
             this.selected.element.material = this.material;
             this.element.add(this.selected.element);
         } else {
             this.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
-            this.selected.updateState(model.selected, model.tileSize, model.tileMaxHeight);
+            this.selected.updateState(model.selected, this.tileSize, this.tileMaxHeight);
         }
     }
 

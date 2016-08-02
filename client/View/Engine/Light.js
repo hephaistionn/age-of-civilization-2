@@ -13,7 +13,7 @@ module.exports = class Light {
         this.directionalLight.matrixAutoUpdate = false;
         this.directionalLight.castShadow = true;
         this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-120, 110, 110, -120, 1, 500));
-        this.directionalLight.shadow.bias = 0.00001;
+        this.directionalLight.shadow.bias = 0.000001;
         this.directionalLight.shadow.mapSize.width = 1024;
         this.directionalLight.shadow.mapSize.height = 1024;
 

@@ -14,10 +14,10 @@ class Camera {
         this.targetZ = 0; //target position
         this.pressX = 0;
         this.pressZ = 0;
-        this.moveTo(config.x || this.x, this.y, config.z || this.z);
+        this.move(config.x || this.x, this.y, config.z || this.z);
     }
 
-    moveTo(x, y, z) {
+    move(x, y, z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -43,7 +43,7 @@ class Camera {
 
         let newX = this.iX + dx / 20;
         let newZ = this.iZ + dz / 20;
-        this.moveTo(newX, this.y, newZ);
+        this.move(newX, this.y, newZ);
     }
 
     mouseDown(x, z) {
@@ -69,7 +69,7 @@ class Camera {
         let y = this.targetY - this.offsetY;
         let z = this.targetZ - this.offsetZ;
 
-        this.moveTo(x, y, z);
+        this.move(x, y, z);
     }
 
     dismount() {

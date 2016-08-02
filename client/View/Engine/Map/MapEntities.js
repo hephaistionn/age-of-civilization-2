@@ -1,4 +1,3 @@
-const THREE = require('../../../services/threejs');
 const ENTITIES = require('../Entity/list');
 const materialMap = require('./../materialMap');
 
@@ -18,14 +17,21 @@ module.exports = Map=> {
             let entityModel = groupModel[i];
 
             if(!entityView) {
-                let newEntityView = new ENTITIES[entityId](entityModel, this.tileSize, this.tileMaxHeight);
+                let newEntityView = new ENTITIES[entityId](entityModel);
                 groupView[i] = newEntityView;
+                if(newEntityView.update){
+                    this.entityDynamicList.push(newEntityView);
+                }
                 let chunkX = Math.floor(entityModel.x / this.tileByChunk);
                 let chunkZ = Math.floor(entityModel.z / this.tileByChunk);
                 this.chunks[chunkX][chunkZ].add(newEntityView.element);
             } else if(entityView.model !== entityModel) {
                 groupView.splice(i, 1);
                 entityView.element.parent.remove(entityView.element);
+                if(entityView.update){
+                    let k = this.entityDynamicList.indexOf(entityView);
+                    this.entityDynamicList.splice(k, 1);
+                }
                 i--;
             }
         }
@@ -35,10 +41,14 @@ module.exports = Map=> {
             for(let i = lengthModel; i < lengthView; i++) {
                 let entityView = groupView[i];
                 entityView.element.parent.remove(entityView.element);
+                if(entityView.update){
+                    let k = this.entityDynamicList.indexOf(entityView);
+                    this.entityDynamicList.splice(k, 1);
+                }
             }
-            groupView.splice(lengthModel - 1, lengthView);
+            groupView.splice(lengthModel, lengthView);
         }
 
-    }
+    };
 
 };

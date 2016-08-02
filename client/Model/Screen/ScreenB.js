@@ -64,8 +64,6 @@ class ScreenB {
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
-            dataMap.tileSize = 4;
-            dataMap.tileMaxHeight = 10;
             this.map = new Map(dataMap);
             this.positioner = new Positioner(dataMap);
             ee.emit('onUpdate', 'map', this.map);
@@ -132,7 +130,13 @@ class ScreenB {
     }
 
     newEntity(params) {
+        params.map = this.map;
         this.map.newEntity(params);
+        ee.emit('onUpdate', 'map', this.map);
+    }
+
+    removeEntity(entity) {
+        this.map.removeEntity(entity);
         ee.emit('onUpdate', 'map', this.map);
     }
 
