@@ -74,11 +74,11 @@ module.exports = class Entity {
         const map = params.map;
         const grid = map.grid;
         const tragetEntityId = params.tragetEntityId;
-        const x = Math.floor(params.x);
-        const z = Math.floor(params.z);
+        let x = Math.floor(params.x);
+        let z = Math.floor(params.z);
         const nearests = map.getNearestEntities(tragetEntityId, x, z);
         const sourceTiles = params.source.getTiles();
-        const length = nearests.length;
+        let length = nearests.length;
         const paths = [];
         for(let i = 0; i < length; i++) {
             let entity = nearests[i];
@@ -92,8 +92,16 @@ module.exports = class Entity {
                 path = paths[k];
             }
         }
+        //compute height
         if(path) {
-            return pf.Util.compressPath(path);
+        length = path.length;
+        for(let k = 0; k < length; k++) {
+            x = path[k][0];
+            z = path[k][1];
+            path[k][2] = map.tilesHeight[map.nbTileX*z+x]/255;
+        }
+        return path;
+        //return pf.Util.compressPath(path);
         }
     }
 

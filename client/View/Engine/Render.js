@@ -13,6 +13,7 @@ module.exports = class Scene {
         this.scene = new THREE.Scene();
         this.scene.matrixAutoUpdate = false;
         this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMapCullFace = THREE.CullFaceBack;
     }
 
     update() {

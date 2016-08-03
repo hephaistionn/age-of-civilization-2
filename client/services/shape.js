@@ -2,20 +2,20 @@ const THREE = require('./threejs');
 
 module.exports = class Shape{
 
-    constructor(path,scaling) {
+    constructor(path,scaling, height) {
         this.points = [];
         this.segmentsLength = [];
         this.length = 0;
-        this.compute(path,scaling);
+        this.compute(path,scaling, height);
     }
 
-    compute(path, scaling) {
+    compute(path, scaling, height) {
         let l = path.length;
         let i = 0;
         let length = 0;
         let point;
         for(i=0 ; i<l ; i++ ) {
-            point = new THREE.Vector2(path[i][0]*scaling+scaling/2,path[i][1]*scaling+scaling/2);
+            point = new THREE.Vector3(path[i][0]*scaling+scaling/2,path[i][1]*scaling+scaling/2,path[i][2]*height);
             this.points.push(point);
             if(this.points[i-1]){
                 length += this.points[i-1].distanceTo(point);
@@ -50,8 +50,9 @@ module.exports = class Shape{
 
         let x = pointB.x * a + pointA.x * b;
         let y = pointB.y * a + pointA.y * b;
+        let z = pointB.z * a + pointA.z * b;
 
-        return [x,y];
+        return [x, y, z];
     }
 
     /**
@@ -78,10 +79,11 @@ module.exports = class Shape{
 
         let x = pointB.x * a + pointA.x * b;
         let y = pointB.y * a + pointA.y * b;
+        let z = pointB.z * a + pointA.z * b;
 
         let length = distanceB-distanceA;
 
-        return [x, y, (pointB.x - pointA.x)/length, (pointB.y - pointA.y)/length ];
+        return [x, y, z, (pointB.x - pointA.x)/length, (pointB.y - pointA.y)/length ];
     }
 
 };
