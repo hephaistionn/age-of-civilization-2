@@ -9,7 +9,7 @@ class Map {
         this.nbPointZ = config.nbPointZ;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.tiltMax = config.tiltMax || 100;
+        this.tiltMax = config.tiltMax || 50;
         this.pointsType = config.pointsType;
         this.pointsHeights = config.pointsHeights;
         this.tilesHeight = config.tilesHeight;
@@ -65,7 +65,7 @@ class Map {
             params.z = Math.floor(i / this.nbTileX);
             params.x = i % this.nbTileX;
             params.y = this.tilesHeight[i] / 255;
-            params.a = 0;
+            params.a = Math.random() * Math.PI;
             this.newEntity(params);
         }
     }

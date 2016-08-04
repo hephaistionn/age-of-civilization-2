@@ -8,6 +8,7 @@ module.exports = Map=> {
         this.materialMap = materialMap;
         //this.materialMap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
         //this.materialMap = new THREE.MeshPhongMaterial( { color: 0x555555 } );
+        this.materialMapWater = new THREE.MeshPhongMaterial({color: 0x2222ff, transparent: true, opacity: 0.66 });
 
         const nbPointX = model.nbPointX;
         const nbPointZ = model.nbPointZ;
@@ -48,7 +49,7 @@ module.exports = Map=> {
 
                 let nbXTilesX1Z1 = chunksTiles[x];
                 let nbZTilesX1Z1 = chunksTiles[z];
-                let nbXTilesX2Z1 = chunksTiles[x+1];
+                let nbXTilesX2Z1 = chunksTiles[x + 1];
                 let nbXTilesX1Z2 = chunksTiles[x];
 
                 this.smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTilesX1Z1, nbZTilesX1Z1, nbXTilesX2Z1, nbXTilesX1Z2);
@@ -84,7 +85,23 @@ module.exports = Map=> {
             }
         }
 
+        this.createWater(model);
+
     };
+
+    Map.prototype.createWater = function createWater(model) {
+        let w = this.tileSize * model.nbTileX;
+        let h = this.tileSize * model.nbTileZ;
+        const waterGeometry = new THREE.PlaneBufferGeometry(w, h, 2, 2);
+        let waterMesh = new THREE.Mesh(waterGeometry, this.materialMapWater);
+        waterMesh.rotation.x = -Math.PI / 2;
+        waterMesh.position.set(w / 2, 3, h / 2);
+        this.element.add(waterMesh);
+        waterMesh.updateMatrixWorld();
+        waterMesh.matrixAutoUpdate = false;
+        waterMesh.matrixWorldNeedsUpdate = false;
+        waterMesh.receiveShadow = true;
+    }
 
     Map.prototype.createSurface = function createSurface(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
@@ -109,7 +126,7 @@ module.exports = Map=> {
 
             let pointsType = model.pointsType[index] || 0;
             let pointsHeights = model.pointsHeights[index] || 0;
-            grounds[i] = pointsType / 255;
+            grounds[i] = pointsType;
             posArray[i * 3 + 2] = pointsHeights / 255 * this.tileMaxHeight;
         }
 
@@ -121,7 +138,7 @@ module.exports = Map=> {
         return chunkGeometry;
     };
 
-    Map.prototype.smoothNormals = function smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTilesX1Z1, nbZTilesX1Z1, nbXTilesX2Z1 , nbXTilesX1Z2) {
+    Map.prototype.smoothNormals = function smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTilesX1Z1, nbZTilesX1Z1, nbXTilesX2Z1, nbXTilesX1Z2) {
         let normalX1Z1 = chunkX1Z1.attributes.normal.array;
         let normalX2Z1 = chunkX2Z1 ? chunkX2Z1.attributes.normal.array : [];
         let normalX1Z2 = chunkX1Z2 ? chunkX1Z2.attributes.normal.array : [];

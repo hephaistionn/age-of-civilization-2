@@ -4,7 +4,7 @@ const vertShader = "" +
     "attribute float grounds; \n" +
     "varying vec4 vGrounds; \n" +
     "varying vec3 vecNormal; \n" +
-    "varying vec2 vAbsolutePosition; \n" +
+    "varying vec3 vAbsolutePosition; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
     "		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHTS ]; \n" +
@@ -13,20 +13,20 @@ const vertShader = "" +
     "#endif \n" +
     "void main() { \n" +
     "vGrounds = vec4(0.0); \n" +
-    "if(grounds<0.33){ \n" +
-    "vGrounds.x = -3.0 * grounds + 1.0; \n" +
-    "vGrounds.y = 3.0 * grounds; \n" +
+    "if(grounds<60.0){ \n" +
+    "vGrounds.y = grounds/60.0; \n" +
+    "vGrounds.x = 1.0 - vGrounds.y; \n" +
     "} \n" +
-    "if(grounds>=0.33 && grounds <0.66){ \n" +
-    "vGrounds.y = -3.0 * grounds + 2.0; \n" +
-    "vGrounds.z = 3.0 * grounds - 1.0; \n" +
+    "if(grounds>=60.0 && grounds <120.0){ \n" +
+    "vGrounds.z = grounds/60.0 - 1.0; \n" +
+    "vGrounds.y = 1.0 - vGrounds.z; \n" +
     "} \n" +
-    "if(grounds>=0.66){ \n" +
-    "vGrounds.z = -3.0 * grounds + 3.0; \n" +
-    "vGrounds.w = 3.0 * grounds - 2.0; \n" +
+    "if(grounds>=120.0){ \n" +
+    "vGrounds.w = grounds/60.0 - 2.0; \n" +
+    "vGrounds.z = 1.0 - vGrounds.w; \n" +
     "} \n" +
     "vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
-    "vAbsolutePosition = vec2(worldPosition.x, worldPosition.z); \n" +
+    "vAbsolutePosition = worldPosition.xyz; \n" +
     "vecNormal = (modelMatrix * vec4(normal, 0.0)).xyz; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
@@ -82,7 +82,7 @@ const fragShader = "" +
 
     "varying vec4 vGrounds; \n" +
     "varying vec3 vecNormal; \n" +
-    "varying vec2 vAbsolutePosition; \n" +
+    "varying vec3 vAbsolutePosition; \n" +
     "uniform sampler2D textureA; \n" +
     "uniform sampler2D textureB; \n" +
     "uniform sampler2D textureC; \n" +
@@ -91,10 +91,11 @@ const fragShader = "" +
     "uniform vec3 ambientLightColor; \n" +
     "void main(void) { \n" +
     "" +
-    "vec3 colorA = texture2D( textureA, vAbsolutePosition/40.0 ).xyz; \n" +
-    "vec3 colorB = texture2D( textureB, vAbsolutePosition/40.0 ).xyz; \n" +
-    "vec3 colorC = texture2D( textureC, vAbsolutePosition/40.0 ).xyz; \n" +
-    "vec3 colorD = texture2D( textureD, vAbsolutePosition/40.0 ).xyz; \n" +
+    "vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/40.0; \n" +
+    "vec3 colorA = texture2D( textureA, UV ).xyz; \n" +
+    "vec3 colorB = texture2D( textureB, UV ).xyz; \n" +
+    "vec3 colorC = texture2D( textureC, UV ).xyz; \n" +
+    "vec3 colorD = texture2D( textureD, UV ).xyz; \n" +
     "vec3 colorFinal = vec3(0.0); \n" +
     "colorFinal += colorA * vGrounds.x; \n" +
     "colorFinal += colorB * vGrounds.y; \n" +
@@ -109,10 +110,14 @@ const fragShader = "" +
     "    directionalLight = directionalLights[ i ]; \n" +
     "    sumLights.rgb += dot(directionalLight.direction, vecNormal)* directionalLight.color; \n" +
     "    #ifdef USE_SHADOWMAP \n" +
-    "    sumLights.rgb *= bool( directionalLight.shadow ) ? getShadow( directionalShadowMap[ i ], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[ i ] ) : 1.0; \n" +
+    "    float shadowFactor = bool( directionalLight.shadow ) ? getShadow( directionalShadowMap[ i ], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[ i ] ) : 1.0; \n" +
+    "    sumLights.rgb *= mix(1.0, shadowFactor, vAbsolutePosition.y/3.0); \n" +
     "    #endif \n" +
     "} \n" +
     "" +
+    "if(vAbsolutePosition.y<3.0){ \n" +
+    "colorFinal = mix(vec3(0.1,0.1,1.0), colorFinal, vAbsolutePosition.y/3.0); \n" +
+    "}" +
     "sumLights = vec4(ambientLightColor, 1.0) + sumLights; \n" +
     "" +
     "gl_FragColor = vec4(colorFinal , 1.0)*sumLights; \n" +
@@ -141,10 +146,10 @@ const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.textureA = {type: 't', value: loadTexture("pic/grass_0.jpg")};
-uniforms.textureB = {type: 't', value: loadTexture("pic/grass_1.jpg")};
-uniforms.textureC = {type: 't', value: loadTexture("pic/soil_0.jpg")};
-uniforms.textureD = {type: 't', value: loadTexture("pic/soil_1.jpg")};
+uniforms.textureA = {type: 't', value: loadTexture("pic/rock_1.jpg")};
+uniforms.textureB = {type: 't', value: loadTexture("pic/grass_0.jpg")};
+uniforms.textureC = {type: 't', value: loadTexture("pic/grass_1.jpg")};
+uniforms.textureD = {type: 't', value: loadTexture("pic/soil_0.jpg")};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,

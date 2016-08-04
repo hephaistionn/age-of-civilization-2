@@ -1,5 +1,7 @@
 const THREE = require('../../../services/threejs');
 
+const material = new THREE.MeshPhongMaterial({map: THREE.ImageUtils.loadTexture('pic/textureB.png')}); 
+
 module.exports = (Component, pathObj)=> {
 
     Component.ready = function() {
@@ -8,5 +10,5 @@ module.exports = (Component, pathObj)=> {
     THREE.loadObj(pathObj, function(object) {
         Component.referenceMesh = object.children[0];
         Component.ready();
-    }, new THREE.MeshPhongMaterial({color: 0x888888}));
+    },material);
 };
