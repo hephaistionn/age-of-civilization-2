@@ -25,7 +25,7 @@ class Map {
         this.initGround(model);
 
         ENTITIES['EntityTree'].ready = () => {
-            this.updateEntities(model, 'EntityTree');
+            this.updateStateEntities(model, 'EntityTree');
         };
         if(!this.entityGroups['EntityTree'].length)
             ENTITIES['EntityTree'].ready();
@@ -33,15 +33,13 @@ class Map {
     }
 
     updateState(model) {
-        this.updateEntities(model);
+        this.updateStateEntities(model);
     }
 
 
     update(dt) {
-        let l = this.entityDynamicList.length;
-        while(l--) {
-            this.entityDynamicList[l].update(dt);
-        }
+        this.updateDynamicEntities(dt);
+        this.updateWater(dt);
     }
 
     remove() {

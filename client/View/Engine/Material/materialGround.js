@@ -1,4 +1,4 @@
-const THREE = require('../../services/threejs');
+const THREE = require('./../../../services/threejs');
 
 const vertShader = "" +
     "attribute float grounds; \n" +
@@ -116,7 +116,7 @@ const fragShader = "" +
     "} \n" +
     "" +
     "if(vAbsolutePosition.y<3.0){ \n" +
-    "colorFinal = mix(vec3(0.1,0.1,1.0), colorFinal, vAbsolutePosition.y/3.0); \n" +
+    "   colorFinal = mix(vec3(0.33,0.7,0.99), colorFinal, vAbsolutePosition.y/3.0); \n" +
     "}" +
     "sumLights = vec4(ambientLightColor, 1.0) + sumLights; \n" +
     "" +

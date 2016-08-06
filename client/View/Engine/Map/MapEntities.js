@@ -1,9 +1,8 @@
 const ENTITIES = require('../Entity/list');
-const materialMap = require('./../materialMap');
 
 module.exports = Map=> {
 
-    Map.prototype.updateEntities = function updateEntities(model, id) {
+    Map.prototype.updateStateEntities = function updateStateEntities(model, id) {
 
         const entityId = model.lastEntityGroupUpdated||id;
 
@@ -50,5 +49,12 @@ module.exports = Map=> {
         }
 
     };
+
+    Map.prototype.updateDynamicEntities = function updateDynamicEntities(dt){
+        let l = this.entityDynamicList.length;
+        while(l--) {
+            this.entityDynamicList[l].update(dt);
+        }
+    }
 
 };

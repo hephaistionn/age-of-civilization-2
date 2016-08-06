@@ -1,5 +1,4 @@
 const THREE = require('../../services/threejs');
-const materialMap = require('./materialMap');
 
 module.exports = class Light {
 

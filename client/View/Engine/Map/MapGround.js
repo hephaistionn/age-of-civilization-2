@@ -1,14 +1,16 @@
 const THREE = require('../../../services/threejs');
-const materialMap = require('./../materialMap');
+const materialGround = require('./../Material/materialGround');
+const materialWater = require('./../Material/materialWater');
 
 module.exports = Map=> {
 
     Map.prototype.initGround = function initGround(model) {
-
-        this.materialMap = materialMap;
-        //this.materialMap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
-        //this.materialMap = new THREE.MeshPhongMaterial( { color: 0x555555 } );
-        this.materialMapWater = new THREE.MeshPhongMaterial({color: 0x2222ff, transparent: true, opacity: 0.66 });
+        this.materialGround = materialGround;
+        //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000/*, wireframe : true*/});
+        //this.materialGround = new THREE.MeshPhongMaterial( { color: 0x555555 } );
+        //this.materialWater = new THREE.MeshPhongMaterial({color: 0x3333ff, map : THREE.ImageUtils.loadTexture('pic/water_0.jpg'), transparent: true, shininess: 90, opacity: 0.66 });
+        this.materialWater = materialWater;
+        this.waterOscillation = 1;
 
         const nbPointX = model.nbPointX;
         const nbPointZ = model.nbPointZ;
@@ -56,6 +58,10 @@ module.exports = Map=> {
             }
         }
 
+        function findVextexUnderWater(vertex){
+            return vertex<3;
+        }
+
         this.chunks = [];
         this.chunksList = [];
         for(x = 0; x < length; x++) {
@@ -67,11 +73,10 @@ module.exports = Map=> {
                 let zSize = chunksTiles[z] * this.tileSize;
 
                 let chunkGeo = chunks[x][z];
-                let chunkMesh = new THREE.Mesh(chunkGeo, this.materialMap);
+                let chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
                 chunkMesh.rotation.x = -Math.PI / 2;
-
                 chunkMesh.position.set(offsetXTiles + xSize / 2, 0, offsetZTiles + zSize / 2);
-
+                chunkGeo.computeBoundingBox();
                 this.element.add(chunkMesh);
                 chunkMesh.updateMatrixWorld();
                 //chunkMesh.frustumCulled = false;
@@ -82,26 +87,48 @@ module.exports = Map=> {
 
                 this.chunks[x][z] = chunkMesh;
                 this.chunksList.push(chunkMesh);
+
+                if(chunkGeo.boundingBox.min.z <= 3){
+                    this.createWater(xSize, zSize, chunkMesh);
+                }
             }
         }
 
-        this.createWater(model);
+
 
     };
 
-    Map.prototype.createWater = function createWater(model) {
-        let w = this.tileSize * model.nbTileX;
-        let h = this.tileSize * model.nbTileZ;
-        const waterGeometry = new THREE.PlaneBufferGeometry(w, h, 2, 2);
-        let waterMesh = new THREE.Mesh(waterGeometry, this.materialMapWater);
-        waterMesh.rotation.x = -Math.PI / 2;
-        waterMesh.position.set(w / 2, 3, h / 2);
-        this.element.add(waterMesh);
+    Map.prototype.createWater = function createWater(xSize, zSize, chunkMesh) {
+        const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
+        let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
+        chunkMesh.add(waterMesh);
+        waterMesh.position.set(0, 0, 3);
+        waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();
         waterMesh.matrixAutoUpdate = false;
         waterMesh.matrixWorldNeedsUpdate = false;
         waterMesh.receiveShadow = true;
-    }
+    };
+
+    Map.prototype.updateWater = function updateWater(dt){
+        const uniformTime = this.materialWater.uniforms.time;
+        const uniformProgress = this.materialWater.uniforms.progress;
+        const uniformCameraPosition = this.materialWater.uniforms.cameraPosition;
+        uniformTime.value += dt/1000 * this.waterOscillation;
+        uniformProgress.value += dt/2400;
+        const camera = this.element.parent.camera;
+        if(camera){
+            uniformCameraPosition.value = camera.position;
+        }
+
+        if(uniformTime.value > 1){
+            this.waterOscillation = -1;
+            uniformTime.value = 1;
+        }else if(uniformTime.value < 0){
+            this.waterOscillation = 1;
+            uniformTime.value = 0;
+        }
+    };
 
     Map.prototype.createSurface = function createSurface(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;

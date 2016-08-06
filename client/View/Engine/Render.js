@@ -32,6 +32,7 @@ module.exports = class Scene {
         }
         if(component.constructor.name === 'Camera') {
             this.camera = component.element;
+            this.scene.camera = component.element;
         }
     }
 
