@@ -8,7 +8,7 @@ const Map = require('../Engine/Map');
 const Light = require('../Engine/Light');
 const Camera = require('../Engine/Camera');
 const Positioner = require('../Engine/Positioner');
-
+const RoadPositioner = require('../Engine/RoadPositioner');
 
 var PixelMap = require('../../services/PixelMap');
 
@@ -29,6 +29,8 @@ class ScreenB {
         const buttonRemove = new Button({text: 'Remove'});
         const buttonRotate = new Button({text: 'Rotate'});
 
+        const buttonRoad = new Button({text: 'Road'});
+
         this.panel = new Panel({width: 200, height: 250, x: 0, y: 0});
         this.panel.setChild(text);
         this.panel.setChild(buttonScreen);
@@ -36,6 +38,7 @@ class ScreenB {
         this.panel.setChild(buttonChurch);
         this.panel.setChild(buttonRemove);
         this.panel.setChild(buttonRotate);
+        this.panel.setChild(buttonRoad);
 
         buttonScreen.onClick(() => {
             ee.emit('screen', 'ScreenA');
@@ -53,6 +56,7 @@ class ScreenB {
 
         buttonRemove.onClick(() => {
             this.positioner.removeEnable();
+            this.roadPositioner.removeEnable();
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
@@ -61,14 +65,20 @@ class ScreenB {
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
+        buttonRoad.onClick(() => {
+            this.roadPositioner.selectEnity('EntityRoad');
+            ee.emit('onUpdate', 'positioner', this.positioner);
+        });
+
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
             this.map = new Map(dataMap);
             this.positioner = new Positioner(dataMap);
+            this.roadPositioner = new RoadPositioner(dataMap);
             ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
-
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         });
 
     }
@@ -87,10 +97,22 @@ class ScreenB {
         if(this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
+        }else if(this.roadPositioner.selected){
+            this.roadPositioner.placeSelectedEntity(x, z, this.map);
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
+        }
+
+    }
+
+    mouseMoveOnMapPress(x, z) {
+        if(this.roadPositioner.selected) {
+            this.roadPositioner.rolloutSelectedEntity(x, z, this.map);
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
     }
 
     mouseMovePress(x, z) {
+        if(this.roadPositioner.selected) return;
         this.camera.mouseMovePress(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
@@ -108,8 +130,15 @@ class ScreenB {
     }
 
     mouseDown(x, z) {
+        if(this.roadPositioner.selected) return;
         this.camera.mouseDown(x, z);
         ee.emit('onUpdate', 'camera', this.camera);
+    }
+
+    mouseDownOnMap(x, z) {
+        if(this.roadPositioner.selected){
+            this.roadPositioner.mouseDown(x, z);
+        }
     }
 
     mouseClick(x, z) {

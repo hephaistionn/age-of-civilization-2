@@ -7,6 +7,7 @@ const COMPONENTS = {
     Camera: require('./../Engine/Camera'),
     Render: require('./../Engine/Render'),
     Positioner: require('./../Engine/Positioner'),
+    RoadPositioner: require('./../Engine/RoadPositioner'),
     Panel: require('../UI/Panel'),
     Text: require('../UI/Text'),
     Button: require('../UI/Button'),
@@ -119,9 +120,10 @@ module.exports = class Screen {
     _mouseMove(e) {
         if(this.mousePress) {
             ee.emit('mouseMovePress', e.offsetX, e.offsetY);
+            this._mouseMoveOnMapPress(e.offsetX, e.offsetY);
         } else {
             ee.emit('mouseMove', e.offsetX, e.offsetY);
-            this._mouseOnMap(e.offsetX, e.offsetY);
+            this._mouseMoveOnMap(e.offsetX, e.offsetY);
         }
     }
 
@@ -134,7 +136,7 @@ module.exports = class Screen {
         ee.emit('mouseWheel', -delta);
     }
 
-    _mouseOnMap(screenX, screenY) {
+    _mouseMoveOnMap(screenX, screenY) {
         if(!this.camera || !this.map)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
@@ -144,6 +146,19 @@ module.exports = class Screen {
             const point = intersects[0].point;
             const tileSize = this.map.tileSize;
             ee.emit('mouseMoveOnMap', point.x / tileSize, point.z / tileSize);
+        }
+    }
+
+    _mouseMoveOnMapPress(screenX, screenY) {
+        if(!this.camera || !this.map)return;
+        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
+        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        const intersects = this.raycaster.intersectObjects(this.map.chunksList, false);
+        if(intersects.length) {
+            const point = intersects[0].point;
+            const tileSize = this.map.tileSize;
+            ee.emit('mouseMoveOnMapPress', point.x / tileSize, point.z / tileSize);
         }
     }
 
@@ -158,6 +173,10 @@ module.exports = class Screen {
             const mesh = intersects[0].object;
             if(mesh.model) {
                 ee.emit('mouseTouchEntity', mesh.model);
+            }else{
+                const point = intersects[0].point;
+                const tileSize = this.map.tileSize;
+                ee.emit('mouseDownOnMap', point.x / tileSize, point.z / tileSize);
             }
         }
 

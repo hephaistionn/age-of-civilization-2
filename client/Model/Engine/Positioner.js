@@ -39,12 +39,6 @@ module.exports = class Positioner {
         return this.tilesHeight[index] / 255;
     }
 
-    getSelectedEntity() {
-        if(this.selected && !this.undroppable) {
-            return this.selected;
-        }
-    }
-
     selectEnity(id) {
         if(!this.selected || this.selected.constructor.name !== id) {
             this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: this.rotation});

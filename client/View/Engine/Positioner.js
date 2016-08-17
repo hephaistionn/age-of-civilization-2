@@ -1,5 +1,7 @@
 const THREE = require('../../services/threejs');
 const ENTITIES = require('./Entity/list');
+const config = require('./config');
+
 
 module.exports = class Positioner {
 
@@ -9,8 +11,8 @@ module.exports = class Positioner {
         this.element.frustumCulled = false;
         this.selected = null;
         this.material = new THREE.MeshPhongMaterial({color: 0x0000ff});
-        this.tileSize = 4;
-        this.tileMaxHeight = 10;
+        this.tileSize = config.tileSize;
+        this.tileMaxHeight = config.tileMaxHeight;
     }
 
     updateState(model) {
