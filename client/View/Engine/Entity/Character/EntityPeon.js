@@ -13,7 +13,7 @@ class EntityPeon {
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
         this.progress = 0;
-        this.shape = new Shape(model.path||[], tileSize, tileMaxHeight);
+        this.shape = new Shape(model.path || [], tileSize, tileMaxHeight);
         this.speed = model.speed * tileSize;
         this.updateState();
     }
@@ -25,8 +25,8 @@ class EntityPeon {
         let point = this.shape.getPointAndTangent(this.progress);
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = point[0];
-        matrixWorld[13] = point[2];
-        matrixWorld[14] = point[1];
+        matrixWorld[13] = point[1];
+        matrixWorld[14] = point[2];
         const a = Math.atan2(point[3], point[4]);
         matrixWorld[0] = Math.cos(a);
         matrixWorld[2] = Math.sin(a);

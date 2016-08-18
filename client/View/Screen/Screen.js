@@ -115,6 +115,7 @@ module.exports = class Screen {
         if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 250) {
             ee.emit('mouseClick', e.offsetX, e.offsetY);
         }
+        ee.emit('mouseUp', e.offsetX, e.offsetY);
     }
 
     _mouseMove(e) {
@@ -173,7 +174,7 @@ module.exports = class Screen {
             const mesh = intersects[0].object;
             if(mesh.model) {
                 ee.emit('mouseTouchEntity', mesh.model);
-            }else{
+            } else {
                 const point = intersects[0].point;
                 const tileSize = this.map.tileSize;
                 ee.emit('mouseDownOnMap', point.x / tileSize, point.z / tileSize);

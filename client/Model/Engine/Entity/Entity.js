@@ -83,7 +83,7 @@ module.exports = class Entity {
         for(let i = 0; i < length; i++) {
             let entity = nearests[i];
             let targetTiles = entity.getTiles();
-            let pathTarget = finder.findPathBetweenArea(sourceTiles, targetTiles, grid.clone());
+            let pathTarget = finder.findPathBetweenArea(sourceTiles, targetTiles, grid);
             paths.push(pathTarget);
         }
         let path = paths[0];
@@ -94,23 +94,23 @@ module.exports = class Entity {
         }
         //compute height
         if(path) {
-        length = path.length;
-        for(let k = 0; k < length; k++) {
-            x = path[k][0];
-            z = path[k][1];
-            path[k][2] = map.tilesHeight[map.nbTileX*z+x]/255;
-        }
-        return path;
-        //return pf.Util.compressPath(path);
+            length = path.length;
+            for(let k = 0; k < length; k += 3) {
+                x = path[k];
+                z = path[k + 1];
+                path[k + 2] = map.tilesHeight[map.nbTileX * z + x];
+            }
+            return path;
+            //return pf.Util.compressPath(path);
         }
     }
 
     getPathLength() {
         let distance = 0;
         const l = this.path.length;
-        for(let i = 0; i < l - 1; i++) {
-            let dX1 = this.path[i + 1][0] - this.path[i][0];
-            let dZ1 = this.path[i + 1][1] - this.path[i][1];
+        for(let i = 0; i < l - 3; i += 3) {
+            let dX1 = this.path[i + 3] - this.path[i];
+            let dZ1 = this.path[i + 4] - this.path[i + 1];
             distance += Math.sqrt(dX1 * dX1 + dZ1 * dZ1);
         }
         return distance;

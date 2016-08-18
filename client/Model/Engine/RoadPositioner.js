@@ -1,4 +1,3 @@
-
 module.exports = class RoadPositioner {
 
     constructor(config) {
@@ -12,6 +11,10 @@ module.exports = class RoadPositioner {
         this.undroppable = false;
         this.x = 0;
         this.z = 0;
+        this.road = {
+            type: 0,
+            tiles: []
+        };
     }
 
     placeSelectedEntity(x, z, map) {

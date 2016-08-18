@@ -16,7 +16,7 @@ class Map {
         this.tilesTilt = config.tilesTilt;
         this.tilesType = config.tilesType;
         this.lastEntityGroupUpdated = null;
-        this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ);
+        this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.entityGroups = {};
         this.entityDynamicList = [];
 
@@ -35,7 +35,7 @@ class Map {
         this.entityGroups[entityId].push(entity);
         this.lastEntityGroupUpdated = entityId;
         if(!entity.constructor.walkable) {
-            this.setWalkableTile(entity, false);
+            this.setWalkableTile(entity, 0);
         }
         if(entity.update) {
             this.entityDynamicList.push(entity);
@@ -48,7 +48,7 @@ class Map {
         this.entityGroups[entityId].splice(index, 1);
         this.lastEntityGroupUpdated = entityId;
         if(!entity.constructor.walkable) {
-            this.setWalkableTile(entity, true);
+            this.setWalkableTile(entity, 1);
         }
         if(entity.update) {
             index = this.entityDynamicList.indexOf(entity);
@@ -108,9 +108,15 @@ class Map {
             let z = Math.floor(i / this.nbTileX);
             let tilt = this.tilesTilt[i];
             if(tilt > this.tiltMax) {
-                this.grid.setWalkableAt(x, z, false);
+                this.grid.setWalkableAt(x, z, 0);
             }
         }
+    }
+
+    newRoad(road) {
+        //const type = road.type;
+        //const path = road.path;
+        //update grid with type for each tile
     }
 
     update(dt) {

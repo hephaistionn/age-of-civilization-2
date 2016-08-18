@@ -97,7 +97,7 @@ class ScreenB {
         if(this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
-        }else if(this.roadPositioner.selected){
+        } else if(this.roadPositioner.selected) {
             this.roadPositioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
@@ -136,7 +136,7 @@ class ScreenB {
     }
 
     mouseDownOnMap(x, z) {
-        if(this.roadPositioner.selected){
+        if(this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
         }
     }
@@ -146,6 +146,14 @@ class ScreenB {
             const entity = this.positioner.selected;
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             this.map.newEntity(params);
+            ee.emit('onUpdate', 'map', this.map);
+        }
+    }
+
+    mouseUp() {
+        if(this.roadPositioner.selected) {
+            const road = this.roadPositioner.road;
+            this.map.newRoad(road);
             ee.emit('onUpdate', 'map', this.map);
         }
     }
