@@ -66,7 +66,7 @@ class ScreenB {
         });
 
         buttonRoad.onClick(() => {
-            this.roadPositioner.selectEnity('EntityRoad');
+            this.roadPositioner.selectEnity(2);//2 => roadType
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
@@ -138,6 +138,7 @@ class ScreenB {
     mouseDownOnMap(x, z) {
         if(this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
+            ee.emit('onUpdate', 'map', this.map);
         }
     }
 
@@ -152,8 +153,8 @@ class ScreenB {
 
     mouseUp() {
         if(this.roadPositioner.selected) {
-            const road = this.roadPositioner.road;
-            this.map.newRoad(road);
+            const params = this.roadPositioner.road;
+            this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);
         }
     }

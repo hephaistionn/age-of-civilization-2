@@ -16,6 +16,7 @@ class Map {
         this.tilesTilt = config.tilesTilt;
         this.tilesType = config.tilesType;
         this.lastEntityGroupUpdated = null;
+        this.lastEntityUpdated = null;
         this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.entityGroups = {};
         this.entityDynamicList = [];
@@ -26,6 +27,7 @@ class Map {
 
         this.initEntitiesResource(config.tilesResource, 'EntityTree');
         this.initGridByHeight(this.tilesTilt);
+        this.initRoad();
     }
 
     newEntity(params) {
@@ -56,6 +58,13 @@ class Map {
         }
     }
 
+    updateEntity(entityId, model, params) {
+        const entityGroup = this.entityGroups[entityId];
+        this.lastEntityGroupUpdated = entityId;
+        this.lastEntityUpdated = model ? entityGroup.indexOf(model) : 0;
+        entityGroup.updateState(params);
+    }
+
     initEntitiesResource(resources, id) {
         let length = resources.length;
         const params = {x: 0, y: 0, z: 0, a: 0, entityId: id};
@@ -68,6 +77,14 @@ class Map {
             params.a = Math.random() * Math.PI;
             this.newEntity(params);
         }
+    }
+
+    initRoad() {
+        const params = {
+            map: this,
+            entityId: 'EntityRoad'
+        };
+        this.newEntity(params);
     }
 
     setWalkableTile(entity, walkable) {
@@ -111,12 +128,6 @@ class Map {
                 this.grid.setWalkableAt(x, z, 0);
             }
         }
-    }
-
-    newRoad(road) {
-        //const type = road.type;
-        //const path = road.path;
-        //update grid with type for each tile
     }
 
     update(dt) {
