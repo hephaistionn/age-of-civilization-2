@@ -57,7 +57,7 @@ module.exports = class RoadPositioner {
                 tiles[i * 2] = this.startX;
                 tiles[i * 2 + 1] = this.startZ + i * signZ;
             }
-            for(let i = 1; i < nbX + 1; i++) {
+            for(let i = 0; i < nbX + 1; i++) {
                 tiles[nbZ * 2 + i * 2] = this.startX + i * signX;
                 tiles[nbZ * 2 + i * 2 + 1] = this.startZ + dz;
             }

@@ -1,13 +1,11 @@
 class EntityRoad {
 
     constructor(params) {
-        console.log('constructor roadModel');
         this.map = params.map;
         this.grid = this.map.grid;
     }
 
     updateState(params) {
-        console.log('updateState roadModel');
         const type = params.type;
         const tiles = params.tiles;
         const l = tiles.length;
