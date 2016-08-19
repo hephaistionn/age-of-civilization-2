@@ -6,6 +6,7 @@ class EntityRoad {
     }
 
     updateState(params) {
+        if(!params) return;
         const type = params.type;
         const tiles = params.tiles;
         const l = tiles.length;

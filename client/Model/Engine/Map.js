@@ -15,7 +15,7 @@ class Map {
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
         this.tilesType = config.tilesType;
-        this.lastEntityGroupUpdated = null;
+        this.lastEntityGroupUpdated = [];
         this.lastEntityUpdated = null;
         this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.entityGroups = {};
@@ -35,7 +35,8 @@ class Map {
         const entityId = params.entityId;
         const entity = new ENTITIES[entityId](params);
         this.entityGroups[entityId].push(entity);
-        this.lastEntityGroupUpdated = entityId;
+        if(this.lastEntityGroupUpdated.indexOf(entityId)===-1)
+            this.lastEntityGroupUpdated.push(entityId);
         if(!entity.constructor.walkable) {
             this.setWalkableTile(entity, 0);
         }
@@ -48,7 +49,8 @@ class Map {
         const entityId = entity.constructor.name;
         let index = this.entityGroups[entityId].indexOf(entity);
         this.entityGroups[entityId].splice(index, 1);
-        this.lastEntityGroupUpdated = entityId;
+        if(this.lastEntityGroupUpdated.indexOf(entityId)===-1)
+            this.lastEntityGroupUpdated.push(entityId);
         if(!entity.constructor.walkable) {
             this.setWalkableTile(entity, 1);
         }
@@ -60,7 +62,7 @@ class Map {
 
     updateEntity(entityId, model, params) {
         const entityGroup = this.entityGroups[entityId];
-        this.lastEntityGroupUpdated = entityId;
+        this.lastEntityGroupUpdated.push(entityId);
         this.lastEntityUpdated = model ? entityGroup.indexOf(model) : 0;
         entityGroup[this.lastEntityUpdated].updateState(params);
     }
@@ -124,7 +126,10 @@ class Map {
             let x = i % this.nbTileX;
             let z = Math.floor(i / this.nbTileX);
             let tilt = this.tilesTilt[i];
+            let height = this.tilesHeight[i];
             if(tilt > this.tiltMax) {
+                this.grid.setWalkableAt(x, z, 0);
+            }else if(height < 45){
                 this.grid.setWalkableAt(x, z, 0);
             }
         }

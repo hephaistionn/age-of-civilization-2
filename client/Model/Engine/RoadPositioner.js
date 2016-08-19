@@ -20,16 +20,18 @@ module.exports = class RoadPositioner {
         const tiles = new Uint16Array(2);
         tiles[0] = x;
         tiles[1] = z;
-        this.road = {
-            type: this.selected,
-            tiles: tiles
-        };
 
         this.undroppable = false;
 
         if(!map.grid.isWalkableAt(tiles[0], tiles[1])) {
             this.undroppable = true;
+            return;
         }
+
+        this.road = {
+            type: this.selected,
+            tiles: tiles
+        };
 
     }
 
@@ -63,11 +65,6 @@ module.exports = class RoadPositioner {
             }
         }
 
-        this.road = {
-            type: 2,
-            tiles: tiles
-        };
-
         this.undroppable = false;
 
         for(let i = 0; i < tiles.length; i += 2) {
@@ -76,6 +73,13 @@ module.exports = class RoadPositioner {
                 return;
             }
         }
+
+
+        this.road = {
+            type: 2,
+            tiles: tiles
+        };
+
 
     }
 

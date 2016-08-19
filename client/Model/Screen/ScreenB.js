@@ -138,8 +138,7 @@ class ScreenB {
     mouseDownOnMap(x, z) {
         if(this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
-            ee.emit('onUpdate', 'map', this.map);
-        }
+         }
     }
 
     mouseClick(x, z) {
@@ -147,6 +146,8 @@ class ScreenB {
             const entity = this.positioner.selected;
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             this.map.newEntity(params);
+            ee.emit('onUpdate', 'map', this.map);
+            this.map.updateEntity('EntityRoad', null); //remove road under entity
             ee.emit('onUpdate', 'map', this.map);
         }
     }

@@ -4,7 +4,7 @@ module.exports = Map=> {
 
     Map.prototype.updateStateEntities = function updateStateEntities(model, id) {
 
-        const entityId = model.lastEntityGroupUpdated||id;
+        const entityId = id || model.lastEntityGroupUpdated.pop();
         const entityIndex = model.lastEntityUpdated;
 
         const groupView = this.entityGroups[entityId];
@@ -63,7 +63,7 @@ module.exports = Map=> {
     Map.prototype.updateDynamicEntities = function updateDynamicEntities(dt){
         const l = this.entityDynamicList.length;
         for(let i = 0; i < l ; i++) {
-            this.entityDynamicList[l].update(dt);
+            this.entityDynamicList[i].update(dt);
         }
     }
 
