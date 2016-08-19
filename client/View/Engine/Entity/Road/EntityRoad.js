@@ -16,7 +16,6 @@ class EntityRoad {
     }
 
     updateState() {
-        debugger;
         //creation des attribute en fonction de la grid de la map
         console.log('updateState RoadView');
         this.model.map.grid;

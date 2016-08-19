@@ -153,9 +153,11 @@ class ScreenB {
 
     mouseUp() {
         if(this.roadPositioner.selected) {
-            const params = this.roadPositioner.road;
-            this.map.updateEntity('EntityRoad', null, params);
-            ee.emit('onUpdate', 'map', this.map);
+            const params = this.roadPositioner.getNewRoad();
+            if(params){
+                this.map.updateEntity('EntityRoad', null, params);
+                ee.emit('onUpdate', 'map', this.map);
+            }
         }
     }
 

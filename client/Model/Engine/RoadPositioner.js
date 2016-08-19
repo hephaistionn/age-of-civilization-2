@@ -9,10 +9,7 @@ module.exports = class RoadPositioner {
         this.nbTileZ = config.nbTileZ;
         this.removeMode = false;
         this.undroppable = false;
-        this.road = {
-            type: 0,
-            tiles: []
-        };
+        this.road = null;
         this.startX = 0;
         this.startZ = 0;
     }
@@ -85,6 +82,14 @@ module.exports = class RoadPositioner {
     mouseDown(x, z) {
         this.startX = Math.floor(x);
         this.startZ = Math.floor(z);
+    }
+
+    getNewRoad(){
+        if(this.road){
+            const road = this.road;
+            this.road  = null;
+            return road;
+        }
     }
 
     selectEnity(id) {

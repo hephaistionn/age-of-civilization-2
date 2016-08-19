@@ -62,7 +62,7 @@ class Map {
         const entityGroup = this.entityGroups[entityId];
         this.lastEntityGroupUpdated = entityId;
         this.lastEntityUpdated = model ? entityGroup.indexOf(model) : 0;
-        entityGroup.updateState(params);
+        entityGroup[this.lastEntityUpdated].updateState(params);
     }
 
     initEntitiesResource(resources, id) {
