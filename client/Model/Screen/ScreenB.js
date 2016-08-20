@@ -93,7 +93,7 @@ class ScreenB {
     }
 
     mouseMoveOnMap(x, z) {
-        if(this.positioner.selected) {
+        if(this.positioner && this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
         }
@@ -101,7 +101,7 @@ class ScreenB {
     }
 
     mouseMoveOnMapPress(x, z) {
-        if(this.roadPositioner.selected) {
+        if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.rolloutSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
@@ -116,13 +116,13 @@ class ScreenB {
     }
 
     mouseDown(x, z) {
-        if(this.roadPositioner.selected) return;
+        if(this.roadPositioner && this.roadPositioner.selected) return;
         this.camera.mouseDown(x, z);
         ee.emit('onUpdate', 'camera', this.camera);
     }
 
     mouseDownOnMap(x, z) {
-        if(this.roadPositioner.selected) {
+        if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
         }
     }
