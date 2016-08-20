@@ -35,32 +35,37 @@ module.exports = class RoadPositioner {
     }
 
     rolloutSelectedEntity(x, z, map) {
-        let dx = Math.floor(x) - this.startX;
-        let dz = Math.floor(z) - this.startZ;
-        let nbX = Math.abs(dx);
-        let nbZ = Math.abs(dz);
+        const tile1x = this.startX;
+        const tile1z = this.startZ;
+        const tile2x = Math.floor(x);
+        const tile2z = Math.floor(z);
+        const dx = tile2x - tile1x;
+        const dz = tile2z - tile1z;
+        const nbX = Math.abs(dx)+1; //tile count
+        const nbZ = Math.abs(dz)+1; //tile count
+        if(dx===0 && dz===0) return;
+        const signX = dx / Math.abs(dx);
+        const signZ = dz / Math.abs(dz);
+        const tiles = new Uint16Array((nbX + nbZ -1) * 2);
 
-        let signX = dx / nbX;
-        let signZ = dz / nbZ;
-        const tiles = new Uint16Array((nbX + nbZ) * 2 + 2);
-
-        if(nbX > nbZ) {
+        let ctn = 0;
+        if(nbX >= nbZ) {
             for(let i = 0; i < nbX; i++) {
-                tiles[i * 2] = this.startX + i * signX;
-                tiles[i * 2 + 1] = this.startZ;
+                tiles[ctn++] = this.startX + i * signX;
+                tiles[ctn++] = this.startZ;
             }
-            for(let i = 0; i < nbZ + 1; i++) {
-                tiles[nbX * 2 + i * 2] = this.startX + dx;
-                tiles[nbX * 2 + i * 2 + 1] = this.startZ + i * signZ;
+            for(let i = 1; i < nbZ; i++) {
+                tiles[ctn++] = this.startX + (nbX-1) * signX;
+                tiles[ctn++] = this.startZ + i * signZ;
             }
         } else {
             for(let i = 0; i < nbZ; i++) {
-                tiles[i * 2] = this.startX;
-                tiles[i * 2 + 1] = this.startZ + i * signZ;
+                tiles[ctn++] = this.startX;
+                tiles[ctn++] = this.startZ + i * signZ;
             }
             for(let i = 0; i < nbX + 1; i++) {
-                tiles[nbZ * 2 + i * 2] = this.startX + i * signX;
-                tiles[nbZ * 2 + i * 2 + 1] = this.startZ + dz;
+                tiles[ctn++] = this.startX + i * signX;
+                tiles[ctn++] = this.startZ + (nbZ-1) * signZ;
             }
         }
 
@@ -73,6 +78,7 @@ module.exports = class RoadPositioner {
             }
         }
 
+        console.log(tiles)
 
         this.road = {
             type: 2,
