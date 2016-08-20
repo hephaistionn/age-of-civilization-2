@@ -78,14 +78,10 @@ module.exports = class RoadPositioner {
             }
         }
 
-        console.log(tiles)
-
         this.road = {
             type: 2,
             tiles: tiles
         };
-
-
     }
 
     mouseDown(x, z) {

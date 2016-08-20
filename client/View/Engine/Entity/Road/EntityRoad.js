@@ -133,7 +133,7 @@ class EntityRoad {
                 uvIndex = a*128+b*64+c*32+d*16+e*8+f*4+g*2+h;
                 uvref = UVpath[uvIndex];
 
-                ctn = roadGeoetry.drawRange.count;
+                ctn = roadGeoetry.drawRange.count*3;
                 ctnUV = ctn*2/3;
 
                 vx = x;
@@ -203,8 +203,7 @@ class EntityRoad {
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6]/4;
                 uvs[ctnUV++] = uvref[7]/4;
-
-                roadGeoetry.drawRange.count = ctn;
+                roadGeoetry.drawRange.count = ctn/3;
                 roadGeoetry.attributes.position.needsUpdate = true;
                 roadGeoetry.attributes.uv.needsUpdate = true;
                 roadGeoetry.attributes.normal.needsUpdate = true;
