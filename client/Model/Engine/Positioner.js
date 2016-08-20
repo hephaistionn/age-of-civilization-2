@@ -10,7 +10,6 @@ module.exports = class Positioner {
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
         this.rotation = 0;
-        this.removeMode = false;
         this.undroppable = false;
         this.x = 0;
         this.z = 0;
@@ -46,7 +45,6 @@ module.exports = class Positioner {
             this.selected = null;
         }
         this.rotation = 0;
-        this.removeMode = false;
     }
 
     increaseRotation() {
@@ -54,11 +52,6 @@ module.exports = class Positioner {
         if(this.rotation >= Math.PI * 2) {
             this.rotation = 0;
         }
-    }
-
-    removeEnable() {
-        this.removeMode = !this.removeMode;
-        this.selected = null;
     }
 
     dismount() {

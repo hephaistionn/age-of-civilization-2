@@ -5,7 +5,7 @@ module.exports = Map=> {
     Map.prototype.updateStateEntities = function updateStateEntities(model, id) {
 
         const entityId = id || model.lastEntityGroupUpdated.pop();
-        const entityIndex = model.lastEntityUpdated;
+
 
         const groupView = this.entityGroups[entityId];
         const groupModel = model.entityGroups[entityId];
@@ -54,7 +54,7 @@ module.exports = Map=> {
         }
 
         if(model.lastEntityUpdated !== null){
-            groupView[entityIndex].updateState();
+            groupView[model.lastEntityUpdated].updateState();
             model.lastEntityUpdated = null;
         }
 

@@ -11,6 +11,7 @@ const Positioner = require('../Engine/Positioner');
 const RoadPositioner = require('../Engine/RoadPositioner');
 
 var PixelMap = require('../../services/PixelMap');
+let removeMode = false;
 
 class ScreenB {
 
@@ -55,9 +56,7 @@ class ScreenB {
         });
 
         buttonRemove.onClick(() => {
-            this.positioner.removeEnable();
-            this.roadPositioner.removeEnable();
-            ee.emit('onUpdate', 'positioner', this.positioner);
+            removeMode = !removeMode;
         });
 
         buttonRotate.onClick(() => {
@@ -97,9 +96,6 @@ class ScreenB {
         if(this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
-        } else if(this.roadPositioner.selected) {
-            this.roadPositioner.placeSelectedEntity(x, z, this.map);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
 
     }
@@ -119,16 +115,6 @@ class ScreenB {
         ee.emit('onUpdate', 'light', this.light);
     }
 
-    mouseTouchEntity(model) {
-        if(this.positioner.removeMode) {
-            this.map.removeEntity(model);
-            ee.emit('onUpdate', 'map', this.map);
-        } else {
-            //select entity
-        }
-
-    }
-
     mouseDown(x, z) {
         if(this.roadPositioner.selected) return;
         this.camera.mouseDown(x, z);
@@ -138,27 +124,35 @@ class ScreenB {
     mouseDownOnMap(x, z) {
         if(this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
-         }
+        }
     }
 
-    mouseClick(x, z) {
-        if(this.positioner.selected && !this.positioner.undroppable) {
+    mouseClick(x, z, model) {
+        if(removeMode){
+            this.map.clearTile(x,z, model);
+            ee.emit('onUpdate', 'map', this.map);
+        }else if(this.positioner.selected && !this.positioner.undroppable) {
             const entity = this.positioner.selected;
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             this.map.newEntity(params);
             ee.emit('onUpdate', 'map', this.map);
             this.map.updateEntity('EntityRoad', null); //remove road under entity
             ee.emit('onUpdate', 'map', this.map);
-        }
-    }
-
-    mouseUp() {
-        if(this.roadPositioner.selected) {
+        }else if(this.roadPositioner.selected) {
+            this.roadPositioner.placeSelectedEntity(x,z,this.map);
             const params = this.roadPositioner.getNewRoad();
             if(params){
                 this.map.updateEntity('EntityRoad', null, params);
                 ee.emit('onUpdate', 'map', this.map);
             }
+        }
+    }
+
+    mouseUp() {
+        const params = this.roadPositioner.getNewRoad();
+        if(params){
+            this.map.updateEntity('EntityRoad', null, params);
+            ee.emit('onUpdate', 'map', this.map);
         }
     }
 

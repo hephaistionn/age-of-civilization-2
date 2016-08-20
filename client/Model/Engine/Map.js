@@ -96,6 +96,17 @@ class Map {
         }
     }
 
+    clearTile(x, z, model) {
+        if(model){
+            this.removeEntity(model)
+        }else{
+            this.grid.setWalkableAt(Math.floor(x), Math.floor(z), 1);
+            if(this.lastEntityGroupUpdated.indexOf('EntityRoad')===-1)
+                this.lastEntityGroupUpdated.push('EntityRoad');//force redraw of roadview
+            this.lastEntityUpdated = 0;
+        }
+    }
+
     getTile(tiles, x, z) {
         const index = z * this.nbTileX + x;
         return tiles[index];

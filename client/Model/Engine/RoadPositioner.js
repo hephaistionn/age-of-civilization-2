@@ -7,7 +7,6 @@ module.exports = class RoadPositioner {
         this.nbPointX = config.nbPointX;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.removeMode = false;
         this.undroppable = false;
         this.road = null;
         this.startX = 0;
@@ -105,11 +104,6 @@ module.exports = class RoadPositioner {
         this.removeMode = false;
     }
 
-
-    removeEnable() {
-        this.removeMode = !this.removeMode;
-        this.selected = null;
-    }
 
     dismount() {
         this.selected = null;

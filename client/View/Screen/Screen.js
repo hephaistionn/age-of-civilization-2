@@ -112,10 +112,12 @@ module.exports = class Screen {
     _mouseUp(e) {
         this.mousePress = false;
         //filter: detect if the user is moving the camera.
-        if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 250) {
-            ee.emit('mouseClick', e.offsetX, e.offsetY);
+        if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 50) {
+            const point = this.getPointOnMap( e.offsetX, e.offsetY);
+            ee.emit('mouseClick', point.x, point.z, point.model);
+        }else{
+            ee.emit('mouseUp', e.offsetX, e.offsetY);
         }
-        ee.emit('mouseUp', e.offsetX, e.offsetY);
     }
 
     _mouseMove(e) {
@@ -138,50 +140,45 @@ module.exports = class Screen {
     }
 
     _mouseMoveOnMap(screenX, screenY) {
-        if(!this.camera || !this.map)return;
-        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
-        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, this.camera.element);
-        const intersects = this.raycaster.intersectObjects(this.map.chunksList, false);
-        if(intersects.length) {
-            const point = intersects[0].point;
-            const tileSize = this.map.tileSize;
-            ee.emit('mouseMoveOnMap', point.x / tileSize, point.z / tileSize);
-        }
+        const point = this.getPointOnMap( screenX, screenY);
+        ee.emit('mouseMoveOnMap', point.x, point.z);
     }
 
     _mouseMoveOnMapPress(screenX, screenY) {
-        if(!this.camera || !this.map)return;
-        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
-        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, this.camera.element);
-        const intersects = this.raycaster.intersectObjects(this.map.chunksList, false);
-        if(intersects.length) {
-            const point = intersects[0].point;
-            const tileSize = this.map.tileSize;
-            ee.emit('mouseMoveOnMapPress', point.x / tileSize, point.z / tileSize);
-        }
+        const point = this.getPointOnMap( screenX, screenY);
+        ee.emit('mouseMoveOnMapPress', point.x, point.z);
     }
 
     _mouseCheckCollision(screenX, screenY) {
-        if(!this.map || !this.camera)return;
+        const point = this.getPointOnMap( screenX, screenY);
+        ee.emit('mouseDownOnMap', point.x, point.z);
+    }
+
+    getPointOnMap(screenX, screenY){
+        if(!this.map || !this.camera)return {x:0,z:0};
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this.camera.element);
         const intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
-
         if(intersects.length) {
+            const point = intersects[0].point;
+            const tileSize = this.map.tileSize;
+            point.x /= tileSize;
+            point.z /= tileSize;
             const mesh = intersects[0].object;
             if(mesh.model) {
-                ee.emit('mouseTouchEntity', mesh.model);
-            } else {
-                const point = intersects[0].point;
-                const tileSize = this.map.tileSize;
-                ee.emit('mouseDownOnMap', point.x / tileSize, point.z / tileSize);
+                return {
+                    model:mesh.model,
+                    x:point.x,
+                    z:point.z
+                }
+            }else{
+                return point;
             }
+
+        }else{
+            return {x:0,z:0};
         }
-
-
     }
 
 };
