@@ -84,7 +84,8 @@ module.exports = class Entity {
             let entity = nearests[i];
             let targetTiles = entity.getTiles();
             let pathTarget = finder.findPathBetweenArea(sourceTiles, targetTiles, grid);
-            paths.push(pathTarget);
+            if(pathTarget.length > 0)
+                paths.push(pathTarget);
         }
         let path = paths[0];
         for(let k = 1; k < paths.length; k++) {
