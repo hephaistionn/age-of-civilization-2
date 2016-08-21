@@ -1,4 +1,5 @@
 const THREE = require('../../../../services/threejs');
+const materialRoad = require('../../Material/materialRoad');
 const UVpath = require('../../../../services/UVpath');
 const config = require('../../config');
 const tileSize = config.tileSize;
@@ -17,13 +18,13 @@ class EntityRoad {
         this.nbPointX = this.model.map.nbPointX;
         this.nbPointZ = this.model.map.nbPointZ;
         this.pointsHeights = this.model.map.pointsHeights;
-        const MAX_TILES = 50;
-        this.VERTEX_BY_TILE = 18;
+        const MAX_TILES = 75;
+        this.VERTEX_BY_TILE = 6;
         this.MAX_VERTEX =  this.VERTEX_BY_TILE * MAX_TILES;
 
-        this.materialRoad = new THREE.MeshPhongMaterial( { map : THREE.ImageUtils.loadTexture('pic/path_opacity.png')} );
-        this.materialRoad.map.flipY = false;
-        //this.materialRoad = new THREE.MeshPhongMaterial( { color: 0x550000 } );
+        //this.materialRoad = new THREE.MeshPhongMaterial( { map : THREE.ImageUtils.loadTexture('pic/path_opacity.png')} );
+        //this.materialRoad.map.flipY = false;
+        this.materialRoad = materialRoad;
 
         this.element = new THREE.Object3D();
         this.element.frustumCulled = false;
@@ -144,8 +145,8 @@ class EntityRoad {
                 positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
                 normals[ctn] = 0;
                 positions[ctn++] = vz * tileSize;
-                uvs[ctnUV++] = uvref[6]/4;
-                uvs[ctnUV++] = uvref[7]/4;
+                uvs[ctnUV++] = uvref[6];
+                uvs[ctnUV++] = uvref[7];
 
 
 
@@ -157,8 +158,8 @@ class EntityRoad {
                 positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
                 normals[ctn] = 0;
                 positions[ctn++] = vz * tileSize;
-                uvs[ctnUV++] = uvref[2]/4;
-                uvs[ctnUV++] = uvref[3]/4;
+                uvs[ctnUV++] = uvref[2];
+                uvs[ctnUV++] = uvref[3];
 
                 vx = x;
                 vz = z;
@@ -168,8 +169,8 @@ class EntityRoad {
                 positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
                 normals[ctn] = 0;
                 positions[ctn++] = vz * tileSize;
-                uvs[ctnUV++] = uvref[0]/4;
-                uvs[ctnUV++] = uvref[1]/4;
+                uvs[ctnUV++] = uvref[0];
+                uvs[ctnUV++] = uvref[1];
 
                 vx = x + 1;
                 vz = z + 1;
@@ -179,8 +180,8 @@ class EntityRoad {
                 positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
                 normals[ctn] = 0;
                 positions[ctn++] = vz * tileSize;
-                uvs[ctnUV++] = uvref[4]/4;
-                uvs[ctnUV++] = uvref[5]/4;
+                uvs[ctnUV++] = uvref[4];
+                uvs[ctnUV++] = uvref[5];
 
                 vx = x + 1;
                 vz = z;
@@ -190,8 +191,8 @@ class EntityRoad {
                 positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
                 normals[ctn] = 0;
                 positions[ctn++] = vz * tileSize;
-                uvs[ctnUV++] = uvref[2]/4;
-                uvs[ctnUV++] = uvref[3]/4;
+                uvs[ctnUV++] = uvref[2];
+                uvs[ctnUV++] = uvref[3];
 
                 vx = x;
                 vz = z + 1;
@@ -201,8 +202,8 @@ class EntityRoad {
                 positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
                 normals[ctn] = 0;
                 positions[ctn++] = vz * tileSize;
-                uvs[ctnUV++] = uvref[6]/4;
-                uvs[ctnUV++] = uvref[7]/4;
+                uvs[ctnUV++] = uvref[6];
+                uvs[ctnUV++] = uvref[7];
                 roadGeoetry.drawRange.count = ctn/3;
                 roadGeoetry.attributes.position.needsUpdate = true;
                 roadGeoetry.attributes.uv.needsUpdate = true;
