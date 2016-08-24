@@ -10,8 +10,9 @@ module.exports = class Shape {
     }
 
     compute(path, scaling, height) {
-        let l = path.length;
+        if(path.length === 0)return;
         let i = 0;
+        let l = path.length;
         let length = 0;
         let point;
         let pointLength;

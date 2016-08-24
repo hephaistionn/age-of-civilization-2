@@ -15,6 +15,8 @@ class Map {
         this.tileMaxHeight = config.tileMaxHeight;
         this.nbPointX = model.nbPointX;
         this.nbPointZ = model.nbPointZ;
+        this.pointsNormal = model.pointsNormal;
+
 
         this.entityDynamicList = [];
         this.entityGroups = {};
@@ -25,7 +27,7 @@ class Map {
         this.initGround(model);
 
         ENTITIES['EntityTree'].ready = () => {
-            this.updateStateEntities(model, 'EntityTree');
+            this.updateStateEntities('EntityTree', model);
         };
         if(!this.entityGroups['EntityTree'].length)
             ENTITIES['EntityTree'].ready();
@@ -33,7 +35,14 @@ class Map {
     }
 
     updateState(model) {
-        this.updateStateEntities(model);
+
+        while(model.entityGroupUpdated.length !==0){
+            this.updateStateEntities(model.entityGroupUpdated.pop(), model);
+        }
+
+        while(model.updatedEntity.length !==0){
+            this.updateStateOfOneEntities(model.updatedEntity.pop(), model.updatedEntity.pop());
+        }
     }
 
 

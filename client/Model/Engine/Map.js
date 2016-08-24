@@ -12,11 +12,12 @@ class Map {
         this.tiltMax = config.tiltMax || 50;
         this.pointsType = config.pointsType;
         this.pointsHeights = config.pointsHeights;
+        this.pointsNormal = config.pointsNormal;
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
         this.tilesType = config.tilesType;
-        this.lastEntityGroupUpdated = [];
-        this.lastEntityUpdated = null;
+        this.entityGroupUpdated = [];
+        this.updatedEntity = [];
         this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.entityGroups = {};
         this.entityDynamicList = [];
@@ -35,8 +36,8 @@ class Map {
         const entityId = params.entityId;
         const entity = new ENTITIES[entityId](params);
         this.entityGroups[entityId].push(entity);
-        if(this.lastEntityGroupUpdated.indexOf(entityId)===-1)
-            this.lastEntityGroupUpdated.push(entityId);
+        if(this.entityGroupUpdated.indexOf(entityId)===-1)
+            this.entityGroupUpdated.push(entityId);
         if(!entity.constructor.walkable) {
             this.setWalkableTile(entity, 0);
         }
@@ -49,8 +50,8 @@ class Map {
         const entityId = entity.constructor.name;
         let index = this.entityGroups[entityId].indexOf(entity);
         this.entityGroups[entityId].splice(index, 1);
-        if(this.lastEntityGroupUpdated.indexOf(entityId)===-1)
-            this.lastEntityGroupUpdated.push(entityId);
+        if(this.entityGroupUpdated.indexOf(entityId)===-1)
+            this.entityGroupUpdated.push(entityId);
         if(!entity.constructor.walkable) {
             this.setWalkableTile(entity, 1);
         }
@@ -61,10 +62,12 @@ class Map {
     }
 
     updateEntity(entityId, model, params) {
+        const indexOfEntity = model ? entityGroup.indexOf(model) : 0;
         const entityGroup = this.entityGroups[entityId];
-        this.lastEntityGroupUpdated.push(entityId);
-        this.lastEntityUpdated = model ? entityGroup.indexOf(model) : 0;
-        entityGroup[this.lastEntityUpdated].updateState(params);
+        entityGroup[indexOfEntity].updateState(params);
+        this.updatedEntity.push(indexOfEntity);
+        this.updatedEntity.push(entityId);
+
     }
 
     initEntitiesResource(resources, id) {
@@ -99,11 +102,12 @@ class Map {
     clearTile(x, z, model) {
         if(model){
             this.removeEntity(model)
-        }else{
+        }else {
             this.grid.setWalkableAt(Math.floor(x), Math.floor(z), 1);
-            if(this.lastEntityGroupUpdated.indexOf('EntityRoad')===-1)
-                this.lastEntityGroupUpdated.push('EntityRoad');//force redraw of roadview
-            this.lastEntityUpdated = 0;
+            if(this.updatedEntity.indexOf('EntityRoad') === -1) {
+                this.updatedEntity.push(0);
+                this.updatedEntity.push('EntityRoad');
+            }
         }
     }
 

@@ -102,25 +102,25 @@ const fragShader = "" +
     "colorFinal += colorC * vGrounds.z; \n" +
     "colorFinal += colorD * vGrounds.w; \n" +
     "" +
-    "vec4 sumLights = vec4(0.0, 0.0, 0.0, 1.0); \n" +
+    "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
     "DirectionalLight directionalLight;" +
     "for(int i = 0; i < NUM_DIR_LIGHTS; i++) \n" +
     "{ \n" +
     "    directionalLight = directionalLights[ i ]; \n" +
-    "    sumLights.rgb += dot(directionalLight.direction, vecNormal)* directionalLight.color; \n" +
+    "    sumLights += dot(directionalLight.direction, vecNormal)* directionalLight.color; \n" +
     "    #ifdef USE_SHADOWMAP \n" +
     "    float shadowFactor = bool( directionalLight.shadow ) ? getShadow( directionalShadowMap[ i ], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[ i ] ) : 1.0; \n" +
-    "    sumLights.rgb *= mix(1.0, shadowFactor, vAbsolutePosition.y/3.0); \n" +
+    "    sumLights *= shadowFactor; \n" +
     "    #endif \n" +
     "} \n" +
-    "" +
+    "sumLights = ambientLightColor + sumLights; \n" +
+    "colorFinal *= sumLights; \n" +
     "if(vAbsolutePosition.y<3.0){ \n" +
     "   colorFinal = mix(vec3(0.33,0.7,0.99), colorFinal, vAbsolutePosition.y/3.0); \n" +
     "}" +
-    "sumLights = vec4(ambientLightColor, 1.0) + sumLights; \n" +
     "" +
-    "gl_FragColor = vec4(colorFinal , 1.0)*sumLights; \n" +
+    "gl_FragColor = vec4(colorFinal , 1.0); \n" +
     "} ";
 
 let canvas = document.createElement('canvas');

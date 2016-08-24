@@ -2,10 +2,7 @@ const ENTITIES = require('../Entity/list');
 
 module.exports = Map=> {
 
-    Map.prototype.updateStateEntities = function updateStateEntities(model, id) {
-
-        const entityId = id || model.lastEntityGroupUpdated.pop();
-
+    Map.prototype.updateStateEntities = function updateStateEntities(entityId, model) {
 
         const groupView = this.entityGroups[entityId];
         const groupModel = model.entityGroups[entityId];
@@ -53,11 +50,11 @@ module.exports = Map=> {
             groupView.splice(lengthModel, lengthView);
         }
 
-        if(model.lastEntityUpdated !== null){
-            groupView[model.lastEntityUpdated].updateState();
-            model.lastEntityUpdated = null;
-        }
+    };
 
+    Map.prototype.updateStateOfOneEntities = function updateStateOfOneEntities(entityId, entityIndex){
+        const groupView = this.entityGroups[entityId];
+        groupView[entityIndex].updateState();
     };
 
     Map.prototype.updateDynamicEntities = function updateDynamicEntities(dt){

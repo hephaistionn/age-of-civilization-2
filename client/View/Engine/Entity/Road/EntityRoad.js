@@ -18,12 +18,10 @@ class EntityRoad {
         this.nbPointX = this.model.map.nbPointX;
         this.nbPointZ = this.model.map.nbPointZ;
         this.pointsHeights = this.model.map.pointsHeights;
-        const MAX_TILES = 75;
+        this.pointsNormal = this.model.map.pointsNormal;
+        this.MAX_TILES = 75;
         this.VERTEX_BY_TILE = 6;
-        this.MAX_VERTEX =  this.VERTEX_BY_TILE * MAX_TILES;
-
-        //this.materialRoad = new THREE.MeshPhongMaterial( { map : THREE.ImageUtils.loadTexture('pic/path_opacity.png')} );
-        //this.materialRoad.map.flipY = false;
+        this.MAX_VERTEX =  this.VERTEX_BY_TILE * this.MAX_TILES;
         this.materialRoad = materialRoad;
 
         this.element = new THREE.Object3D();
@@ -31,7 +29,7 @@ class EntityRoad {
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = false;
         this.initChunks(model);
-        //this.updateState();
+        this.updateState();
     }
 
     initChunks(){
@@ -68,12 +66,11 @@ class EntityRoad {
     }
 
 
-    createRoadChunk(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles){
+    createRoadChunk(){
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array( this.MAX_VERTEX * 3 );
         const uv = new Float32Array( this.MAX_VERTEX * 2 );
         const normal = new Float32Array( this.MAX_VERTEX * 3 );
-
         geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
         geometry.addAttribute( 'uv', new THREE.BufferAttribute( uv, 2 ) );
         geometry.addAttribute( 'normal', new THREE.BufferAttribute( normal, 3 ) );
@@ -82,6 +79,7 @@ class EntityRoad {
         mesh.matrixAutoUpdate = false;
         mesh.frustumCulled = false;
         mesh.matrixWorldNeedsUpdate = false;
+        mesh.receiveShadow = true;
         mesh.drawMode = THREE.TrianglesDrawMode;
         return mesh;
     }
@@ -105,9 +103,11 @@ class EntityRoad {
         let uvs;
         let normals;
         let a,b,c,d,e,f,g,h, uvIndex, uvref;
+        let absoluteIndex;
+        let dx, dy, dz, norm;
 
         for(i=0; i<nbChunk; i++){
-            this.flatChunks[i].drawRange.count = 0;
+            this.flatChunks[i].drawRange.count = 1; //avoid WARNING: Render count or primcount is 0.
         }
 
         for(i = 0; i < l; i+=sizeNode ){
@@ -134,73 +134,124 @@ class EntityRoad {
                 uvIndex = a*128+b*64+c*32+d*16+e*8+f*4+g*2+h;
                 uvref = UVpath[uvIndex];
 
-                ctn = roadGeoetry.drawRange.count*3;
+                if(roadGeoetry.drawRange.count === 1){
+                    ctn = 0; //avoid WARNING: Render count or primcount is 0.
+                }else{
+                    ctn = roadGeoetry.drawRange.count*3;
+                }
+
                 ctnUV = ctn*2/3;
 
                 vx = x;
                 vz = z + 1;
-                normals[ctn] = 0;
+                absoluteIndex = vz * this.nbPointX + vx;
+                dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
+                norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
+                dx /= norm;
+                dy /= norm;
+                dz /= norm;
+                normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
-                normals[ctn] = 1;
-                positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
-                normals[ctn] = 0;
+                normals[ctn] = dy;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];
                 uvs[ctnUV++] = uvref[7];
 
-
-
                 vx = x + 1;
                 vz = z;
-                normals[ctn] = 0;
+                absoluteIndex = vz * this.nbPointX + vx;
+                dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
+                norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
+                dx /= norm;
+                dy /= norm;
+                dz /= norm;
+                normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
-                normals[ctn] = 1;
-                positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
-                normals[ctn] = 0;
+                normals[ctn] = dy;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
                 uvs[ctnUV++] = uvref[3];
 
                 vx = x;
                 vz = z;
-                normals[ctn] = 0;
+                absoluteIndex = vz * this.nbPointX + vx;
+                dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
+                norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
+                dx /= norm;
+                dy /= norm;
+                dz /= norm;
+                normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
-                normals[ctn] = 1;
-                positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
-                normals[ctn] = 0;
+                normals[ctn] = dy;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[0];
                 uvs[ctnUV++] = uvref[1];
 
                 vx = x + 1;
                 vz = z + 1;
-                normals[ctn] = 0;
+                absoluteIndex = vz * this.nbPointX + vx;
+                dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
+                norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
+                dx /= norm;
+                dy /= norm;
+                dz /= norm;
+                normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
-                normals[ctn] = 1;
-                positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
-                normals[ctn] = 0;
+                normals[ctn] = dy;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[4];
                 uvs[ctnUV++] = uvref[5];
 
                 vx = x + 1;
                 vz = z;
-                normals[ctn] = 0;
+                absoluteIndex = vz * this.nbPointX + vx;
+                dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
+                norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
+                dx /= norm;
+                dy /= norm;
+                dz /= norm;
+                normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
-                normals[ctn] = 1;
-                positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
-                normals[ctn] = 0;
+                normals[ctn] = dy;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
                 uvs[ctnUV++] = uvref[3];
 
                 vx = x;
                 vz = z + 1;
-                normals[ctn] = 0;
+                absoluteIndex = vz * this.nbPointX + vx;
+                dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
+                norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
+                dx /= norm;
+                dy /= norm;
+                dz /= norm;
+                normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
-                normals[ctn] = 1;
-                positions[ctn++] = this.pointsHeights[vz * this.nbPointX + vx]/ 255 * this.tileMaxHeight+0.1;
-                normals[ctn] = 0;
+                normals[ctn] = dy;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];
                 uvs[ctnUV++] = uvref[7];

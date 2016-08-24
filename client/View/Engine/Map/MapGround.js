@@ -6,7 +6,7 @@ module.exports = Map=> {
 
     Map.prototype.initGround = function initGround(model) {
         this.materialGround = materialGround;
-        //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000/*, wireframe : true*/});
+        //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
         //this.materialGround = new THREE.MeshPhongMaterial( { color: 0x555555 } );
         //this.materialWater = new THREE.MeshPhongMaterial({color: 0x3333ff, map : THREE.ImageUtils.loadTexture('pic/water_0.jpg'), transparent: true, shininess: 90, opacity: 0.66 });
         this.materialWater = materialWater;
@@ -42,24 +42,8 @@ module.exports = Map=> {
             }
         }
 
-        //smooth normals of chunks
-        for(x = 0; x < length; x++) {
-            for(z = 0; z < length; z++) {
-                let chunkX1Z1 = chunks[x][z];
-                let chunkX2Z1 = chunks[x + 1] ? chunks[x + 1][z] : undefined;
-                let chunkX1Z2 = chunks[x][z + 1];
-
-                let nbXTilesX1Z1 = chunksTiles[x];
-                let nbZTilesX1Z1 = chunksTiles[z];
-                let nbXTilesX2Z1 = chunksTiles[x + 1];
-                let nbXTilesX1Z2 = chunksTiles[x];
-
-                this.smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTilesX1Z1, nbZTilesX1Z1, nbXTilesX2Z1, nbXTilesX1Z2);
-            }
-        }
-
-        function findVextexUnderWater(vertex){
-            return vertex<3;
+        function findVextexUnderWater(vertex) {
+            return vertex < 3;
         }
 
         this.chunks = [];
@@ -74,35 +58,29 @@ module.exports = Map=> {
 
                 let chunkGeo = chunks[x][z];
                 let chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
-                chunkMesh.rotation.x = -Math.PI / 2;
-                chunkMesh.position.set(offsetXTiles + xSize / 2, 0, offsetZTiles + zSize / 2);
+                chunkMesh.position.set(offsetXTiles, 0, offsetZTiles);
                 chunkGeo.computeBoundingBox();
                 this.element.add(chunkMesh);
                 chunkMesh.updateMatrixWorld();
-                //chunkMesh.frustumCulled = false;
                 chunkMesh.matrixAutoUpdate = false;
                 chunkMesh.matrixWorldNeedsUpdate = false;
-                //chunkMesh.castShadow = true;
                 chunkMesh.receiveShadow = true;
 
                 this.chunks[x][z] = chunkMesh;
                 this.chunksList.push(chunkMesh);
 
-                if(chunkGeo.boundingBox.min.z <= 3){
+                if(chunkGeo.boundingBox.min.y <= 3) {
                     this.createWater(xSize, zSize, chunkMesh);
                 }
             }
         }
-
-
-
     };
 
     Map.prototype.createWater = function createWater(xSize, zSize, chunkMesh) {
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
         chunkMesh.add(waterMesh);
-        waterMesh.position.set(0, 0, 3);
+        waterMesh.position.set(0, 3, 0);
         waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();
         waterMesh.matrixAutoUpdate = false;
@@ -110,21 +88,21 @@ module.exports = Map=> {
         waterMesh.receiveShadow = true;
     };
 
-    Map.prototype.updateWater = function updateWater(dt){
+    Map.prototype.updateWater = function updateWater(dt) {
         const uniformTime = this.materialWater.uniforms.time;
         const uniformProgress = this.materialWater.uniforms.progress;
         const uniformCameraPosition = this.materialWater.uniforms.cameraPosition;
-        uniformTime.value += dt/1000 * this.waterOscillation;
-        uniformProgress.value += dt/2400;
+        uniformTime.value += dt / 1000 * this.waterOscillation;
+        uniformProgress.value += dt / 2400;
         const camera = this.element.parent.camera;
-        if(camera){
+        if(camera) {
             uniformCameraPosition.value = camera.position;
         }
 
-        if(uniformTime.value > 1){
+        if(uniformTime.value > 1) {
             this.waterOscillation = -1;
             uniformTime.value = 1;
-        }else if(uniformTime.value < 0){
+        } else if(uniformTime.value < 0) {
             this.waterOscillation = 1;
             uniformTime.value = 0;
         }
@@ -135,84 +113,38 @@ module.exports = Map=> {
         const zSize = nbZTiles * this.tileSize;
 
         const chunkGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, nbXTiles, nbZTiles);
-        delete chunkGeometry.attributes.normal;
-        delete chunkGeometry.attributes.uv;
 
         const position = chunkGeometry.attributes.position;
         const posArray = position.array;
         const length = position.count;
-        const grounds = new Float32Array(length);
-
-        const correctionX = nbXTiles / 2;
-        const correctionZ = nbZTiles / 2;
+        const normalArray = new Float32Array(length * 3);
+        const groundArry = new Float32Array(length);
 
         for(let i = 0; i < length; i++) {
-            let tilex = offsetXTiles + posArray[i * 3] / this.tileSize + correctionX;
-            let tiley = offsetZTiles + nbZTiles - (posArray[i * 3 + 1] / this.tileSize + correctionZ); //begin at top, not to 0
-            let index = tiley * model.nbPointX + tilex;
+            let tileX = offsetXTiles + posArray[i * 3] / this.tileSize;
+            let tileZ = offsetZTiles + posArray[i * 3 + 2] / this.tileSize;
+            let index = tileZ * model.nbPointX + tileX;
 
             let pointsType = model.pointsType[index] || 0;
             let pointsHeights = model.pointsHeights[index] || 0;
-            grounds[i] = pointsType;
-            posArray[i * 3 + 2] = pointsHeights / 255 * this.tileMaxHeight;
+            groundArry[i] = pointsType;
+            posArray[i * 3 + 1] = pointsHeights / 255 * this.tileMaxHeight;
+
+            let dx = model.pointsNormal[index * 3] / 127 / this.tileSize;
+            let dy = model.pointsNormal[index * 3 + 1] / 127 / this.tileMaxHeight;
+            let dz = model.pointsNormal[index * 3 + 2] / 127 / this.tileSize;
+            let l = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+            normalArray[i * 3] = dx / l;
+            normalArray[i * 3 + 1] = dy / l;
+            normalArray[i * 3 + 2] = dz / l;
         }
 
-        chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(grounds, 1));
-        chunkGeometry.computeVertexNormals();
-        chunkGeometry.attributes.grounds.needsUpdate = true;
+        chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(groundArry, 1));
+        chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
         chunkGeometry.attributes.position.needsUpdate = true;
-
         return chunkGeometry;
     };
 
-    Map.prototype.smoothNormals = function smoothNormals(chunkX1Z1, chunkX2Z1, chunkX1Z2, nbXTilesX1Z1, nbZTilesX1Z1, nbXTilesX2Z1, nbXTilesX1Z2) {
-        let normalX1Z1 = chunkX1Z1.attributes.normal.array;
-        let normalX2Z1 = chunkX2Z1 ? chunkX2Z1.attributes.normal.array : [];
-        let normalX1Z2 = chunkX1Z2 ? chunkX1Z2.attributes.normal.array : [];
-        let x, z;
-        //(3*(Nx+1))*z+3*x //index of common borders
-        if(normalX1Z2.length) {
-            for(x = 0; x < nbXTilesX1Z1 + 1; x++) {
-                let indexX1Z1 = (3 * (nbXTilesX1Z1 + 1)) * (nbZTilesX1Z1) + 3 * x;
-                let indexX1Z2 = (3 * (nbXTilesX1Z2 + 1)) * 0 + 3 * x;
-
-                let n1x = normalX1Z1[indexX1Z1];
-                let n1y = normalX1Z1[indexX1Z1 + 1];
-                let n1z = normalX1Z1[indexX1Z1 + 2];
-
-                let n2x = normalX1Z2[indexX1Z2];
-                let n2y = normalX1Z2[indexX1Z2 + 1];
-                let n2z = normalX1Z2[indexX1Z2 + 2];
-
-                normalX1Z1[indexX1Z1] = normalX1Z2[indexX1Z2] = (n1x + n2x) / 2;
-                normalX1Z1[indexX1Z1 + 1] = normalX1Z2[indexX1Z2 + 1] = (n1y + n2y) / 2;
-                normalX1Z1[indexX1Z1 + 2] = normalX1Z2[indexX1Z2 + 2] = (n1z + n2z) / 2;
-
-            }
-            chunkX1Z2.attributes.normal.needsUpdate = true;
-        }
-
-        if(normalX2Z1.length) {
-            for(z = 0; z < nbZTilesX1Z1 + 1; z++) {
-
-                let indexX1Z1 = (3 * (nbXTilesX1Z1 + 1)) * z + 3 * nbZTilesX1Z1;
-                let indexX2Z1 = (3 * (nbXTilesX2Z1 + 1)) * z;
-
-                let n1x = normalX1Z1[indexX1Z1];
-                let n1y = normalX1Z1[indexX1Z1 + 1];
-                let n1z = normalX1Z1[indexX1Z1 + 2];
-
-                let n2x = normalX2Z1[indexX2Z1];
-                let n2y = normalX2Z1[indexX2Z1 + 1];
-                let n2z = normalX2Z1[indexX2Z1 + 2];
-
-                normalX1Z1[indexX1Z1] = normalX2Z1[indexX2Z1] = (n1x + n2x) / 2;
-                normalX1Z1[indexX1Z1 + 1] = normalX2Z1[indexX2Z1 + 1] = (n1y + n2y) / 2;
-                normalX1Z1[indexX1Z1 + 2] = normalX2Z1[indexX2Z1 + 2] = (n1z + n2z) / 2;
-
-            }
-            chunkX2Z1.attributes.normal.needsUpdate = true;
-        }
-    };
 
 };
