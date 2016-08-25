@@ -7,31 +7,29 @@ module.exports = class RoadPositioner {
         this.nbPointX = config.nbPointX;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.undroppable = false;
         this.road = null;
         this.startX = 0;
         this.startZ = 0;
+        this.maxTile = 30;
         this.road = {
             type: 0,
-            tiles: []
+            tiles: new Uint16Array(2 * this.maxTile),
+            walkable: new Uint8Array(this.maxTile),
+            length: 0
         };
     }
 
     placeSelectedEntity(x, z, map) {
         x = Math.floor(x);
         z = Math.floor(z);
-        const tiles = new Uint16Array(2);
-        tiles[0] = x;
-        tiles[1] = z;
-
-        this.undroppable = false;
-
-        if(!map.grid.isWalkableAt(tiles[0], tiles[1])) {
-            this.undroppable = true;
-            return;
+        this.road.tiles[0] = x;
+        this.road.tiles[1] = z;
+        this.road.walkable[0] = this.selected;
+        if(!map.grid.isWalkableAt(x, z)) {
+            this.road.walkable[0] = 0;
         }
+        this.road.length = 1;
         this.road.type = this.selected;
-        this.road.tiles = tiles;
     }
 
     rolloutSelectedEntity(x, z, map) {
@@ -41,12 +39,13 @@ module.exports = class RoadPositioner {
         const tile2z = Math.floor(z);
         const dx = tile2x - tile1x;
         const dz = tile2z - tile1z;
-        const nbX = Math.abs(dx)+1; //tile count
-        const nbZ = Math.abs(dz)+1; //tile count
-        if(dx===0 && dz===0) return;
+        const nbX = Math.abs(dx) + 1; //tile count
+        const nbZ = Math.abs(dz) + 1; //tile count
+        if(dx === 0 && dz === 0) return;
         const signX = dx / Math.abs(dx);
         const signZ = dz / Math.abs(dz);
-        const tiles = new Uint16Array((nbX + nbZ -1) * 2);
+        const tiles = this.road.tiles;
+        const walkable = this.road.walkable;
 
         let ctn = 0;
         if(nbX >= nbZ) {
@@ -55,7 +54,7 @@ module.exports = class RoadPositioner {
                 tiles[ctn++] = this.startZ;
             }
             for(let i = 1; i < nbZ; i++) {
-                tiles[ctn++] = this.startX + (nbX-1) * signX;
+                tiles[ctn++] = this.startX + (nbX - 1) * signX;
                 tiles[ctn++] = this.startZ + i * signZ;
             }
         } else {
@@ -63,23 +62,25 @@ module.exports = class RoadPositioner {
                 tiles[ctn++] = this.startX;
                 tiles[ctn++] = this.startZ + i * signZ;
             }
-            for(let i = 0; i < nbX + 1; i++) {
+            for(let i = 1; i < nbX; i++) {
                 tiles[ctn++] = this.startX + i * signX;
-                tiles[ctn++] = this.startZ + (nbZ-1) * signZ;
+                tiles[ctn++] = this.startZ + (nbZ - 1) * signZ;
             }
         }
 
-        this.undroppable = false;
+        const length = Math.min(ctn / 2, tiles.length);
 
-        for(let i = 0; i < tiles.length; i += 2) {
-            if(!map.grid.isWalkableAt(tiles[i], tiles[i + 1])) {
-                this.undroppable = true;
-                return;
+
+        for(let i = 0; i < length; i++) {
+            if(!map.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1])) {
+                walkable[i] = 0;
+            } else {
+                walkable[i] = this.selected;
             }
         }
 
         this.road.type = this.selected;
-        this.road.tiles = tiles;
+        this.road.length = length;
     }
 
     mouseDown(x, z) {
@@ -87,14 +88,16 @@ module.exports = class RoadPositioner {
         this.startZ = Math.floor(z);
     }
 
-    getNewRoad(){
-        if(this.road){
-            const road = this.road;
-            this.road  = {
-                type: 0,
-                tiles: []
+    getNewRoad() {
+        if(this.road.length) {
+            const result = {
+                type: this.road.type,
+                tiles: this.road.tiles,
+                walkable: this.road.walkable,
+                length: this.road.length
             };
-            return road;
+            this.road.length = 0;
+            return result;
         }
     }
 

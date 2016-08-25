@@ -7,11 +7,11 @@ class EntityRoad {
 
     updateState(params) {
         if(!params) return;
-        const type = params.type;
         const tiles = params.tiles;
-        const l = tiles.length;
+        const walkable = params.walkable;
+        const l = params.length * 2;
         for(let i = 0; i < l; i += 2) {
-            this.grid.setWalkableAt(tiles[i], tiles[i + 1], type);
+            this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkable[i/2]);
         }
     }
 }
