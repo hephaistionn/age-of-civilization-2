@@ -12,7 +12,6 @@ module.exports = class RoadPositioner {
         this.startZ = 0;
         this.maxTile = 30;
         this.road = {
-            type: 0,
             tiles: new Uint16Array(2 * this.maxTile),
             walkable: new Uint8Array(this.maxTile),
             length: 0
@@ -29,7 +28,6 @@ module.exports = class RoadPositioner {
             this.road.walkable[0] = 0;
         }
         this.road.length = 1;
-        this.road.type = this.selected;
     }
 
     rolloutSelectedEntity(x, z, map) {
@@ -79,7 +77,6 @@ module.exports = class RoadPositioner {
             }
         }
 
-        this.road.type = this.selected;
         this.road.length = length;
     }
 
@@ -91,7 +88,6 @@ module.exports = class RoadPositioner {
     getNewRoad() {
         if(this.road.length) {
             const result = {
-                type: this.road.type,
                 tiles: this.road.tiles,
                 walkable: this.road.walkable,
                 length: this.road.length

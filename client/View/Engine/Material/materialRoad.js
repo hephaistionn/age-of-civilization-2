@@ -1,9 +1,11 @@
 const THREE = require('./../../../services/threejs');
 
 const vertShader = "" +
+    "attribute float type; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying vec2 vUv; \n" +
     "varying vec3 vecNormal; \n" +
+    "varying float vType; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
     "		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHTS ]; \n" +
@@ -22,6 +24,7 @@ const vertShader = "" +
     "	#endif \n" +
     "#endif \n" +
     "vUv = uv; \n" +
+    "vType = type; \n" +
     "gl_Position = projectionMatrix * viewMatrix * worldPosition; \n" +
     "} ";
 
@@ -69,18 +72,20 @@ const fragShader = "" +
     "varying vec2 vUv; \n" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
+    "varying float vType; \n" +
     "uniform sampler2D textureLayout; \n" +
     "uniform sampler2D textureA; \n" +
+    "uniform sampler2D textureB; \n" +
     "uniform vec3 ambientLightColor; \n" +
     "" +
     "void main(void) { \n" +
     "" +
     "vec2 UVT = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/10.0; \n" +
     "vec3 filter = texture2D( textureLayout, vUv ).xyz; \n" +
-    "vec3 colorA = texture2D( textureA, UVT ).xyz; \n" +
-    "vec3 colorFinal = vec3(0.0); \n" +
-    "colorFinal += colorA; \n" +
-
+    "vec3 colorFinal = texture2D( textureA, UVT ).xyz; \n" +
+    " if(vType>2.5){ \n"+
+    "   colorFinal = texture2D( textureB, UVT ).xyz; \n" +
+    "}" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
     "DirectionalLight directionalLight;" +
@@ -123,6 +128,7 @@ const uniforms = THREE.UniformsUtils.merge([
 ]);
 
 uniforms.textureA = {type: 't', value: loadTexture("pic/tile_0.jpg")};
+uniforms.textureB = {type: 't', value: loadTexture("pic/soil_1.jpg")};
 uniforms.textureLayout = {type: 't', value: loadTexture("pic/path_opacity_2.png")};
 uniforms.textureLayout.value.flipY = false;
 uniforms.textureLayout.value.minFilter = THREE.NearestFilter;

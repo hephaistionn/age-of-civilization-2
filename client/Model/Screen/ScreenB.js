@@ -29,8 +29,8 @@ class ScreenB {
         const buttonChurch = new Button({text: 'Build Church'});
         const buttonRemove = new Button({text: 'Remove'});
         const buttonRotate = new Button({text: 'Rotate'});
-
-        const buttonRoad = new Button({text: 'Road'});
+        const buttonRoadA = new Button({text: 'RoadA'});
+        const buttonRoadB = new Button({text: 'RoadB'});
 
         this.panel = new Panel({width: 200, height: 250, x: 0, y: 0});
         this.panel.setChild(text);
@@ -39,7 +39,8 @@ class ScreenB {
         this.panel.setChild(buttonChurch);
         this.panel.setChild(buttonRemove);
         this.panel.setChild(buttonRotate);
-        this.panel.setChild(buttonRoad);
+        this.panel.setChild(buttonRoadA);
+        this.panel.setChild(buttonRoadB);
 
         buttonScreen.onClick(() => {
             ee.emit('screen', 'ScreenA');
@@ -64,8 +65,12 @@ class ScreenB {
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
-        buttonRoad.onClick(() => {
+        buttonRoadA.onClick(() => {
             this.roadPositioner.selectEnity(2);//2 => roadType
+            ee.emit('onUpdate', 'positioner', this.positioner);
+        });
+        buttonRoadB.onClick(() => {
+            this.roadPositioner.selectEnity(3);//2 => roadType
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 

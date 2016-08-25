@@ -70,9 +70,11 @@ class EntityRoad {
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array( this.MAX_VERTEX * 3 );
         const uv = new Float32Array( this.MAX_VERTEX * 2 );
+        const type = new Float32Array( this.MAX_VERTEX * 1 );
         const normal = new Float32Array( this.MAX_VERTEX * 3 );
         geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
         geometry.addAttribute( 'uv', new THREE.BufferAttribute( uv, 2 ) );
+        geometry.addAttribute( 'type', new THREE.BufferAttribute( type, 1 ) );
         geometry.addAttribute( 'normal', new THREE.BufferAttribute( normal, 3 ) );
         geometry.setDrawRange( 0, 3 );
         const mesh = new THREE.Mesh(geometry, this.materialRoad);
@@ -97,11 +99,12 @@ class EntityRoad {
         const nbChunk = this.flatChunks.length;
 
         let roadType, x, z, chunkX, chunkZ, i , vx, vz = 0;
-        let ctn, ctnUV = 0;
+        let ctn, ctnUV, ctnType = 0;
         let roadGeoetry;
         let positions;
         let uvs;
         let normals;
+        let types;
         let a,b,c,d,e,f,g,h, uvIndex, uvref;
         let absoluteIndex;
         let dx, dy, dz, norm;
@@ -113,7 +116,6 @@ class EntityRoad {
         for(i = 0; i < l; i+=sizeNode ){
             roadType = nodes[i + indexWalkable];
             if(roadType > 1){
-                roadType = nodes[i + indexWalkable];
                 x = nodes[i + indexX];
                 z = nodes[i + indexY];
                 chunkX = Math.floor(x / this.tileByChunk);
@@ -122,6 +124,7 @@ class EntityRoad {
                 positions = roadGeoetry.attributes.position.array;
                 normals = roadGeoetry.attributes.normal.array;
                 uvs = roadGeoetry.attributes.uv.array;
+                types = roadGeoetry.attributes.type.array;
 
                 a = grid.isWalkableAt(x-1,z-1)>1?1:0;
                 b = grid.isWalkableAt(x,z-1)>1?1:0;
@@ -141,6 +144,7 @@ class EntityRoad {
                 }
 
                 ctnUV = ctn*2/3;
+                ctnType = ctn/3;
 
                 vx = x;
                 vz = z + 1;
@@ -160,6 +164,7 @@ class EntityRoad {
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];
                 uvs[ctnUV++] = uvref[7];
+                types[ctnType++] = roadType;
 
                 vx = x + 1;
                 vz = z;
@@ -179,6 +184,7 @@ class EntityRoad {
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
                 uvs[ctnUV++] = uvref[3];
+                types[ctnType++] = roadType;
 
                 vx = x;
                 vz = z;
@@ -198,6 +204,7 @@ class EntityRoad {
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[0];
                 uvs[ctnUV++] = uvref[1];
+                types[ctnType++] = roadType;
 
                 vx = x + 1;
                 vz = z + 1;
@@ -217,6 +224,7 @@ class EntityRoad {
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[4];
                 uvs[ctnUV++] = uvref[5];
+                types[ctnType++] = roadType;
 
                 vx = x + 1;
                 vz = z;
@@ -236,6 +244,7 @@ class EntityRoad {
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
                 uvs[ctnUV++] = uvref[3];
+                types[ctnType++] = roadType;
 
                 vx = x;
                 vz = z + 1;
@@ -255,9 +264,12 @@ class EntityRoad {
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];
                 uvs[ctnUV++] = uvref[7];
+                types[ctnType++] = roadType;
+
                 roadGeoetry.drawRange.count = ctn/3;
                 roadGeoetry.attributes.position.needsUpdate = true;
                 roadGeoetry.attributes.uv.needsUpdate = true;
+                roadGeoetry.attributes.type.needsUpdate = true;
                 roadGeoetry.attributes.normal.needsUpdate = true;
 
             }
