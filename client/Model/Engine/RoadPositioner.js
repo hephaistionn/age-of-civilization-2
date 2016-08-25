@@ -2,7 +2,7 @@ module.exports = class RoadPositioner {
 
     constructor(config) {
         this.selected = null;
-        this.tilesHeight = config.tilesHeight;
+        this.pointsHeights = config.pointsHeights;
         this.nbPointZ = config.nbPointZ;
         this.nbPointX = config.nbPointX;
         this.nbTileX = config.nbTileX;
@@ -11,6 +11,10 @@ module.exports = class RoadPositioner {
         this.road = null;
         this.startX = 0;
         this.startZ = 0;
+        this.road = {
+            type: 0,
+            tiles: []
+        };
     }
 
     placeSelectedEntity(x, z, map) {
@@ -26,12 +30,8 @@ module.exports = class RoadPositioner {
             this.undroppable = true;
             return;
         }
-
-        this.road = {
-            type: this.selected,
-            tiles: tiles
-        };
-
+        this.road.type = this.selected;
+        this.road.tiles = tiles;
     }
 
     rolloutSelectedEntity(x, z, map) {
@@ -78,10 +78,8 @@ module.exports = class RoadPositioner {
             }
         }
 
-        this.road = {
-            type: 2,
-            tiles: tiles
-        };
+        this.road.type = this.selected;
+        this.road.tiles = tiles;
     }
 
     mouseDown(x, z) {
@@ -92,7 +90,10 @@ module.exports = class RoadPositioner {
     getNewRoad(){
         if(this.road){
             const road = this.road;
-            this.road  = null;
+            this.road  = {
+                type: 0,
+                tiles: []
+            };
             return road;
         }
     }

@@ -155,7 +155,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];
@@ -174,7 +174,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
@@ -193,7 +193,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[0];
@@ -212,7 +212,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[4];
@@ -231,7 +231,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
@@ -250,7 +250,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.1;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];

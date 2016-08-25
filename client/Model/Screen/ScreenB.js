@@ -96,8 +96,10 @@ class ScreenB {
         if(this.positioner && this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
+        }else if(this.roadPositioner && this.roadPositioner.selected) {
+            this.roadPositioner.placeSelectedEntity(x, z, this.map);
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
-
     }
 
     mouseMoveOnMapPress(x, z) {
@@ -144,6 +146,7 @@ class ScreenB {
             if(params){
                 this.map.updateEntity('EntityRoad', null, params);
                 ee.emit('onUpdate', 'map', this.map);
+                ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
             }
         }
     }
@@ -153,6 +156,7 @@ class ScreenB {
         if(params){
             this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
     }
 
