@@ -26,11 +26,8 @@ class Map {
 
         this.initGround(model);
 
-        ENTITIES['EntityTree'].ready = () => {
-            this.updateStateEntities('EntityTree', model);
-        };
-        if(!this.entityGroups['EntityTree'].length)
-            ENTITIES['EntityTree'].ready();
+        this.updateStateEntities('EntityTree', model);
+
 
     }
 

@@ -1,16 +1,20 @@
 const config = require('../../config');
 const tileSize = config.tileSize;
 const tileMaxHeight = config.tileMaxHeight;
+const material = require('../materialA');
+const THREE = require('three');
 
-class EntityHouse {
+module.exports = class EntityHouse {
 
     constructor(model) {
         this.model = model;
-        this.element = EntityHouse.referenceMesh.clone();
-        this.element.model = model;
+        this.element = THREE.loadObjAsync('obj/buildingA.obj', material);
+        this.element.userData.model = model;
+        this.element.userData.parent = this;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
+
         this.updateState();
     }
 
@@ -24,7 +28,4 @@ class EntityHouse {
         matrixWorld[8] = -matrixWorld[2];
         matrixWorld[10] = matrixWorld[0];
     }
-}
-
-require('./../async').obj(EntityHouse, 'obj/buildingA.obj');
-module.exports = EntityHouse;
+};

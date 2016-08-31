@@ -1,5 +1,6 @@
 const THREE = require('three');
 require('./OBJLoader');
+require('./ObjLoaderAsync');
 require('./Shape');
 require('./PlaneBufferGeometry');
 require('./AttributeLoader');
