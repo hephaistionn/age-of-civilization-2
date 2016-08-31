@@ -104,32 +104,14 @@ const fragShader = "" +
     "gl_FragColor = vec4(colorFinal * sumLights , filter.x); \n" +
     "} ";
 
-let canvas = document.createElement('canvas');
-canvas.width = 512;
-canvas.height = 512;
-let ctx = canvas.getContext('2d');
-ctx.beginPath();
-ctx.rect(0, 0, 512, 512);
-ctx.fillStyle = 'black';
-ctx.fill();
-
-const textureLoader = new THREE.TextureLoader();
-function loadTexture(path) {
-    const texture = textureLoader.load(path);
-    texture.image = canvas;
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.needsUpdate = true;
-    return texture;
-}
-
 const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['lights'],
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.textureA = {type: 't', value: loadTexture("pic/tile_0.jpg")};
-uniforms.textureB = {type: 't', value: loadTexture("pic/soil_1.jpg")};
-uniforms.textureLayout = {type: 't', value: loadTexture("pic/path_opacity_2.png")};
+uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/tile_0.jpg")};
+uniforms.textureB = {type: 't', value: THREE.loadTexture("pic/soil_1.jpg")};
+uniforms.textureLayout = {type: 't', value: THREE.loadTexture("pic/path_opacity_2.png")};
 uniforms.textureLayout.value.flipY = false;
 uniforms.textureLayout.value.minFilter = THREE.NearestFilter;
 uniforms.textureLayout.value.repeat = false;

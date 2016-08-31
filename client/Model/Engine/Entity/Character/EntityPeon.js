@@ -6,7 +6,7 @@ class EntityPeon extends Entity {
     constructor(params) {
         super(params);
         this.power = params.power || 0;
-        this.speed = 0.002;
+        this.speed = 0.001;
         this.path = this.computePath(params);
         this.cycle = 0;
         if(this.path) {

@@ -26,5 +26,5 @@ class EntityChurch {
     }
 }
 
-require('./../async')(EntityChurch, 'obj/buildingB.obj');
+require('./../async').obj(EntityChurch, 'obj/buildingB.obj');
 module.exports = EntityChurch;

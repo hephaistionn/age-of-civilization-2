@@ -26,5 +26,5 @@ class EntityTree {
     }
 }
 
-require('./../async')(EntityTree, 'obj/treeA.obj');
+require('./../async').obj(EntityTree, 'obj/treeA.obj');
 module.exports = EntityTree;

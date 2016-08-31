@@ -2,6 +2,8 @@ const THREE = require('three');
 require('./OBJLoader');
 require('./Shape');
 require('./PlaneBufferGeometry');
+require('./AttributeLoader');
+require('./loadTexture');
 module.exports = THREE;
 
 //This polyfill is essential to rendering on mobile.

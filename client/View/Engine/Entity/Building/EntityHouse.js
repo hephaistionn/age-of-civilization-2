@@ -26,5 +26,5 @@ class EntityHouse {
     }
 }
 
-require('./../async')(EntityHouse, 'obj/buildingA.obj');
+require('./../async').obj(EntityHouse, 'obj/buildingA.obj');
 module.exports = EntityHouse;

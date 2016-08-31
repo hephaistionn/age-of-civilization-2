@@ -55,30 +55,12 @@ const fragShader = "" +
     "gl_FragColor.a = 0.35; \n" +
     "} ";
 
-let canvas = document.createElement('canvas');
-canvas.width = 512;
-canvas.height = 512;
-let ctx = canvas.getContext('2d');
-ctx.beginPath();
-ctx.rect(0, 0, 512, 512);
-ctx.fillStyle = 'black';
-ctx.fill();
-
-const textureLoader = new THREE.TextureLoader();
-function loadTexture(path) {
-    const texture = textureLoader.load(path);
-    texture.image = canvas;
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.needsUpdate = true;
-    return texture;
-}
-
 const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['lights'],
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.textureA = {type: 't', value: loadTexture('pic/water_1.jpg')};
+uniforms.textureA = {type: 't', value: THREE.loadTexture('pic/water_1.jpg')};
 uniforms.time = { type: 'f', value: 0.0 };
 uniforms.progress = { type: 'f', value: 0.0 };
 uniforms.cameraPosition  = { type: 'v3', value: new THREE.Vector3(1.0,0.0,0.0) };
