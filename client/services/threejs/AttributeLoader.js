@@ -36,9 +36,9 @@ THREE.AttributeLoader.prototype = {
         let vertices;
         let uvs;
 
-        function parseVertexIndex(value) { 
+        function parseVertexIndex(value) {
 
-            return  parseInt(value) - 1;
+            return parseInt(value) - 1;
 
         }
 
@@ -59,7 +59,7 @@ THREE.AttributeLoader.prototype = {
         let cnt = 0;
         let currentIndex = 0;
 
-        function newIndex(index, vertexIndex, uvIndex){
+        function newIndex(index, vertexIndex, uvIndex) {
             let vertices1;
             let vertices2;
             let normals1;
@@ -69,48 +69,48 @@ THREE.AttributeLoader.prototype = {
 
             let l = verticesGroup.length;
 
-            for(i = 0; i < verticesGroup.length ; i++){
-                if(!verticesGroup2[i]){
+            for(i = 0; i < verticesGroup.length; i++) {
+                if(!verticesGroup2[i]) {
                     verticesGroup2.push([]);
                 }
             }
-            for(i = 0; i < uvsGroup.length ; i++){
-                if(!uvsGroup2[i]){
+            for(i = 0; i < uvsGroup.length; i++) {
+                if(!uvsGroup2[i]) {
                     uvsGroup2.push([]);
                 }
             }
-            for(i = 0; i < normalsGroup.length ; i++){
-                if(!normalsGroup2[i]){
+            for(i = 0; i < normalsGroup.length; i++) {
+                if(!normalsGroup2[i]) {
                     normalsGroup2.push([]);
                 }
             }
 
-            for(i = 0; i < l ; i++){
+            for(i = 0; i < l; i++) {
                 vertices1 = verticesGroup[i];
                 vertices2 = verticesGroup2[i];
-                vertices2[index*3] = vertices1[vertexIndex*3];
-                vertices2[index*3+1] = vertices1[vertexIndex*3+1];
-                vertices2[index*3+2] = vertices1[vertexIndex*3+2];
+                vertices2[index * 3] = vertices1[vertexIndex * 3];
+                vertices2[index * 3 + 1] = vertices1[vertexIndex * 3 + 1];
+                vertices2[index * 3 + 2] = vertices1[vertexIndex * 3 + 2];
             }
 
             l = uvsGroup.length;
-            for(i = 0; i < l ; i++){
+            for(i = 0; i < l; i++) {
                 uvs1 = uvsGroup[i];
                 uvs2 = uvsGroup2[i];
-                uvs2[index*2] = uvs1[uvIndex*2];
-                uvs2[index*2+1] = uvs1[uvIndex*2+1];
+                uvs2[index * 2] = uvs1[uvIndex * 2];
+                uvs2[index * 2 + 1] = uvs1[uvIndex * 2 + 1];
             }
 
             //only one
             normals1 = normalsGroup[0];
             normals2 = normalsGroup2[0];
-            normals2[index*3] = normals1[vertexIndex*3];
-            normals2[index*3+1] = normals1[vertexIndex*3+1];
-            normals2[index*3+2] = normals1[vertexIndex*3+2];
+            normals2[index * 3] = normals1[vertexIndex * 3];
+            normals2[index * 3 + 1] = normals1[vertexIndex * 3 + 1];
+            normals2[index * 3 + 2] = normals1[vertexIndex * 3 + 2];
 
         }
 
-        function addFace(a, b, c, d, ua, ub, uc, ud){
+        function addFace(a, b, c, d, ua, ub, uc, ud) {
             var ia, ib, ic, id, ie, ig;
             if(ua !== undefined) {
                 haveUV = true;
@@ -126,7 +126,7 @@ THREE.AttributeLoader.prototype = {
                 faces.push(ie);
                 faces.push(ic);
                 faces.push(ig);
-            }else{
+            } else {
                 ia = parseVertexIndex(a);
                 ib = parseVertexIndex(b);
                 ic = parseVertexIndex(c);
@@ -138,28 +138,28 @@ THREE.AttributeLoader.prototype = {
 
         function computeIndex(indexVertex, indexUv) {
 
-            let i,uniqueID;
+            let i, uniqueID;
 
             if(indexUv !== undefined) {
-                uniqueID = indexVertex*MAX_INDEX+indexUv+1;
+                uniqueID = indexVertex * MAX_INDEX + indexUv + 1;
                 i = indexPair.indexOf(uniqueID);
-                if(i===-1){
+                if(i === -1) {
                     currentIndex = cnt;
                     indexPair[cnt++] = uniqueID;
-                    newIndex(currentIndex,indexVertex, indexUv);
-                }else{
+                    newIndex(currentIndex, indexVertex, indexUv);
+                } else {
                     currentIndex = i
                 }
                 index.push(currentIndex);
 
-            }else{
+            } else {
 
                 i = indexPair.indexOf(indexVertex);
-                if(i===-1){
+                if(i === -1) {
                     currentIndex = cnt;
                     indexPair[cnt++] = indexVertex;
-                    newIndex(currentIndex, indexVertex );
-                }else{
+                    newIndex(currentIndex, indexVertex);
+                } else {
                     currentIndex = i
                 }
                 index.push(currentIndex);
@@ -174,27 +174,27 @@ THREE.AttributeLoader.prototype = {
 
             var inc = haveUV ? 6 : 3;
             var l = faces.length;
-            var k ;
+            var k;
 
             var iA, iB, iC;
             var pAx, pAy, pAz, pBx, pBy, pBz, pCx, pCy, pCz;
             var vAx, vAy, vAz, vBx, vBy, vBz;
             var nAx, nAy, nAz;
 
-            for(k=0 ; k<l;k+=inc){
-                iA = faces[ k + 0 ]*3;
-                iB = faces[ k + 2 ]*3;
-                iC = faces[ k + 4 ]*3;
+            for(k = 0; k < l; k += inc) {
+                iA = faces[k + 0] * 3;
+                iB = faces[k + 2] * 3;
+                iC = faces[k + 4] * 3;
 
                 pAx = positions[iA];
-                pAy = positions[iA+1];
-                pAz = positions[iA+2];
+                pAy = positions[iA + 1];
+                pAz = positions[iA + 2];
                 pBx = positions[iB];
-                pBy = positions[iB+1];
-                pBz = positions[iB+2];
+                pBy = positions[iB + 1];
+                pBz = positions[iB + 2];
                 pCx = positions[iC];
-                pCy = positions[iC+1];
-                pCz = positions[iC+2];
+                pCy = positions[iC + 1];
+                pCz = positions[iC + 2];
 
                 vAx = pCx - pBx;
                 vAy = pCy - pBy;
@@ -207,29 +207,29 @@ THREE.AttributeLoader.prototype = {
                 nAy = vAz * vBx - vAx * vBz;
                 nAz = vAx * vBy - vAy * vBx;
 
-                normals[ iA ] += nAx;
-                normals[ iA + 1 ] += nAy;
-                normals[ iA + 2 ] += nAz;
+                normals[iA] += nAx;
+                normals[iA + 1] += nAy;
+                normals[iA + 2] += nAz;
 
-                normals[ iB ] += nAx;
-                normals[ iB + 1 ] += nAy;
-                normals[ iB + 2 ] += nAz;
+                normals[iB] += nAx;
+                normals[iB + 1] += nAy;
+                normals[iB + 2] += nAz;
 
-                normals[ iC ] += nAx;
-                normals[ iC + 1 ] += nAy;
-                normals[ iC + 2 ] += nAz;
+                normals[iC] += nAx;
+                normals[iC + 1] += nAy;
+                normals[iC + 2] += nAz;
 
             }
 
-            l= normals.length;
-            for(k=0 ; k<l;k+=3){
-                nAx = normals[ k ];
-                nAy = normals[ k + 1 ];
-                nAz = normals[ k + 2 ];
-                const length = Math.sqrt(nAx*nAx+nAy*nAy+nAz*nAz);
-                normals[ k ] = nAx/length;
-                normals[ k + 1 ] = nAy/length;
-                normals[ k + 2 ] = nAz/length;
+            l = normals.length;
+            for(k = 0; k < l; k += 3) {
+                nAx = normals[k];
+                nAy = normals[k + 1];
+                nAz = normals[k + 2];
+                const length = Math.sqrt(nAx * nAx + nAy * nAy + nAz * nAz);
+                normals[k] = nAx / length;
+                normals[k + 1] = nAy / length;
+                normals[k + 2] = nAz / length;
             }
 
         }
@@ -263,7 +263,7 @@ THREE.AttributeLoader.prototype = {
 
             } else if(( result = vertex_pattern.exec(line) ) !== null) {
 
-                if(currentGroup!== 0){
+                if(currentGroup !== 0) {
                     vertices = verticesGroup[verticesGroup.length] = [];
                     currentGroup = 0;
                 }
@@ -274,9 +274,9 @@ THREE.AttributeLoader.prototype = {
                     parseFloat(result[3])
                 );
 
-            }  else if(( result = uv_pattern.exec(line) ) !== null) {
+            } else if(( result = uv_pattern.exec(line) ) !== null) {
 
-                if(currentGroup!== 1){
+                if(currentGroup !== 1) {
                     uvs = uvsGroup[uvsGroup.length] = [];
                     currentGroup = 1;
                 }
@@ -311,21 +311,21 @@ THREE.AttributeLoader.prototype = {
         computeVertexNormals();
 
         let k;
-        if(haveUV){
-            for(k = 0; k < l; k+=2) {
-                computeIndex(faces[k], faces[k+1]);
+        if(haveUV) {
+            for(k = 0; k < l; k += 2) {
+                computeIndex(faces[k], faces[k + 1]);
             }
-        }else{
+        } else {
             for(k = 0; k < l; k++) {
                 computeIndex(faces[k]);
             }
         }
 
         return {
-            verticesGroup: verticesGroup2.map(vertices => new Float32Array(vertices)),
-            uvsGroup: uvsGroup2.map(uvs => new Float32Array(uvs)),
-            normalsGroup: normalsGroup2.map(normals => new Float32Array(normals)),
-            index: new Uint32Array(index)
+            verticesGroup: verticesGroup2.map(vertices => new THREE.BufferAttribute(new Float32Array(vertices), 3)),
+            uvsGroup: uvsGroup2.map(uvs => new THREE.BufferAttribute(new Float32Array(uvs), 2)),
+            normalsGroup: normalsGroup2.map(normals => new THREE.BufferAttribute(new Float32Array(normals), 3)),
+            index: new THREE.BufferAttribute(new Uint32Array(index), 1)
         };
     }
 };
@@ -336,9 +336,17 @@ manager.onProgress = function(item, loaded, total) {
     console.log(item, loaded, total);
 };
 const loader = new THREE.AttributeLoader(manager);
-THREE.loadAttributes = function(url, cb) {
-    loader.load(url, function(object) {
-        cb(object);
-    });
+
+const cacheBuffer = {};
+
+THREE.loadBuffers = function(url, cb) {
+    if(!cacheBuffer[url]) {
+        loader.load(url, function(buffers) {
+            cacheBuffer[url] = buffers;
+            cb(cacheBuffer[url]);
+        });
+    } else {
+        cb(cacheBuffer[url]);
+    }
 };
 

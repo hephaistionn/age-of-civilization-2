@@ -8,7 +8,7 @@ module.exports = class EntityHouse {
 
     constructor(model) {
         this.model = model;
-        this.element = THREE.loadObjAsync('obj/buildingA.obj', material);
+        this.element = THREE.getMesh('obj/buildingA.obj', material);
         this.element.userData.model = model;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;

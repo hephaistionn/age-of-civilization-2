@@ -113,9 +113,9 @@ module.exports = class Screen {
         this.mousePress = false;
         //filter: detect if the user is moving the camera.
         if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 50) {
-            const point = this.getPointOnMap( e.offsetX, e.offsetY);
+            const point = this.getPointOnMap(e.offsetX, e.offsetY);
             ee.emit('mouseClick', point.x, point.z, point.model);
-        }else{
+        } else {
             ee.emit('mouseUp', e.offsetX, e.offsetY);
         }
     }
@@ -140,22 +140,22 @@ module.exports = class Screen {
     }
 
     _mouseMoveOnMap(screenX, screenY) {
-        const point = this.getPointOnMap( screenX, screenY);
+        const point = this.getPointOnMap(screenX, screenY);
         ee.emit('mouseMoveOnMap', point.x, point.z);
     }
 
     _mouseMoveOnMapPress(screenX, screenY) {
-        const point = this.getPointOnMap( screenX, screenY);
+        const point = this.getPointOnMap(screenX, screenY);
         ee.emit('mouseMoveOnMapPress', point.x, point.z);
     }
 
     _mouseCheckCollision(screenX, screenY) {
-        const point = this.getPointOnMap( screenX, screenY);
+        const point = this.getPointOnMap(screenX, screenY);
         ee.emit('mouseDownOnMap', point.x, point.z);
     }
 
-    getPointOnMap(screenX, screenY){
-        if(!this.map || !this.camera)return {x:0,z:0};
+    getPointOnMap(screenX, screenY) {
+        if(!this.map || !this.camera)return {x: 0, z: 0};
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this.camera.element);
@@ -166,18 +166,18 @@ module.exports = class Screen {
             point.x /= tileSize;
             point.z /= tileSize;
             const mesh = intersects[0].object;
-            if(mesh.model) {
+            if(mesh.userData.model) {
                 return {
-                    model:mesh.model,
-                    x:point.x,
-                    z:point.z
+                    model: mesh.userData.model,
+                    x: point.x,
+                    z: point.z
                 }
-            }else{
+            } else {
                 return point;
             }
 
-        }else{
-            return {x:0,z:0};
+        } else {
+            return {x: 0, z: 0};
         }
     }
 

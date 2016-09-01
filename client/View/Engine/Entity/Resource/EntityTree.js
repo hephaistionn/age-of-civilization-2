@@ -8,7 +8,7 @@ module.exports = class EntityTree {
 
     constructor(model) {
         this.model = model;
-        this.element = THREE.loadObjAsync('obj/treeA.obj', material);
+        this.element = THREE.getMesh('obj/treeB.obj', material);
         this.element.userData.model = model;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;

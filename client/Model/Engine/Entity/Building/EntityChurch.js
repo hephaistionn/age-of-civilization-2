@@ -12,22 +12,20 @@ class EntityChurch extends Entity {
     update() {
         this.power += 1;
         if(this.power === 2) {
-            ee.emit('newEntity',{
+            ee.emit('newEntity', {
                 entityId: 'EntityPeon',
                 power: 5,
-                x:this.x,
-                y:this.y,
-                z:this.z,
-                a:0,
+                x: this.x,
+                y: this.y,
+                z: this.z,
+                a: 0,
                 map: null,
                 tragetEntityId: 'EntityHouse',
                 source: this
-            } );
+            });
             this.power = 0;
         }
     }
-
-
 }
 
 EntityChurch.tile_x = 2;
