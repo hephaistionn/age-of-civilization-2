@@ -1,7 +1,7 @@
 const config = require('../../config');
 const tileSize = config.tileSize;
 const tileMaxHeight = config.tileMaxHeight;
-const material = require('../materialA');
+const material = require('../../material/materialA');
 const THREE = require('three');
 
 module.exports = class EntityChurch {

@@ -50,6 +50,7 @@ class App {
             const now = new Date().getTime();
             const dt = now - (time || now);
             time = now;
+            Math.min(dt,500);
             that._update(dt);
         };
 

@@ -12,7 +12,7 @@ module.exports = class Entity {
         this.z = 0;
         this.a = 0;
         this.timer = 0;
-        this.move(params.x, params.y, params.z, params.a);
+        this.move(params.x||0, params.y||0, params.z||0, params.a||0);
     }
 
     move(x, y, z, a) {

@@ -4,6 +4,7 @@ require('./Shape');
 require('./PlaneBufferGeometry');
 require('./AttributeLoader');
 require('./loadTexture');
+require('./renderer');
 module.exports = THREE;
 
 //This polyfill is essential to rendering on mobile.

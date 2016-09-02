@@ -19,7 +19,7 @@ module.exports = Map=> {
                 if(newEntityView.update){
                     this.entityDynamicList.push(newEntityView);
                 }
-                if(entityModel.x !== undefined && entityModel.z !== undefined){
+                if(entityModel.x !== undefined && entityModel.z !== undefined && !newEntityView.absolute){
                     let chunkX = Math.floor(entityModel.x / this.tileByChunk);
                     let chunkZ = Math.floor(entityModel.z / this.tileByChunk);
                     this.chunks[chunkX][chunkZ].add(newEntityView.element);
