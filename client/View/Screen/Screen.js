@@ -8,10 +8,7 @@ const COMPONENTS = {
     Render: require('./../Engine/Render'),
     Positioner: require('./../Engine/Positioner'),
     RoadPositioner: require('./../Engine/RoadPositioner'),
-    Panel: require('../UI/Panel'),
-    Text: require('../UI/Text'),
-    Button: require('../UI/Button'),
-    Picture: require('../UI/Picture')
+    BuildingMenu: require('../UI/BuildingMenu')
 };
 
 module.exports = class Screen {
@@ -83,11 +80,12 @@ module.exports = class Screen {
     }
 
     initObservers() {
-        this.dom.addEventListener('mousedown', this._mouseDown.bind(this));
-        this.dom.addEventListener('mouseup', this._mouseUp.bind(this));
-        this.dom.addEventListener('mousemove', this._mouseMove.bind(this));
-        this.dom.addEventListener('mousewheel', this._mouseWheel.bind(this));
-        this.dom.addEventListener('mouseleave', this._mouseLeave.bind(this));
+        this.canvas.addEventListener('mousedown', this._mouseDown.bind(this));
+        this.canvas.addEventListener('mouseup', this._mouseUp.bind(this));
+        this.canvas.addEventListener('mousemove', this._mouseMove.bind(this));
+        this.canvas.addEventListener('mousewheel', this._mouseWheel.bind(this));
+        this.canvas.addEventListener('onmouseenter', this._mouseLeave.bind(this));
+        //this.canvas.addEventListener('onmouseout', this._mouseLeave.bind(this));
 
         window.addEventListener('resize', this._resize.bind(this), false);
         ee.on('onUpdate', this.updateComponent.bind(this));

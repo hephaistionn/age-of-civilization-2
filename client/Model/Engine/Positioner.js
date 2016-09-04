@@ -47,6 +47,11 @@ module.exports = class Positioner {
         this.rotation = 0;
     }
 
+    unselectEnity() {
+        this.selected = null;
+        this.rotation = 0;
+    }
+
     increaseRotation() {
         this.rotation += Math.PI / 2;
         if(this.rotation >= Math.PI * 2) {

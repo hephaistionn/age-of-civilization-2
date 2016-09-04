@@ -103,7 +103,11 @@ module.exports = class RoadPositioner {
         } else {
             this.selected = null;
         }
-        this.removeMode = false;
+    }
+
+    unselectEnity() {
+        this.road.length = 0;
+        this.selected = null;
     }
 
 

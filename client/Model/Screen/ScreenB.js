@@ -1,8 +1,6 @@
 const ee = require('../../services/eventEmitter');
 
-const Panel = require('../UI/Panel');
-const Text = require('../UI/Text');
-const Button = require('../UI/Button');
+const BuildingMenu = require('../UI/BuildingMenu');
 
 const Map = require('../Engine/Map');
 const Light = require('../Engine/Light');
@@ -19,61 +17,38 @@ class ScreenB {
 
         this.camera = new Camera({x: 100, z: 100});
         this.light = new Light({x: -35, y: 100, z: 25});
+        this.buildingMenu = new BuildingMenu();
+
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         this.light.scaleOffset(-this.camera.offsetY);
 
+        this.buildingMenu.onClickBuilding(entityId => {
+            if(entityId === 'Destroy') {
+                this.positioner.unselectEnity();
+                this.roadPositioner.unselectEnity();
+                removeMode = true;
+            } else if(entityId === 'Road') {
+                this.positioner.unselectEnity();
+                this.roadPositioner.selectEnity(2);
+                removeMode = false;
 
-        const text = new Text({text: 'Screen B', size: 3});
-        const buttonScreen = new Button({text: 'Change Screen'});
-        const buttonHouse = new Button({text: 'Build House'});
-        const buttonChurch = new Button({text: 'Build Church'});
-        const buttonRemove = new Button({text: 'Remove'});
-        const buttonRotate = new Button({text: 'Rotate'});
-        const buttonRoadA = new Button({text: 'RoadA'});
-        const buttonRoadB = new Button({text: 'RoadB'});
+            } else {
+                this.roadPositioner.unselectEnity();
+                this.positioner.selectEnity(entityId);
+                removeMode = false;
+            }
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
+            ee.emit('onUpdate', 'positioner', this.positioner);
 
-        this.panel = new Panel({width: 200, height: 250, x: 0, y: 0});
-        this.panel.setChild(text);
-        this.panel.setChild(buttonScreen);
-        this.panel.setChild(buttonHouse);
-        this.panel.setChild(buttonChurch);
-        this.panel.setChild(buttonRemove);
-        this.panel.setChild(buttonRotate);
-        this.panel.setChild(buttonRoadA);
-        this.panel.setChild(buttonRoadB);
-
-        buttonScreen.onClick(() => {
-            ee.emit('screen', 'ScreenA');
         });
 
-        buttonHouse.onClick(() => {
-            this.positioner.selectEnity('EntityHouse');
+        this.buildingMenu.onClose(()=> {
+            this.positioner.unselectEnity();
+            this.roadPositioner.unselectEnity();
+            removeMode = false;
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
-
-        buttonChurch.onClick(() => {
-            this.positioner.selectEnity('EntityChurch');
-            ee.emit('onUpdate', 'positioner', this.positioner);
-        });
-
-        buttonRemove.onClick(() => {
-            removeMode = !removeMode;
-        });
-
-        buttonRotate.onClick(() => {
-            this.positioner.increaseRotation();
-            ee.emit('onUpdate', 'positioner', this.positioner);
-        });
-
-        buttonRoadA.onClick(() => {
-            this.roadPositioner.selectEnity(2);//2 => roadType
-            ee.emit('onUpdate', 'positioner', this.positioner);
-        });
-        buttonRoadB.onClick(() => {
-            this.roadPositioner.selectEnity(3);//2 => roadType
-            ee.emit('onUpdate', 'positioner', this.positioner);
-        });
-
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
@@ -101,7 +76,7 @@ class ScreenB {
         if(this.positioner && this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
-        }else if(this.roadPositioner && this.roadPositioner.selected) {
+        } else if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
@@ -135,20 +110,20 @@ class ScreenB {
     }
 
     mouseClick(x, z, model) {
-        if(removeMode){
-            this.map.clearTile(x,z, model);
+        if(removeMode) {
+            this.map.clearTile(x, z, model);
             ee.emit('onUpdate', 'map', this.map);
-        }else if(this.positioner.selected && !this.positioner.undroppable) {
+        } else if(this.positioner.selected && !this.positioner.undroppable) {
             const entity = this.positioner.selected;
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             this.map.newEntity(params);
             ee.emit('onUpdate', 'map', this.map);
             this.map.updateEntity('EntityRoad', null); //remove road under entity
             ee.emit('onUpdate', 'map', this.map);
-        }else if(this.roadPositioner.selected) {
-            this.roadPositioner.placeSelectedEntity(x,z,this.map);
+        } else if(this.roadPositioner.selected) {
+            this.roadPositioner.placeSelectedEntity(x, z, this.map);
             const params = this.roadPositioner.getNewRoad();
-            if(params){
+            if(params) {
                 this.map.updateEntity('EntityRoad', null, params);
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
@@ -158,7 +133,7 @@ class ScreenB {
 
     mouseUp() {
         const params = this.roadPositioner.getNewRoad();
-        if(params){
+        if(params) {
             this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
