@@ -1,4 +1,5 @@
 const THREE = require('../../services/threejs');
+const config = require('./config');
 
 module.exports = class Light {
 
@@ -19,20 +20,22 @@ module.exports = class Light {
         this.element.add(this.ambient);
         this.element.add(this.directionalLight);
 
+        this.tileSize = config.tileSize;
+
         this.updateState(model);
     }
 
     updateState(model) {
 
-        this.directionalLight.shadow.camera.zoom = 90 / model.y;
+        this.directionalLight.shadow.camera.zoom = 60 / (model.y * this.tileSize);
         this.directionalLight.shadow.camera.updateProjectionMatrix();
 
-        this.directionalLight.matrix.elements[12] = model.x;
-        this.directionalLight.matrix.elements[13] = model.y;
-        this.directionalLight.matrix.elements[14] = model.z;
-        this.directionalLight.target.matrixWorld.elements[12] = model.targetX;
-        this.directionalLight.target.matrixWorld.elements[13] = model.targetY;
-        this.directionalLight.target.matrixWorld.elements[14] = model.targetZ;
+        this.directionalLight.matrix.elements[12] = model.x * this.tileSize;
+        this.directionalLight.matrix.elements[13] = model.y * this.tileSize;
+        this.directionalLight.matrix.elements[14] = model.z * this.tileSize;
+        this.directionalLight.target.matrixWorld.elements[12] = model.targetX * this.tileSize;
+        this.directionalLight.target.matrixWorld.elements[13] = model.targetY * this.tileSize;
+        this.directionalLight.target.matrixWorld.elements[14] = model.targetZ * this.tileSize;
     }
 
     update(dt) {

@@ -11,7 +11,7 @@ module.exports = class RoadPositioner {
         this.MAX_VERTEX = this.VERTEX_BY_TILE * this.MAX_TILES;
         this.pointsHeights = model.pointsHeights;
         this.tileSize = config.tileSize;
-        this.tileMaxHeight = config.tileMaxHeight;
+        this.tileHeight = config.tileHeight;
         this.nbPointX = model.nbPointX;
         this.nbPointZ = model.nbPointZ;
         this.material = material;
@@ -40,7 +40,7 @@ module.exports = class RoadPositioner {
         const l = this.model.road.length;
         const nbPointX = this.nbPointX;
         const pointsHeights = this.pointsHeights;
-        const tileMaxHeight = this.tileMaxHeight;
+        const tileHeight = this.tileHeight;
         const geometry = this.element.geometry;
         const positions = geometry.attributes.position.array;
         const walkables = geometry.attributes.walkable.array;
@@ -62,7 +62,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileMaxHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x + 1;
@@ -70,7 +70,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileMaxHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x;
@@ -78,7 +78,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileMaxHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
 
@@ -87,7 +87,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileMaxHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x + 1;
@@ -95,7 +95,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileMaxHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x;
@@ -103,7 +103,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileMaxHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             geometry.drawRange.count = ctn / 3;

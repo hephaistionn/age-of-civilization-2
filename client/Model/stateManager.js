@@ -1,7 +1,10 @@
 class StateManager {
 
     constructor() {
-        this.state = {};
+        this.state = {
+            wood: 1000,
+            stone: 500
+        };
     }
 }
 

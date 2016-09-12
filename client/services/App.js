@@ -16,16 +16,22 @@ class App {
         }
 
         ee.on('mouseDown', this.mouseDown.bind(this));
+        ee.on('mouseDownRight', this.mouseDownRight.bind(this));
         ee.on('mouseMovePress', this.mouseMovePress.bind(this));
         ee.on('mouseMove', this.mouseMove.bind(this));
+        ee.on('mouseBorder', this.mouseBorder.bind(this));
         ee.on('mouseClick', this.mouseClick.bind(this));
         ee.on('mouseUp', this.mouseUp.bind(this));
+        ee.on('keypress', this.keypress.bind(this));
+        ee.on('mouseLeave', this.mouseLeave.bind(this));
+        ee.on('mouseEnter', this.mouseEnter.bind(this));
         ee.on('mouseWheel', this.mouseWheel.bind(this));
         ee.on('mouseMoveOnMap', this.mouseMoveOnMap.bind(this));
         ee.on('mouseMoveOnMapPress', this.mouseMoveOnMapPress.bind(this));
         ee.on('mouseDownOnMap', this.mouseDownOnMap.bind(this));
         ee.on('newEntity', this.newEntity.bind(this));
         ee.on('removeEntity', this.removeEntity.bind(this));
+        ee.on('mouseRotate', this.mouseRotate.bind(this));
 
     }
 
@@ -50,7 +56,7 @@ class App {
             const now = new Date().getTime();
             const dt = now - (time || now);
             time = now;
-            Math.min(dt,500);
+            Math.min(dt, 500);
             that._update(dt);
         };
 
@@ -71,6 +77,12 @@ class App {
             this.model.mouseDown(x, z);
     }
 
+
+    mouseDownRight(x, z) {
+        if(this.model.mouseDownRight)
+            this.model.mouseDownRight(x, z);
+    }
+
     mouseClick(x, z, model) {
         if(this.model.mouseClick)
             this.model.mouseClick(x, z, model);
@@ -81,6 +93,26 @@ class App {
             this.model.mouseUp(x, z);
     }
 
+    keypress(code) {
+        if(this.model.keypress)
+            this.model.keypress(code);
+    }
+
+    mouseLeave(dx, dy) {
+        if(this.model.mouseLeave)
+            this.model.mouseLeave(dx, dy);
+    }
+
+    mouseEnter(dx, dy) {
+        if(this.model.mouseEnter)
+            this.model.mouseEnter(dx, dy);
+    }
+
+    mouseRotate() {
+        if(this.model.mouseRotate)
+            this.model.mouseRotate();
+    }
+
     mouseMovePress(x, z) {
         if(this.model.mouseMovePress)
             this.model.mouseMovePress(x, z);
@@ -89,6 +121,11 @@ class App {
     mouseMove(x, z) {
         if(this.model.mouseMove)
             this.model.mouseMove(x, z);
+    }
+
+    mouseBorder(x, z) {
+        if(this.model.mouseBorder)
+            this.model.mouseBorder(x, z);
     }
 
     mouseWheel(delta) {

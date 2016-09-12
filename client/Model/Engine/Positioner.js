@@ -16,6 +16,8 @@ module.exports = class Positioner {
     }
 
     placeSelectedEntity(x, z, map) {
+        this.x = x;
+        this.z = z;
 
         const y = this.getHeightTile(x, z);
 
@@ -52,11 +54,29 @@ module.exports = class Positioner {
         this.rotation = 0;
     }
 
-    increaseRotation() {
+    increaseRotation(map) {
         this.rotation += Math.PI / 2;
         if(this.rotation >= Math.PI * 2) {
             this.rotation = 0;
         }
+
+        const y = this.getHeightTile(this.x, this.z);
+
+        this.selected.move(this.x, y, this.z, this.rotation);
+
+        const tiles = this.selected.getTiles();
+
+        this.undroppable = false;
+
+        for(let i = 0; i < tiles.length; i += 2) {
+            if(!map.grid.isWalkableAt(tiles[i], tiles[i + 1])) {
+                this.undroppable = true;
+                return;
+            }
+        }
+
+
+
     }
 
     dismount() {

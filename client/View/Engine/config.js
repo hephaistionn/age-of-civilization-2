@@ -1,7 +1,7 @@
 module.exports = {
 
     tileSize: 4,
-    tileMaxHeight: 20,
+    tileHeight: 20,
     tileByChunk: 10,
 
 };

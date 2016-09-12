@@ -1,8 +1,8 @@
-const ee = require('../../services/eventEmitter');
+const ee = require('../../../services/eventEmitter');
 
-const Camera = require('../Engine/Camera');
+const Camera = require('../../Engine/Camera');
 
-class ScreenA {
+class ScreenWorldmap {
 
     constructor() {
 
@@ -23,4 +23,4 @@ class ScreenA {
     }
 }
 
-module.exports = ScreenA;
+module.exports = ScreenWorldmap;

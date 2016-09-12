@@ -1,0 +1,84 @@
+.buildingMenu.pc {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+
+  .categoriesContainer {
+    position: absolute;
+    left: 0;
+    bottom: 100px;
+    white-space: nowrap;
+    overflow-x: hidden;
+
+    .item {
+      background-color: grey;
+      cursor: pointer;
+      text-align: center;
+      width: 100px;
+      height: 40px;
+      margin: 0 10px 0 42px;
+      line-height: 40px;
+      display: inline-block;
+      &:hover {
+        background-color: #777777;
+      }
+
+      &.focus{
+        background-color: #565656;
+      }
+    }
+  }
+
+  .buildingContainer{
+    position: absolute;
+    background-color: #565656;
+    height: 100px;
+    bottom: 0;
+    width: 100%;
+    overflow-x: scroll;
+    left: 0;
+    padding: 0 30px 0 0;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .item {
+      background-color: grey;
+      cursor: pointer;
+      text-align: center;
+      width: 90px;
+      height: 90px;
+      margin: 5px 0 5px 30px;
+      line-height: 90px;
+      display: inline-block;
+      &:hover {
+        background-color: #777777;
+      }
+    }
+
+  }
+
+
+/** ANIMATION CLOSE OPEN */
+
+  .categoriesContainer{
+    transition-property: transform;
+    transition-duration: 350ms;
+    transform: translateY(0px);
+  }
+  .buildingContainer{
+    transition-property: transform;
+    transition-duration: 350ms;
+    transform: translateY(0px);
+  }
+
+  &.hide{
+    .categoriesContainer{
+      transform: translateY(100px);
+    }
+    .buildingContainer{
+      transform: translateY(100px);
+    }
+  }
+}

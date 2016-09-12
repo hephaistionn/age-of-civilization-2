@@ -10,29 +10,31 @@ module.exports = class BuildingMenu {
             factory: [{id: 'Destroy'}],
             service: [{id: 'Destroy'}],
             culture: [{id: 'EntityChurch', required: {}}, {id: 'Destroy'}],
-            state: [{id: 'EntityHouse', required: {}}, {id: 'EntityHouse', required: {}},
-                {id: 'EntityHouse', required: {}}, {id: 'EntityHouse', required: {}},
-                {id: 'Road', required: {}}, {id: 'Destroy'}]
+            state: [
+                {id: 'EntityHouse', required: {}, cost: {stone: 5}},
+                {id: 'EntityChurch', required: {}, cost: {stone: 5, wood: 5}},
+                {id: 'Road', required: {}, cost: {stone: 1}},
+                {id: 'Destroy'},
+                {id: 'Destroy'},
+                {id: 'Destroy'}]
         };
         this.currentCategory = [];
         this.currentFocus = null;
         this.displayed = false;
-
-        this.labelButtonOpen = 'Build';
-        this.labelButtonClose = 'Close';
 
         this.type = 'UI';
 
     }
 
     open() {
+        if(this.displayed === true) return;
         this.displayed = true;
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
     close() {
+        if(this.displayed === false) return;
         this.displayed = false;
-        this.currentCategory = [];
         if(this._close)this._close();
         ee.emit('onUpdate', 'buildingMenu', this);
     }

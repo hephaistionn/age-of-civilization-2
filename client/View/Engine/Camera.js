@@ -1,4 +1,5 @@
 const THREE = require('../../services/threejs');
+const config = require('./config');
 
 module.exports = class Camera {
 
@@ -7,6 +8,8 @@ module.exports = class Camera {
 
         this.element = new THREE.PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
         this.target = new THREE.Vector3();
+
+        this.tileSize = config.tileSize;
 
         this.updateState(model);
 
@@ -18,12 +21,12 @@ module.exports = class Camera {
     }
 
     updateState(model) {
-        this.element.position.x = model.x;
-        this.element.position.y = model.y;
-        this.element.position.z = model.z;
-        this.target.x = model.targetX;
-        this.target.y = model.targetY;
-        this.target.z = model.targetZ;
+        this.element.position.x = model.x * this.tileSize;
+        this.element.position.y = model.y * this.tileSize;
+        this.element.position.z = model.z * this.tileSize;
+        this.target.x = model.targetX * this.tileSize;
+        this.target.y = model.targetY * this.tileSize;
+        this.target.z = model.targetZ * this.tileSize;
     }
 
     resize(width, height) {

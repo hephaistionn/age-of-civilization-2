@@ -4,17 +4,17 @@ window.addEventListener('load', () => {
 
     const App = require('./services/App');
 
-    const ScreenA = require('./Model/Screen/ScreenA');
-    const ScreenB = require('./Model/Screen/ScreenB');
+    const ScreenWorldmap = require('./Model/Screen/ScreenWorldmap');
+    const ScreenMap = require('./Model/Screen/ScreenMap');
 
-    const app = new App(ScreenA, ScreenB);
+    const app = new App(ScreenWorldmap, ScreenMap);
 
     ee.on('screen', id => {
         app.hideScreen();
         app.showScreen(id);
     });
 
-    app.showScreen('ScreenB');
+    app.showScreen('ScreenMap');
 
 });
 

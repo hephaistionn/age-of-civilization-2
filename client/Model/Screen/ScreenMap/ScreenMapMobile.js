@@ -1,17 +1,17 @@
-const ee = require('../../services/eventEmitter');
+const ee = require('../../../services/eventEmitter');
 
-const BuildingMenu = require('../UI/BuildingMenu');
+const BuildingMenu = require('../../UI/BuildingMenu');       
 
-const Map = require('../Engine/Map');
-const Light = require('../Engine/Light');
-const Camera = require('../Engine/Camera');
-const Positioner = require('../Engine/Positioner');
-const RoadPositioner = require('../Engine/RoadPositioner');
+const Map = require('../../Engine/Map');
+const Light = require('../../Engine/Light');
+const Camera = require('../../Engine/Camera');
+const Positioner = require('../../Engine/Positioner');
+const RoadPositioner = require('../../Engine/RoadPositioner');
 
-var PixelMap = require('../../services/PixelMap');
+var PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
 
-class ScreenB {
+class ScreenMap {
 
     constructor() {
 
@@ -161,4 +161,4 @@ class ScreenB {
 
 }
 
-module.exports = ScreenB;
+module.exports = ScreenMap;

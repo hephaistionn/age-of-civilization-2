@@ -12,7 +12,7 @@ class Map {
 
         this.tileByChunk = config.tileByChunk;
         this.tileSize = config.tileSize;
-        this.tileMaxHeight = config.tileMaxHeight;
+        this.tileHeight = config.tileHeight;
         this.nbPointX = model.nbPointX;
         this.nbPointZ = model.nbPointZ;
         this.pointsNormal = model.pointsNormal;

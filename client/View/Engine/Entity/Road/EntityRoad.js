@@ -3,7 +3,7 @@ const materialRoad = require('../../Material/materialRoad');
 const UVpath = require('../../../../services/UVpath');
 const config = require('../../config');
 const tileSize = config.tileSize;
-const tileMaxHeight = config.tileMaxHeight;
+const tileHeight = config.tileHeight;
 
 class EntityRoad {
 
@@ -14,7 +14,7 @@ class EntityRoad {
         this.tileSize = config.tileSize;
         this.nbTileX = this.model.map.nbTileX;
         this.nbTileZ = this.model.map.nbTileZ;
-        this.tileMaxHeight = config.tileMaxHeight;
+        this.tileHeight = config.tileHeight;
         this.nbPointX = this.model.map.nbPointX;
         this.nbPointZ = this.model.map.nbPointZ;
         this.pointsHeights = this.model.map.pointsHeights;
@@ -159,7 +159,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];
@@ -170,7 +170,7 @@ class EntityRoad {
                 vz = z;
                 absoluteIndex = vz * this.nbPointX + vx;
                 dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
-                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileHeight;
                 dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
                 norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
                 dx /= norm;
@@ -179,7 +179,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
@@ -190,7 +190,7 @@ class EntityRoad {
                 vz = z;
                 absoluteIndex = vz * this.nbPointX + vx;
                 dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
-                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileHeight;
                 dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
                 norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
                 dx /= norm;
@@ -199,7 +199,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[0];
@@ -210,7 +210,7 @@ class EntityRoad {
                 vz = z + 1;
                 absoluteIndex = vz * this.nbPointX + vx;
                 dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
-                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileHeight;
                 dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
                 norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
                 dx /= norm;
@@ -219,7 +219,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[4];
@@ -230,7 +230,7 @@ class EntityRoad {
                 vz = z;
                 absoluteIndex = vz * this.nbPointX + vx;
                 dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
-                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileHeight;
                 dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
                 norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
                 dx /= norm;
@@ -239,7 +239,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[2];
@@ -250,7 +250,7 @@ class EntityRoad {
                 vz = z + 1;
                 absoluteIndex = vz * this.nbPointX + vx;
                 dx = this.pointsNormal[absoluteIndex * 3]/127/this.tileSize;
-                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileMaxHeight;
+                dy = this.pointsNormal[absoluteIndex * 3 +1]/127/this.tileHeight;
                 dz = this.pointsNormal[absoluteIndex * 3 + 2]/127/this.tileSize;
                 norm = Math.sqrt(dx*dx+dy*dy+dz*dz);
                 dx /= norm;
@@ -259,7 +259,7 @@ class EntityRoad {
                 normals[ctn] = dx;
                 positions[ctn++] = vx * tileSize;
                 normals[ctn] = dy;
-                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileMaxHeight+0.05;
+                positions[ctn++] = this.pointsHeights[absoluteIndex]/ 255 * this.tileHeight+0.05;
                 normals[ctn] = dz;
                 positions[ctn++] = vz * tileSize;
                 uvs[ctnUV++] = uvref[6];

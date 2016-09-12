@@ -128,10 +128,10 @@ module.exports = Map=> {
             let pointsType = model.pointsType[index] || 0;
             let pointsHeights = model.pointsHeights[index] || 0;
             groundArry[i] = pointsType;
-            posArray[i * 3 + 1] = pointsHeights / 255 * this.tileMaxHeight;
+            posArray[i * 3 + 1] = pointsHeights / 255 * this.tileHeight;
 
             let dx = model.pointsNormal[index * 3] / 127 / this.tileSize;
-            let dy = model.pointsNormal[index * 3 + 1] / 127 / this.tileMaxHeight;
+            let dy = model.pointsNormal[index * 3 + 1] / 127 / this.tileHeight;
             let dz = model.pointsNormal[index * 3 + 2] / 127 / this.tileSize;
             let l = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
