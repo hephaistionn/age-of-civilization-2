@@ -89,7 +89,6 @@ class ScreenMap {
     mouseRotate() {
         this.positioner.increaseRotation(this.map);
         ee.emit('onUpdate', 'positioner', this.positioner);
-
     }
 
     mouseMoveOnMapPress(x, z) {

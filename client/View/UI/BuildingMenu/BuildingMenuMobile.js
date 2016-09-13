@@ -6,18 +6,6 @@ module.exports = class BuildingMenu {
         this.node = document.createElement('div');
         this.node.className = 'buildingMenu mobile';
 
-        this.nodeButtonOpen = document.createElement('div');
-        this.nodeButtonOpen.className = 'button open';
-        this.nodeButtonOpen.textContent = 'Build';
-        this.nodeButtonOpen.onclick = model._onClickOpen.bind(model);
-        this.node.appendChild(this.nodeButtonOpen);
-
-        this.nodeButtonClose = document.createElement('div');
-        this.nodeButtonClose.className = 'button close';
-        this.nodeButtonClose.textContent = 'Close';
-        this.nodeButtonClose.onclick = model._onClickClose.bind(model);
-        this.node.appendChild(this.nodeButtonClose);
-
         this.nodeCategoriesContainer = document.createElement('div');
         this.nodeCategoriesContainer.className = 'categoriesContainer';
         this.node.appendChild(this.nodeCategoriesContainer);
@@ -37,7 +25,21 @@ module.exports = class BuildingMenu {
             nodeButtonCategory.onclick = model._onClickCategory.bind(model, categoryId);
             this.nodeCategoriesContainer.appendChild(nodeButtonCategory);
         }
+
+        this.nodeButtonOpen = document.createElement('div');
+        this.nodeButtonOpen.className = 'button open';
+        this.nodeButtonOpen.textContent = 'Build';
+        this.nodeButtonOpen.onclick = model._onClickOpen.bind(model);
+        this.node.appendChild(this.nodeButtonOpen);
+
+        this.nodeButtonClose = document.createElement('div');
+        this.nodeButtonClose.className = 'button close';
+        this.nodeButtonClose.textContent = 'Close';
+        this.nodeButtonClose.onclick = model._onClickClose.bind(model);
+        this.node.appendChild(this.nodeButtonClose);
+
         this.updateState(model);
+
     }
 
     updateState(model) {

@@ -29,10 +29,16 @@ class App {
         ee.on('mouseMoveOnMap', this.mouseMoveOnMap.bind(this));
         ee.on('mouseMoveOnMapPress', this.mouseMoveOnMapPress.bind(this));
         ee.on('mouseDownOnMap', this.mouseDownOnMap.bind(this));
-        ee.on('newEntity', this.newEntity.bind(this));
-        ee.on('removeEntity', this.removeEntity.bind(this));
         ee.on('mouseRotate', this.mouseRotate.bind(this));
 
+        ee.on('newEntity', this.newEntity.bind(this));
+        ee.on('removeEntity', this.removeEntity.bind(this));
+
+        ee.on('touchStart', this.touchStart.bind(this));
+        ee.on('touchEnd', this.touchEnd.bind(this));
+        ee.on('touchCancel', this.touchCancel.bind(this));
+        ee.on('touchleave', this.touchleave.bind(this));
+        ee.on('touchMove', this.touchMove.bind(this));
     }
 
     hideScreen() {
@@ -157,6 +163,32 @@ class App {
         if(this.model.removeEntity)
             this.model.removeEntity(entity);
     }
+
+    touchStart(x, y) {
+        if(this.model.touchStart)
+            this.model.touchStart(x, y);
+    }
+
+    touchEnd(x, y) {
+        if(this.model.touchEnd)
+            this.model.touchEnd(x, y);
+    }
+
+    touchCancel(x, y) {
+        if(this.model.touchCancel)
+            this.model.touchCancel(x, y);
+    }
+
+    touchleave(x, y) {
+        if(this.model.touchleave)
+            this.model.touchleave(x, y);
+    }
+
+    touchMove(x, y) {
+        if(this.model.touchMove)
+            this.model.touchMove(x, y);
+    }
+
 }
 
 module.exports = App;

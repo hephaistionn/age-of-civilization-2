@@ -7,12 +7,19 @@
     left: 20px;
     position: absolute;
     bottom: 20px;
+    width: 90px;
+    height: 90px;
+    margin: 0 10px 0 0;
+    line-height: 90px;
   }
 
   .button.close {
-    position: absolute;
-    bottom: 330px;
-    left: 20px;
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
   }
 
   .button {
@@ -20,12 +27,7 @@
     background-color: grey;
     cursor: pointer;
     text-align: center;
-    width: 90px;
-    height: 90px;
-    margin: 0 10px 0 0;
     line-height: 90px;
-    display: inline-block;
-
     &:hover {
       background-color: #4444ff;
     }
