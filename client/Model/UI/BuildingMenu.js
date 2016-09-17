@@ -21,6 +21,7 @@ module.exports = class BuildingMenu {
         this.currentCategory = [];
         this.currentFocus = null;
         this.displayed = false;
+        this.entityEditor = false;
 
         this.type = 'UI';
 
@@ -35,6 +36,7 @@ module.exports = class BuildingMenu {
     close() {
         if(this.displayed === false) return;
         this.displayed = false;
+        this.currentCategory = [];
         if(this._close)this._close();
         ee.emit('onUpdate', 'buildingMenu', this);
     }
@@ -58,10 +60,29 @@ module.exports = class BuildingMenu {
         return true;
     }
 
+    showEditor() {
+        this.entityEditor = true;
+        ee.emit('onUpdate', 'buildingMenu', this);
+    }
+
+    hideEditor() {
+        this.entityEditor = false;
+        ee.emit('onUpdate', 'buildingMenu', this);
+    }
+
+    onConstructEditor(fct) {
+        this._onConstructEditor = () => {
+            fct();
+        };
+    }
+
+    onCancelEditor(fct) {
+        this._onCancelEditor = fct;
+    }
+
     onClickBuilding(fct) {
         this._onClickBuilding = entityId => {
             this.currentFocus === entityId ? this.currentFocus = null : this.currentFocus = entityId;
-
             fct(entityId);
             ee.emit('onUpdate', 'buildingMenu', this);
         };

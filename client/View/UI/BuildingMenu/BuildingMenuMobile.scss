@@ -90,6 +90,32 @@
     display: none;
   }
 
+
+  .editor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    .button.construct {
+      position: fixed;
+      bottom: 50px;
+      right: 50px;
+      width: 70px;
+      height: 70px;
+      line-height: 70px;
+    }
+
+    .button.cancel{
+      position: fixed;
+      bottom: 50px;
+      left: 50px;
+      width: 70px;
+      height: 70px;
+      line-height: 70px;
+    }
+  }
+
 }
 
 

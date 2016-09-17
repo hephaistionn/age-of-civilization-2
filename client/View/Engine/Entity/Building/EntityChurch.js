@@ -6,9 +6,9 @@ const THREE = require('three');
 
 module.exports = class EntityChurch {
 
-    constructor(model) {
+    constructor(model, materialForce) {
         this.model = model;
-        this.element = THREE.getMesh('obj/buildingB.obj', material);
+        this.element = THREE.getMesh('obj/buildingB.obj', materialForce||material);
         this.element.userData.model = model;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;

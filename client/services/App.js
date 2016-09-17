@@ -39,6 +39,9 @@ class App {
         ee.on('touchCancel', this.touchCancel.bind(this));
         ee.on('touchleave', this.touchleave.bind(this));
         ee.on('touchMove', this.touchMove.bind(this));
+        ee.on('touchMoveOnMap', this.touchMoveOnMap.bind(this));
+        ee.on('touchStartOnMap', this.touchStartOnMap.bind(this));
+        ee.on('touchDragg', this.touchDragg.bind(this));
     }
 
     hideScreen() {
@@ -187,6 +190,21 @@ class App {
     touchMove(x, y) {
         if(this.model.touchMove)
             this.model.touchMove(x, y);
+    }
+
+    touchMoveOnMap(x, y) {
+        if(this.model.touchMoveOnMap)
+            this.model.touchMoveOnMap(x, y);
+    }
+
+    touchDragg(x, y, screenX, screenY) {
+        if(this.model.touchDragg)
+            this.model.touchDragg(x, y, screenX, screenY);
+    }
+
+    touchStartOnMap(x, y) {
+        if(this.model.touchStartOnMap)
+            this.model.touchStartOnMap(x, y);
     }
 
 }

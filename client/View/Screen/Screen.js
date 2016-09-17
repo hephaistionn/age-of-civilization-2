@@ -76,8 +76,47 @@ class Screen {
         }
         this.render.update();
     }
-}
-;
+
+    getPointOnMap(screenX, screenY) {
+        if(!this.map || !this.camera)return {x: 0, z: 0};
+        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
+        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        const intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+        if(intersects.length) {
+            const point = intersects[0].point;
+            const tileSize = this.map.tileSize;
+            point.x /= tileSize;
+            point.z /= tileSize;
+            const mesh = intersects[0].object;
+            if(mesh.userData.model) {
+                return {
+                    model: mesh.userData.model,
+                    x: point.x,
+                    z: point.z
+                }
+            } else {
+                return point;
+            }
+
+        } else {
+            return {x: 0, z: 0};
+        }
+    };
+
+    touchSelected(screenX, screenY) {
+        if(!this.map || !this.camera || !this.positioner.element)return false;
+        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
+        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
+        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        const intersects = this.raycaster.intersectObjects([this.positioner.element], true);
+        if(intersects.length) {
+            return true;
+        } else {
+            return false
+        }
+    };
+};
 
 if(isMobile) {
     require('./eventsMobile.js')(Screen);

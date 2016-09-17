@@ -41,11 +41,7 @@ module.exports = class Positioner {
     }
 
     selectEnity(id) {
-        if(!this.selected || this.selected.constructor.name !== id) {
-            this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: this.rotation});
-        } else {
-            this.selected = null;
-        }
+        this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: this.rotation});
         this.rotation = 0;
     }
 
@@ -74,9 +70,6 @@ module.exports = class Positioner {
                 return;
             }
         }
-
-
-
     }
 
     dismount() {

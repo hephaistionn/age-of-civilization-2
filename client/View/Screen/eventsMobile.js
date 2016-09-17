@@ -10,6 +10,7 @@ module.exports = Component => {
         this.canvas.addEventListener('touchleave', this._touchleave.bind(this));
         this.canvas.addEventListener('touchmove', this._touchMove.bind(this));
         window.addEventListener('resize', this._resize.bind(this), false);
+        this.selected = false;
         ee.on('onUpdate', this.updateComponent.bind(this));
     };
 
@@ -23,41 +24,37 @@ module.exports = Component => {
 
     Component.prototype._touchStart = function _touchStart(e) {
         e.preventDefault();
-        const touches = e.changedTouches;
-        for (let i=0; i<touches.length; i++) {
-            const touch = touches[i];
-            ee.emit('touchStart', touch.clientX, touch.clientY);
-        }
+        const touch = e.changedTouches[0];
+        ee.emit('touchStart', touch.clientX, touch.clientY);
+        this.selected = this.touchSelected(touch.clientX, touch.clientY);
+
+        const point = this.getPointOnMap(touch.clientX,touch.clientY);
+        ee.emit('touchStartOnMap', point.x, point.z);
     };
     Component.prototype._touchEnd = function _touchEnd(e) {
         e.preventDefault();
-        const touches = e.changedTouches;
-        for (let i=0; i<touches.length; i++) {
-            const touch = touches[i];
-            ee.emit('touchEnd', touch.clientX,touch.clientY);
-        }
+        const touch = e.changedTouches[0];
+        ee.emit('touchEnd', touch.clientX,touch.clientY);
+        this.selected = false;
     };
     Component.prototype._touchCancel = function _touchCancel(e) {
         e.preventDefault();
-        const touches = e.changedTouches;
-        for (let i=0; i<touches.length; i++) {
-            const touch = touches[i];
-            ee.emit('touchCancel', touch.clientX,touch.clientY);
-        }
+        const touch = e.changedTouches[0];
+        ee.emit('touchCancel', touch.clientX,touch.clientY);
     };
     Component.prototype._touchleave = function _touchleave(e) {
         e.preventDefault();
-        const touches = e.changedTouches;
-        for (let i=0; i<touches.length; i++) {
-            const touch = touches[i];
-            ee.emit('touchleave', touch.clientX,touch.clientY);
-        }
+        const touch = e.changedTouches[0];
+        ee.emit('touchleave', touch.clientX,touch.clientY);
     };
     Component.prototype._touchMove = function _touchMove(e) {
         e.preventDefault();
-        const touches = e.changedTouches;
-        for (let i=0; i<touches.length; i++) {
-            const touch = touches[i];
+        const touch = e.changedTouches[0];
+        const point = this.getPointOnMap(touch.clientX,touch.clientY);
+        if(this.selected){
+            ee.emit('touchDragg', point.x, point.z, touch.clientX,touch.clientY);
+        }else{
+            ee.emit('touchMoveOnMap', point.x, point.z);
             ee.emit('touchMove', touch.clientX,touch.clientY);
         }
     };

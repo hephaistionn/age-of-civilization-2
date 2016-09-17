@@ -69,6 +69,8 @@ THREE.getMesh = function getMesh(url, material, indexUV) {
     if(cacheMesh[id]) {
         const meshRef = cacheMesh[id];
         const meshEnded = meshRef.clone();
+        if(material)
+            meshEnded.material = material;
         if(meshRef.morphTargetInfluences) {
             meshEnded.morphTargetInfluences = new Float32Array(meshRef.morphTargetInfluences);
         }

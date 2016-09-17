@@ -24,12 +24,12 @@ module.exports = class Positioner {
             if(this.selected) {
                 this.element.remove(this.selected.element);
             }
-            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, this.tileSize, this.tileHeight);
-            this.selected.element.material = this.material;
+            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, this.material);
+            this.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
             this.element.add(this.selected.element);
         } else {
             this.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
-            this.selected.updateState(model.selected, this.tileSize, this.tileHeight);
+            this.selected.updateState(model.selected);
         }
     }
 

@@ -1,6 +1,6 @@
 const ee = require('../../../services/eventEmitter');
 
-const BuildingMenu = require('../../UI/BuildingMenu');       
+const BuildingMenu = require('../../UI/BuildingMenu');
 
 const Map = require('../../Engine/Map');
 const Light = require('../../Engine/Light');
@@ -10,6 +10,7 @@ const RoadPositioner = require('../../Engine/RoadPositioner');
 
 var PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
+let selected = false;
 
 class ScreenMap {
 
@@ -23,6 +24,7 @@ class ScreenMap {
         this.light.scaleOffset(-this.camera.offsetY);
 
         this.buildingMenu.onClickBuilding(entityId => {
+
             if(entityId === 'Destroy') {
                 this.positioner.unselectEnity();
                 this.roadPositioner.unselectEnity();
@@ -31,15 +33,36 @@ class ScreenMap {
                 this.positioner.unselectEnity();
                 this.roadPositioner.selectEnity(2);
                 removeMode = false;
-
             } else {
                 this.roadPositioner.unselectEnity();
                 this.positioner.selectEnity(entityId);
+                this.positioner.placeSelectedEntity(this.camera.targetX, this.camera.targetZ, this.map);
+                this.buildingMenu.showEditor();
                 removeMode = false;
             }
+            this.buildingMenu.close();
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
             ee.emit('onUpdate', 'positioner', this.positioner);
 
+        });
+
+        this.buildingMenu.onConstructEditor(() => {
+            if(this.positioner.selected && !this.positioner.undroppable) {
+                const entity = this.positioner.selected;
+                const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
+                this.positioner.unselectEnity();
+                this.map.newEntity(params);
+                this.map.updateEntity('EntityRoad', null); //remove road under entity
+                this.buildingMenu.hideEditor();
+                ee.emit('onUpdate', 'map', this.map);
+                ee.emit('onUpdate', 'positioner', this.positioner);
+            }
+        });
+
+        this.buildingMenu.onCancelEditor(() => {
+            this.positioner.unselectEnity();
+            this.buildingMenu.hideEditor();
+            ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
         const pixelMap = new PixelMap();
@@ -68,11 +91,25 @@ class ScreenMap {
     }
 
     touchMove(x, z) {
-        if(this.roadPositioner.selected) return;
+        if(this.roadPositioner && this.roadPositioner.selected) return;
         this.camera.mouseMovePress(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
+    }
+
+    touchMoveOnMap(x, z) {
+        if(this.roadPositioner && this.roadPositioner.selected) {
+            this.roadPositioner.rolloutSelectedEntity(x, z, this.map);
+            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
+        }
+    }
+
+    touchDragg(x, z, screenX, screenY) {
+        if(this.positioner.selected) {
+            this.positioner.placeSelectedEntity(x, z, this.map);
+            ee.emit('onUpdate', 'positioner', this.positioner);
+        }
     }
 
     touchStart(x, z) {
@@ -81,7 +118,6 @@ class ScreenMap {
         ee.emit('onUpdate', 'camera', this.camera);
     }
 
-    //TODO
     touchStartOnMap(x, z) {
         if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
@@ -90,6 +126,7 @@ class ScreenMap {
 
 
     touchEnd() {
+        if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {
             this.map.updateEntity('EntityRoad', null, params);

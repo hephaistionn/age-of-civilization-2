@@ -159,6 +159,7 @@ class ScreenMap {
     }
 
     mouseUp() {
+        if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {
             this.map.updateEntity('EntityRoad', null, params);

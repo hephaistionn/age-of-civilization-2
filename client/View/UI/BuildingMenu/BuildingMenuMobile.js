@@ -3,6 +3,8 @@ module.exports = class BuildingMenu {
     constructor(model) {
         this.type = 'UI';
 
+        this.canvas = document.getElementById('D3');
+
         this.node = document.createElement('div');
         this.node.className = 'buildingMenu mobile';
 
@@ -38,13 +40,39 @@ module.exports = class BuildingMenu {
         this.nodeButtonClose.onclick = model._onClickClose.bind(model);
         this.node.appendChild(this.nodeButtonClose);
 
+        this.nodeEditor = document.createElement('div');
+        this.nodeEditor.className = 'editor hide';
+        this.node.appendChild(this.nodeEditor);
+
+        this.nodeButtonConstruct = document.createElement('div');
+        this.nodeButtonConstruct.className = 'button construct';
+        this.nodeButtonConstruct.textContent = 'ok';
+        this.nodeButtonConstruct.onclick = model._onConstructEditor.bind(model);
+        this.nodeEditor.appendChild(this.nodeButtonConstruct);
+
+        this.nodeCancelConstruct = document.createElement('div');
+        this.nodeCancelConstruct.className = 'button cancel';
+        this.nodeCancelConstruct.textContent = 'X';
+        this.nodeCancelConstruct.onclick = model._onCancelEditor.bind(model);
+        this.nodeEditor.appendChild(this.nodeCancelConstruct);
+
         this.updateState(model);
 
     }
 
     updateState(model) {
 
+        if(model.entityEditor){
+            this.showNode(this.nodeEditor);
+            this.hideNode(this.nodeButtonOpen);
+            this.hideNode(this.nodeBuildingsContainer);
+            this.hideNode(this.nodeButtonClose);
+            this.hideNode(this.nodeCategoriesContainer);
+            return;
+        }
+
         if(model.displayed) {
+            this.hideNode(this.nodeEditor);
             this.hideNode(this.nodeButtonOpen);
             this.showNode(this.nodeButtonClose);
             if(model.currentCategory.length) {
@@ -56,10 +84,11 @@ module.exports = class BuildingMenu {
                 this.hideNode(this.nodeBuildingsContainer);
             }
         } else {
+            this.hideNode(this.nodeBuildingsContainer);
             this.showNode(this.nodeButtonOpen);
             this.hideNode(this.nodeButtonClose);
             this.hideNode(this.nodeCategoriesContainer);
-            this.hideNode(this.nodeBuildingsContainer);
+            this.hideNode(this.nodeEditor);
         }
     }
 

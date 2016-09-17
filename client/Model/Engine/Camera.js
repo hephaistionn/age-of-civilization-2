@@ -1,9 +1,9 @@
 class Camera {
 
     constructor(config) {
-        this.x = config.x||10; //camera position
+        this.x = config.x || 10; //camera position
         this.y = 12; //camera position
-        this.z = config.z||10; //camera position
+        this.z = config.z || 10; //camera position
         this.iX = 0; //camera position before drag
         this.iZ = 0; //camera position before drag
         this.offsetX = -10; //target positio relative too camera position
@@ -15,6 +15,7 @@ class Camera {
         this.pressX = 0;
         this.pressZ = 0;
         this.speed = 0.001;
+        this.moveSpeed = 0.01;
         this.maxXTarget = 0;
         this.maxZTarget = 0;
         this.minX = 0 - this.offsetX;
@@ -34,12 +35,11 @@ class Camera {
     }
 
     moveTo(dx, dz, dt) {
-
         let module = Math.sqrt(dx * dx + dz * dz);
         let a = -Math.atan2(dx, dz) + Math.PI / 4;
         dx = module * Math.cos(a);
         dz = module * Math.sin(a);
-        this.x -= dx * this.speed *dt * this.offsetZ;
+        this.x -= dx * this.speed * dt * this.offsetZ;
         this.z -= dz * this.speed * dt * this.offsetZ;
         this.limiter();
         this.targetX = this.x + this.offsetX;
@@ -51,7 +51,6 @@ class Camera {
     }
 
     mouseMovePress(x, z) {
-
         //Transformation of space. Apply a rotation of PI/4 at  direction vector.
         //screen space to camera space
         let dx = this.pressX - x;
@@ -61,8 +60,8 @@ class Camera {
         dx = module * Math.cos(a);
         dz = module * Math.sin(a);
 
-        let newX = this.iX + dx / 20;
-        let newZ = this.iZ + dz / 20;
+        let newX = this.iX + dx * this.moveSpeed;
+        let newZ = this.iZ + dz * this.moveSpeed;
         this.move(newX, this.y, newZ);
     }
 
@@ -93,20 +92,20 @@ class Camera {
         this.move(x, y, z);
     }
 
-    setMapBorder(dataMap){
+    setMapBorder(dataMap) {
         this.maxXTarget = dataMap.nbTileX;
         this.maxZTarget = dataMap.nbTileZ;
         this.computeBorder();
     }
 
-    computeBorder(){
+    computeBorder() {
         this.minX = 0 - this.offsetX;
         this.minZ = 0 - this.offsetZ;
-        this.maxX = this.maxXTarget  - this.offsetX;
+        this.maxX = this.maxXTarget - this.offsetX;
         this.maxZ = this.maxZTarget - this.offsetZ;
     }
 
-    limiter(){
+    limiter() {
         this.x = this.x <= this.minX ? this.minX : this.x;
         this.x = this.x >= this.maxX ? this.maxX : this.x;
         this.z = this.z <= this.minZ ? this.minZ : this.z;
