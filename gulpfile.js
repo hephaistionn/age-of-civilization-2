@@ -5,9 +5,12 @@ const source = require('vinyl-source-stream');
 const gutil = require('gulp-util');
 const watchify = require('watchify');
 const sourcemaps = require('gulp-sourcemaps');
-const uglify = require('gulp-uglify');
 const buffer = require('vinyl-buffer');
 const sass = require('gulp-sass');
+const uglify = require('gulp-uglify');
+const babel  = require('gulp-babel');
+const concat = require("gulp-concat");
+const fs = require("fs");
 require("./gulpAssets")(gulp);
 
 const config = {
@@ -33,7 +36,7 @@ function bundle() {
       .on('error', gutil.log)
       .pipe(source('app.js'))
       .pipe(buffer())
-    //.pipe(uglify())
+      //.pipe(uglify().on('error', gutil.log))
       .pipe(gulp.dest(config.output))
       .on('end', function() {
         gulp.src(config.input + '/index.html')
@@ -46,9 +49,10 @@ b.on('update', bundle);
 b.on('log', gutil.log);
 
 gulp.task('build-js', () => {
-  bundler = browserify(config.browserifyOptions);
-  bundler.transform(babelify.configure(config.babelifyOptions));
-  return bundle();
+  browserify(config.browserifyOptions)
+  .transform('babelify',config.babelifyOptions)
+  .bundle()
+  .pipe(fs.createWriteStream("build/app.js"));
 });
 
 gulp.task('build-css', function() {

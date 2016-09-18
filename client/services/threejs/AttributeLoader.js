@@ -55,7 +55,9 @@ THREE.AttributeLoader.prototype = {
         var index = [];
         var haveUV = false;
         let i;
-        const indexPair = new Uint16Array(MAX_INDEX);
+        //const indexPair = new Uint16Array(MAX_INDEX);
+        const indexPair = [];
+        //fix for mobile browser
         let cnt = 0;
         let currentIndex = 0;
 

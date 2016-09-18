@@ -1,7 +1,7 @@
 const THREE = require('three');
 
-cacheMesh = {};
-meshesTemp = {};
+const cacheMesh = {};
+const meshesTemp = {};
 
 function unstake(meshesTemp, meshRef) {
     let meshTemp;

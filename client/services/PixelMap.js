@@ -28,19 +28,19 @@ module.exports = class PixelMap {
     }
 
     getData(context) {
-        let ImageData = context.getImageData(0, 0, context.width, context.height).data;
+        let imageData = context.getImageData(0, 0, context.width, context.height).data;
         let size = context.height * context.width;
         let data = {};
-        let color;
         let dataHeights = new Uint8Array(size);
         let dataSurfaces = new Uint8Array(size);
         let dataResources = new Uint8Array(size);
 
+        var index = 0;
         for(let i = 0; i < size; i++) {
-            color = ImageData.slice(i * 4, i * 4 + 4);
-            dataSurfaces[i] = color[0]; //set surface type
-            dataHeights[i] = color[1]; //set surface height
-            dataResources[i] = color[2]; //set forest type
+            index = i * 4;
+            dataSurfaces[i] = imageData[index]; //set surface type
+            dataHeights[i] = imageData[index + 1]; //set surface height
+            dataResources[i] = imageData[index + 2]; //set forest type
         }
 
         data.nbPointZ = context.height;

@@ -20,7 +20,9 @@ module.exports = class Shape {
         let dy = 0;
         let dz = 0;
         var previousPoint;
-        this.segmentsLength = new Float32Array(l / 3 - 1);
+        //this.segmentsLength = new Float32Array(l / 3 - 1);
+        this.segmentsLength = [];
+        //fix for mobile browser
         for(i = 0; i < l; i += 3) {
             point = new Float32Array(3);
             point[0] = path[i] * scaling + scaling / 2;
@@ -48,9 +50,14 @@ module.exports = class Shape {
      */
     getPointAndTangent(distance) {
 
-        let index = this.segmentsLength.findIndex(ele => {
+        //let index = this.segmentsLength.findIndex(ele => {
+        //    return ele >= distance;
+        //});
+        let nearest = this.segmentsLength.filter(ele => {
             return ele >= distance;
         });
+        let index = this.segmentsLength.indexOf(nearest[0]);
+        //fix for Mobile Browser
 
         let c1 = index;
         let c2 = index + 1;
