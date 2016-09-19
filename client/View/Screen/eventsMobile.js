@@ -25,10 +25,10 @@ module.exports = Component => {
     Component.prototype._touchStart = function _touchStart(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
-        ee.emit('touchStart', touch.clientX, touch.clientY);
+        let point = this.getPointOnMapCameraRelative(touch.clientX, touch.clientY);
+        ee.emit('touchStart',  point.x, point.z);
         this.selected = this.touchSelected(touch.clientX, touch.clientY);
-
-        const point = this.getPointOnMap(touch.clientX,touch.clientY);
+        point = this.getPointOnMap(touch.clientX,touch.clientY);
         ee.emit('touchStartOnMap', point.x, point.z);
     };
     Component.prototype._touchEnd = function _touchEnd(e) {
@@ -50,12 +50,13 @@ module.exports = Component => {
     Component.prototype._touchMove = function _touchMove(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
-        const point = this.getPointOnMap(touch.clientX,touch.clientY);
+        let point = this.getPointOnMap(touch.clientX,touch.clientY);
         if(this.selected){
             ee.emit('touchDragg', point.x, point.z, touch.clientX,touch.clientY);
         }else{
             ee.emit('touchMoveOnMap', point.x, point.z);
-            ee.emit('touchMove', touch.clientX,touch.clientY);
+            point = this.getPointOnMapCameraRelative(touch.clientX, touch.clientY);
+            ee.emit('touchMove', point.x, point.z);
         }
     };
 

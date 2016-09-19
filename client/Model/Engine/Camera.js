@@ -55,13 +55,9 @@ class Camera {
         //screen space to camera space
         let dx = this.pressX - x;
         let dz = this.pressZ - z;
-        let module = Math.sqrt(dx * dx + dz * dz);
-        let a = -Math.atan2(dx, dz) + Math.PI / 4;
-        dx = module * Math.cos(a);
-        dz = module * Math.sin(a);
 
-        let newX = this.iX + dx * this.moveSpeed;
-        let newZ = this.iZ + dz * this.moveSpeed;
+        let newX = this.iX + dx;
+        let newZ = this.iZ + dz;
         this.move(newX, this.y, newZ);
     }
 

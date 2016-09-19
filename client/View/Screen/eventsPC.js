@@ -45,10 +45,12 @@ module.exports = Component => {
             this.mousePress = true;
             this.pressX = e.offsetX;
             this.pressZ = e.offsetY;
-            ee.emit('mouseDown', e.offsetX, e.offsetY);
+
+            const point = this.getPointOnMapCameraRelative( e.offsetX,  e.offsetY);
+
+            ee.emit('mouseDown', point.x, point.z);
             this._mouseCheckCollision(e.offsetX, e.offsetY);
         }
-
         e.preventDefault();
     };
 
@@ -66,7 +68,8 @@ module.exports = Component => {
 
     Component.prototype._mouseMove = function _mouseMove(e) {
         if(this.mousePress) {
-            ee.emit('mouseMovePress', e.offsetX, e.offsetY);
+            const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);
+            ee.emit('mouseMovePress', point.x, point.z);
             this._mouseMoveOnMapPress(e.offsetX, e.offsetY);
         } else {
             ee.emit('mouseMove', e.offsetX, e.offsetY);

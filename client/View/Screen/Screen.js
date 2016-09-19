@@ -102,7 +102,27 @@ class Screen {
         } else {
             return {x: 0, z: 0};
         }
-    };
+    }
+
+    getPointOnMapCameraRelative(screenX, screenY) {
+        if(!this.map || !this.camera)return {x: 0, z: 0};
+        this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
+        this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
+        const camera = this.camera.element;
+        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        const intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+        if(intersects.length) {
+            const point = intersects[0].point;
+            const tileSize = this.map.tileSize;
+            point.x /= tileSize;
+            point.z /= tileSize;
+            point.x -= camera.matrixWorld.elements[12]/ this.camera.tileSize;
+            point.z -= camera.matrixWorld.elements[14]/ this.camera.tileSize;
+            return point;
+        } else {
+            return {x: 0, z: 0};
+        }
+    }
 
     touchSelected(screenX, screenY) {
         if(!this.map || !this.camera || !this.positioner.element)return false;
@@ -115,8 +135,8 @@ class Screen {
         } else {
             return false
         }
-    };
-};
+    }
+}
 
 if(isMobile) {
     require('./eventsMobile.js')(Screen);
