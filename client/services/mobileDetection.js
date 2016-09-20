@@ -20,6 +20,6 @@ const isMobile = {
 };
 
 module.exports = function isOnMobile (){
-    return false;
+    return true;
     if( isMobile.any() ) return true;
 }

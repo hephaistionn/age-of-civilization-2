@@ -22,6 +22,10 @@ class Camera {
         this.minZ = 0 - this.offsetZ;
         this.maxX = this.maxXTarget - this.offsetX;
         this.maxZ = this.maxZTarget - this.offsetZ;
+        this.zoom = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
+        this.offsetXInit = 0;
+        this.offsetYInit = 0;
+        this.offsetZInit = 0;
     }
 
     move(x, y, z) {
@@ -66,11 +70,31 @@ class Camera {
         this.iZ = this.z;
         this.pressX = x;
         this.pressZ = z;
+        this.computeCurrentZoom();
+    }
+
+    computeCurrentZoom(){
+        this.zoom = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
+        this.offsetXInit = this.offsetX / this.zoom;
+        this.offsetYInit = this.offsetY / this.zoom;
+        this.offsetZInit = this.offsetZ / this.zoom;
+    }
+
+    scale(delta){
+        if(this.offsetY > -5 && delta < 0 || this.offsetY < -30  && delta > 0) return;
+        let zoom = this.zoom + delta;
+        this.offsetX = this.offsetXInit * zoom;
+        this.offsetY = this.offsetYInit * zoom;
+        this.offsetZ = this.offsetZInit * zoom;
+        let x = this.targetX - this.offsetX;
+        let y = this.targetY - this.offsetY;
+        let z = this.targetZ - this.offsetZ;
+        this.computeBorder();
+        this.move(x, y, z);
     }
 
     mouseWheel(delta) {
-
-        if(-this.offsetY < 5 && delta < 0) return;
+        if(this.offsetY > -5 && delta < 0 || this.offsetY < -30  && delta > 0) return;
         let length = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
         this.offsetX /= length;
         this.offsetY /= length;

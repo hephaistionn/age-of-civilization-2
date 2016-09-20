@@ -36,6 +36,7 @@ class Screen {
         for(let id in model) {
             this.removeComponent(id)
         }
+        clearTimeout( this.timer );
     }
 
     newComponent(id, model) {

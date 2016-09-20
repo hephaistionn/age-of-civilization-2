@@ -125,7 +125,8 @@ class ScreenMap {
     }
 
 
-    touchEnd() {
+    touchEnd(x, z) {
+        this.camera.mouseDown(x, z);
         if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {
@@ -135,8 +136,8 @@ class ScreenMap {
         }
     }
 
-    touchZoom(delta) {
-        this.camera.mouseWheel(delta * 2);
+    zoom(delta) {
+        this.camera.scale(delta);
         this.light.scaleOffset(-this.camera.offsetY);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);

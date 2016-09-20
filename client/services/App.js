@@ -42,6 +42,7 @@ class App {
         ee.on('touchMoveOnMap', this.touchMoveOnMap.bind(this));
         ee.on('touchStartOnMap', this.touchStartOnMap.bind(this));
         ee.on('touchDragg', this.touchDragg.bind(this));
+        ee.on('zoom', this.zoom.bind(this));
     }
 
     hideScreen() {
@@ -205,6 +206,11 @@ class App {
     touchStartOnMap(x, y) {
         if(this.model.touchStartOnMap)
             this.model.touchStartOnMap(x, y);
+    }
+
+    zoom(delta) {
+        if(this.model.zoom)
+            this.model.zoom(delta);
     }
 
 }
