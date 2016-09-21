@@ -79,7 +79,7 @@ class Screen {
     }
 
     getPointOnMap(screenX, screenY) {
-        if(!this.map || !this.camera)return {x: 0, z: 0};
+        if(!this.map || !this.camera)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this.camera.element);
@@ -101,12 +101,12 @@ class Screen {
             }
 
         } else {
-            return {x: 0, z: 0};
+            return;
         }
     }
 
     getPointOnMapCameraRelative(screenX, screenY) {
-        if(!this.map || !this.camera)return {x: 0, z: 0};
+        if(!this.map || !this.camera)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         const camera = this.camera.element;
@@ -121,7 +121,7 @@ class Screen {
             point.z -= camera.matrixWorld.elements[14]/ this.camera.tileSize;
             return point;
         } else {
-            return {x: 0, z: 0};
+            return;
         }
     }
 

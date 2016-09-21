@@ -100,7 +100,7 @@ class ScreenMap {
 
     mouseMovePress(x, z) {
         if(this.roadPositioner.selected) return;
-        this.camera.mouseMovePress(x, z);
+        this.camera.dragg(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
@@ -113,7 +113,6 @@ class ScreenMap {
             this.mouseDownRight();
         }
 
-        this.camera.mouseDown(x, z);
         ee.emit('onUpdate', 'camera', this.camera);
     }
 
@@ -159,6 +158,7 @@ class ScreenMap {
     }
 
     mouseUp() {
+        this.camera.cleatMove();
         if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {

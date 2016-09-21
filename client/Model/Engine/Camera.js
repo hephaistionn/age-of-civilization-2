@@ -26,6 +26,7 @@ class Camera {
         this.offsetXInit = 0;
         this.offsetYInit = 0;
         this.offsetZInit = 0;
+        this.moveReady = false;
     }
 
     move(x, y, z) {
@@ -54,9 +55,12 @@ class Camera {
 
     }
 
-    mouseMovePress(x, z) {
+    dragg(x, z) {
         //Transformation of space. Apply a rotation of PI/4 at  direction vector.
         //screen space to camera space
+        if(!this.moveReady){
+           this.initMove(x, z);
+        }
         let dx = this.pressX - x;
         let dz = this.pressZ - z;
 
@@ -65,12 +69,17 @@ class Camera {
         this.move(newX, this.y, newZ);
     }
 
-    mouseDown(x, z) {
+    initMove(x, z) {
+        this.moveReady = true;
         this.iX = this.x;
         this.iZ = this.z;
         this.pressX = x;
         this.pressZ = z;
         this.computeCurrentZoom();
+    }
+
+    cleatMove(){
+        this.moveReady = false;
     }
 
     computeCurrentZoom(){

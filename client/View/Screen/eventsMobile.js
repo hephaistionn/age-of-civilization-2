@@ -28,6 +28,7 @@ module.exports = Component => {
         e.preventDefault();
         const touch = e.changedTouches[0];
         let point = this.getPointOnMapCameraRelative(touch.clientX, touch.clientY);
+        if(!point) return;
         ee.emit('touchStart',  point.x, point.z);
         this.selected = this.touchSelected(touch.clientX, touch.clientY);
         point = this.getPointOnMap(touch.clientX,touch.clientY);
@@ -72,6 +73,7 @@ module.exports = Component => {
         if(this.startSpace !== 0) return;
 
         let point = this.getPointOnMap(touch1.clientX,touch1.clientY);
+        if(!point) return;
         if(this.selected){
             ee.emit('touchDragg', point.x, point.z, touch1.clientX,touch1.clientY);
         }else{

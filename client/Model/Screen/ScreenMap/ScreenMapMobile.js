@@ -99,7 +99,7 @@ class ScreenMap {
 
     touchMove(x, z) {
         if(this.roadPositioner && this.roadPositioner.selected) return;
-        this.camera.mouseMovePress(x, z);
+        this.camera.dragg(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
@@ -121,8 +121,6 @@ class ScreenMap {
 
     touchStart(x, z) {
         if(this.roadPositioner && this.roadPositioner.selected) return;
-        this.camera.mouseDown(x, z);
-        ee.emit('onUpdate', 'camera', this.camera);
     }
 
     touchStartOnMap(x, z) {
@@ -133,7 +131,7 @@ class ScreenMap {
 
 
     touchEnd(x, z) {
-        this.camera.mouseDown(x, z);
+        this.camera.cleatMove();
         if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {
