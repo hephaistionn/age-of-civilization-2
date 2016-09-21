@@ -23,13 +23,13 @@
         background-color: #777777;
       }
 
-      &.focus{
+      &.focus {
         background-color: #565656;
       }
     }
   }
 
-  .buildingContainer{
+  .buildingContainer {
     position: absolute;
     background-color: #565656;
     height: 100px;
@@ -55,29 +55,32 @@
       &:hover {
         background-color: #777777;
       }
+
+      &.focus {
+        background-color: #cccccc;
+      }
     }
 
   }
 
+  /** ANIMATION CLOSE OPEN */
 
-/** ANIMATION CLOSE OPEN */
-
-  .categoriesContainer{
+  .categoriesContainer {
     transition-property: transform;
     transition-duration: 350ms;
     transform: translateY(0px);
   }
-  .buildingContainer{
+  .buildingContainer {
     transition-property: transform;
     transition-duration: 350ms;
     transform: translateY(0px);
   }
 
-  &.hide{
-    .categoriesContainer{
+  &.hide {
+    .categoriesContainer {
       transform: translateY(100px);
     }
-    .buildingContainer{
+    .buildingContainer {
       transform: translateY(100px);
     }
   }

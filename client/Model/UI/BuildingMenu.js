@@ -23,9 +23,9 @@ module.exports = class BuildingMenu {
         this.displayed = false;
         this.entityEditor = false;
         this.roadEditor = false;
+        this.eraseEditor = false;
 
         this.type = 'UI';
-
     }
 
     open() {
@@ -71,20 +71,20 @@ module.exports = class BuildingMenu {
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
+    showDeletionEditor() {
+        this.eraseEditor = true;
+        ee.emit('onUpdate', 'buildingMenu', this);
+    }
+
     hideEditor() {
         this.entityEditor = false;
         this.roadEditor = false;
+        this.eraseEditor = false;
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
     onConstructEditor(fct) {
         this._onConstructEditor = () => {
-            fct();
-        };
-    }
-
-    onRoadBuilded(fct) {
-        this._onRoadBuilded = () => {
             fct();
         };
     }

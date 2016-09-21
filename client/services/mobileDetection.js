@@ -19,7 +19,6 @@ const isMobile = {
     }
 };
 
-module.exports = function isOnMobile (){
-    return true;
-    if( isMobile.any() ) return true;
+module.exports = function isOnMobile() {
+    if(isMobile.any()) return true;
 }

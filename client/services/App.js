@@ -203,9 +203,9 @@ class App {
             this.model.touchDragg(x, y, screenX, screenY);
     }
 
-    touchStartOnMap(x, y) {
+    touchStartOnMap(x, y, model) {
         if(this.model.touchStartOnMap)
-            this.model.touchStartOnMap(x, y);
+            this.model.touchStartOnMap(x, y, model);
     }
 
     zoom(delta) {

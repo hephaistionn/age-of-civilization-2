@@ -25,6 +25,7 @@ class ScreenMap {
 
         this.buildingMenu.onClickBuilding(entityId => {
             if(entityId === 'Destroy') {
+                this.buildingMenu.showDeletionEditor();
                 this.positioner.unselectEnity();
                 this.roadPositioner.unselectEnity();
                 removeMode = true;
@@ -59,15 +60,9 @@ class ScreenMap {
             }
         });
 
-        this.buildingMenu.onRoadBuilded(() => {
-            if(this.roadPositioner.selected){
-                this.buildingMenu.hideEditor();
-                this.roadPositioner.unselectEnity();
-            }
-        });
-
         this.buildingMenu.onCancelEditor(() => {
             this.positioner.unselectEnity();
+            this.roadPositioner.unselectEnity();
             this.buildingMenu.hideEditor();
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
@@ -123,9 +118,13 @@ class ScreenMap {
         if(this.roadPositioner && this.roadPositioner.selected) return;
     }
 
-    touchStartOnMap(x, z) {
+    touchStartOnMap(x, z, model) {
         if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
+        }
+        if(removeMode) {
+            this.map.clearTile(x, z, model);
+            ee.emit('onUpdate', 'map', this.map);
         }
     }
 

@@ -29,54 +29,54 @@ module.exports = Component => {
         const touch = e.changedTouches[0];
         let point = this.getPointOnMapCameraRelative(touch.clientX, touch.clientY);
         if(!point) return;
-        ee.emit('touchStart',  point.x, point.z);
+        ee.emit('touchStart', point.x, point.z);
         this.selected = this.touchSelected(touch.clientX, touch.clientY);
-        point = this.getPointOnMap(touch.clientX,touch.clientY);
-        ee.emit('touchStartOnMap', point.x, point.z);
+        point = this.getPointOnMap(touch.clientX, touch.clientY);
+        ee.emit('touchStartOnMap', point.x, point.z, point.model);
     };
     Component.prototype._touchEnd = function _touchEnd(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
-        ee.emit('touchEnd', touch.clientX,touch.clientY);
-        clearTimeout( this.timer );
-        this.timer = setTimeout(()=>{
+        ee.emit('touchEnd', touch.clientX, touch.clientY);
+        clearTimeout(this.timer);
+        this.timer = setTimeout(()=> {
             this.startSpace = 0;
-        },200);
+        }, 200);
         this.selected = false;
     };
     Component.prototype._touchCancel = function _touchCancel(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
-        ee.emit('touchCancel', touch.clientX,touch.clientY);
+        ee.emit('touchCancel', touch.clientX, touch.clientY);
     };
     Component.prototype._touchleave = function _touchleave(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
-        ee.emit('touchleave', touch.clientX,touch.clientY);
+        ee.emit('touchleave', touch.clientX, touch.clientY);
     };
     Component.prototype._touchMove = function _touchMove(e) {
         e.preventDefault();
         const touch1 = e.changedTouches[0];
         const touch2 = e.changedTouches[1];
-        if(touch2){
-            const spaceX = touch1.clientX-touch2.clientX;
-            const spaceY = touch1.clientY-touch1.clientY;
-            const space = Math.sqrt(spaceX*spaceX+spaceY*spaceY);
-            if(this.startSpace === 0){
+        if(touch2) {
+            const spaceX = touch1.clientX - touch2.clientX;
+            const spaceY = touch1.clientY - touch1.clientY;
+            const space = Math.sqrt(spaceX * spaceX + spaceY * spaceY);
+            if(this.startSpace === 0) {
                 this.startSpace = space;
-            }else{
-                ee.emit('zoom', -(space-this.startSpace)/10);
+            } else {
+                ee.emit('zoom', -(space - this.startSpace) / 10);
                 return;
             }
         }
 
         if(this.startSpace !== 0) return;
 
-        let point = this.getPointOnMap(touch1.clientX,touch1.clientY);
+        let point = this.getPointOnMap(touch1.clientX, touch1.clientY);
         if(!point) return;
-        if(this.selected){
-            ee.emit('touchDragg', point.x, point.z, touch1.clientX,touch1.clientY);
-        }else{
+        if(this.selected) {
+            ee.emit('touchDragg', point.x, point.z, touch1.clientX, touch1.clientY);
+        } else {
             ee.emit('touchMoveOnMap', point.x, point.z);
             point = this.getPointOnMapCameraRelative(touch1.clientX, touch1.clientY);
             ee.emit('touchMove', point.x, point.z);

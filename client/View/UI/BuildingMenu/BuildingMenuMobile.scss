@@ -55,7 +55,7 @@
     }
   }
 
-  .buildingsContainer{
+  .buildingsContainer {
 
     position: fixed;
     width: 100%;
@@ -68,7 +68,7 @@
     &::-webkit-scrollbar {
       display: none;
     }
-    .buildingsContent{
+    .buildingsContent {
       position: relative;
       height: 300px;
       white-space: nowrap;
@@ -90,7 +90,6 @@
     display: none;
   }
 
-
   .editor {
     position: fixed;
     left: 0;
@@ -106,7 +105,7 @@
       line-height: 40px;
     }
 
-    .button.cancel{
+    .button.cancel {
       position: fixed;
       bottom: 30px;
       left: 30px;
@@ -116,7 +115,7 @@
     }
   }
 
-  .button.road{
+  .button.road {
     position: fixed;
     bottom: 30px;
     right: 30px;
@@ -124,7 +123,14 @@
     height: 40px;
     line-height: 40px;
   }
-
+  .button.erase {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
 
 }
 

@@ -109,6 +109,7 @@ class ScreenMap {
     mouseDown(x, z) {
         if(!this.roadPositioner || !this.positioner)return;
         if(this.roadPositioner.selected)return;
+        if(removeMode)return;
         if(!this.roadPositioner.selected && !this.positioner.selected) {
             this.mouseDownRight();
         }
@@ -179,7 +180,7 @@ class ScreenMap {
     }
 
     mouseWheel(delta) {
-        this.camera.mouseWheel(delta * 2);
+        this.camera.mouseWheel(delta);
         this.light.scaleOffset(-this.camera.offsetY);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);

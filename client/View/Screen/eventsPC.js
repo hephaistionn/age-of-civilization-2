@@ -46,8 +46,8 @@ module.exports = Component => {
             this.pressX = e.offsetX;
             this.pressZ = e.offsetY;
 
-            const point = this.getPointOnMapCameraRelative( e.offsetX,  e.offsetY);
-
+            const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);
+            if(!point) return;
             ee.emit('mouseDown', point.x, point.z);
             this._mouseCheckCollision(e.offsetX, e.offsetY);
         }
@@ -120,23 +120,26 @@ module.exports = Component => {
     };
 
     Component.prototype._mouseWheel = function _mouseWheel(e) {
-        const delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
-        ee.emit('mouseWheel', -delta);
+        const delta = -Math.max(-2, Math.min(2, (e.wheelDelta || -e.detail)));
+        ee.emit('mouseWheel', delta);
         e.preventDefault();
     };
 
     Component.prototype._mouseMoveOnMap = function _mouseMoveOnMap(screenX, screenY) {
         const point = this.getPointOnMap(screenX, screenY);
+        if(!point) return;
         ee.emit('mouseMoveOnMap', point.x, point.z);
     };
 
     Component.prototype._mouseMoveOnMapPress = function _mouseMoveOnMapPress(screenX, screenY) {
         const point = this.getPointOnMap(screenX, screenY);
+        if(!point) return;
         ee.emit('mouseMoveOnMapPress', point.x, point.z);
     };
 
     Component.prototype._mouseCheckCollision = function _mouseCheckCollision(screenX, screenY) {
         const point = this.getPointOnMap(screenX, screenY);
+        if(!point) return;
         ee.emit('mouseDownOnMap', point.x, point.z);
     };
 

@@ -60,8 +60,14 @@ module.exports = class BuildingMenu {
         this.nodeButtonRoad = document.createElement('div');
         this.nodeButtonRoad.className = 'button road';
         this.nodeButtonRoad.textContent = 'ok';
-        this.nodeButtonRoad.onclick = model._onRoadBuilded.bind(model);
+        this.nodeButtonRoad.onclick = model._onCancelEditor.bind(model);
         this.node.appendChild(this.nodeButtonRoad);
+
+        this.nodeButtonErase = document.createElement('div');
+        this.nodeButtonErase.className = 'button erase';
+        this.nodeButtonErase.textContent = 'ok';
+        this.nodeButtonErase.onclick = model._onCancelEditor.bind(model);
+        this.node.appendChild(this.nodeButtonErase);
 
         this.updateState(model);
 
@@ -69,19 +75,25 @@ module.exports = class BuildingMenu {
 
     updateState(model) {
 
-        if(model.entityEditor){
+        this.hideNode(this.nodeButtonOpen);
+        this.hideNode(this.nodeBuildingsContainer);
+        this.hideNode(this.nodeButtonClose);
+        this.hideNode(this.nodeEditor);
+        this.hideNode(this.nodeButtonRoad);
+        this.hideNode(this.nodeButtonErase);
+
+        if(model.entityEditor) {
             this.showNode(this.nodeEditor);
-            this.hideNode(this.nodeButtonOpen);
-            this.hideNode(this.nodeBuildingsContainer);
-            this.hideNode(this.nodeButtonClose);
             return;
         }
 
-        if(model.roadEditor){
+        if(model.roadEditor) {
             this.showNode(this.nodeButtonRoad);
-            this.hideNode(this.nodeButtonOpen);
-            this.hideNode(this.nodeBuildingsContainer);
-            this.hideNode(this.nodeButtonClose);
+            return;
+        }
+
+        if(model.eraseEditor) {
+            this.showNode(this.nodeButtonErase);
             return;
         }
 
