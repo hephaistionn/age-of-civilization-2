@@ -49,10 +49,10 @@ b.on('update', bundle);
 b.on('log', gutil.log);
 
 gulp.task('build-js', () => {
-  browserify(config.browserifyOptions)
+  return browserify(config.browserifyOptions)
   .transform('babelify',config.babelifyOptions)
   .bundle()
-  .pipe(fs.createWriteStream("build/app.js"));
+  .pipe(fs.createWriteStream("build/app.js"))
 });
 
 gulp.task('build-css', function() {

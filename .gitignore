@@ -1,3 +1,4 @@
 node_modules/
-build/
+build/app.css
+build/app.js
 .idea/

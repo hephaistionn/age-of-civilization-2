@@ -2,12 +2,14 @@
   "name": "AgeOfCivilization",
   "version": "0.1.0",
   "engines": {
-    "node": "4.3.1"
+    "node": "4.4.0",
+    "npm": "2.14.20"
   },
   "description": "MVP game",
   "scripts": {
     "build": "gulp build",
     "watch": "gulp watch",
+    "postinstall": "gulp build",
     "start": "node server/app.js"
   },
   "dependencies": {
@@ -34,8 +36,5 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
-  },
-  "devDependencies": {
-    "babelify": "^7.2.0"
   }
 }

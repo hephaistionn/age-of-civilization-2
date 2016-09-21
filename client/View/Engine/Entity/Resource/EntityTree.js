@@ -1,7 +1,7 @@
 const config = require('../../config');
 const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;
-const material = require('../../material/materialA');
+const material = require('../../Material/materialA');
 const THREE = require('three');
 
 module.exports = class EntityTree {

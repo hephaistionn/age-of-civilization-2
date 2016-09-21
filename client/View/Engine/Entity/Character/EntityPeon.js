@@ -2,7 +2,7 @@ const Shape = require('../../../../services/shape');
 const config = require('../../config');
 const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;
-const material = require('../../material/materialB');
+const material = require('../../Material/materialB');
 const THREE = require('three');
 
 const animations = {

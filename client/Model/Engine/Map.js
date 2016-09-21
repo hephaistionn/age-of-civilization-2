@@ -1,4 +1,4 @@
-const pathFinding = require('../../services/pathFinding');
+const pathfinding = require('../../services/pathfinding');
 const ENTITIES = require('./Entity/list');
 
 class Map {
@@ -18,7 +18,7 @@ class Map {
         this.tilesType = config.tilesType;
         this.entityGroupUpdated = [];
         this.updatedEntity = [];
-        this.grid = new pathFinding.Grid(this.nbTileX, this.nbTileZ, 1);
+        this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.entityGroups = {};
         this.entityDynamicList = [];
 
