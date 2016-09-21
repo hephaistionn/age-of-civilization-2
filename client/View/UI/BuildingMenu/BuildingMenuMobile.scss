@@ -4,22 +4,22 @@
   bottom: 0;
 
   .button.open {
-    left: 20px;
+    left: 10px;
     position: absolute;
-    bottom: 20px;
-    width: 90px;
-    height: 90px;
+    bottom: 10px;
+    width: 40px;
+    height: 40px;
     margin: 0 10px 0 0;
-    line-height: 90px;
+    line-height: 40px;
   }
 
   .button.close {
     position: fixed;
     top: 16px;
     right: 20px;
-    width: 70px;
-    height: 70px;
-    line-height: 70px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
   }
 
   .button {
@@ -27,7 +27,7 @@
     background-color: grey;
     cursor: pointer;
     text-align: center;
-    line-height: 90px;
+    line-height: 40px;
     &:hover {
       background-color: #4444ff;
     }
@@ -37,16 +37,16 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 890px;
-    height: 500px;
+    width: 600px;
+    height: 320px;
     background: #cecccc;
-    margin-top: -250px;
-    margin-left: -445px;
+    margin-top: -160px;
+    margin-left: -300px;
 
     .item {
       position: relative;
-      width: 262px;
-      height: 215px;
+      width: 166px;
+      height: 125px;
       margin: 25px 0 0 25px;
       background-color: #555555;
       text-align: center;
@@ -59,10 +59,10 @@
 
     position: fixed;
     width: 100%;
-    height: 370px;
+    height: 300px;
     top: 50%;
     left: 0;
-    margin-top: -180px;
+    margin-top: -150px;
     overflow-x: scroll;
     background-color: #555555;
     &::-webkit-scrollbar {
@@ -70,15 +70,15 @@
     }
     .buildingsContent{
       position: relative;
-      height: 370px;
+      height: 300px;
       white-space: nowrap;
 
       .item {
         background-color: grey;
         cursor: pointer;
         text-align: center;
-        width: 300px;
-        height: 300px;
+        width: 185px;
+        height: 232px;
         margin: 34px 25px;
         line-height: 90px;
         display: inline-block;
@@ -99,22 +99,32 @@
     height: 0;
     .button.construct {
       position: fixed;
-      bottom: 50px;
-      right: 50px;
-      width: 70px;
-      height: 70px;
-      line-height: 70px;
+      bottom: 30px;
+      right: 30px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
     }
 
     .button.cancel{
       position: fixed;
-      bottom: 50px;
-      left: 50px;
-      width: 70px;
-      height: 70px;
-      line-height: 70px;
+      bottom: 30px;
+      left: 30px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
     }
   }
+
+  .button.road{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+
 
 }
 

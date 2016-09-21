@@ -56,6 +56,13 @@ module.exports = class BuildingMenu {
         this.nodeCancelConstruct.onclick = model._onCancelEditor.bind(model);
         this.nodeEditor.appendChild(this.nodeCancelConstruct);
 
+
+        this.nodeButtonRoad = document.createElement('div');
+        this.nodeButtonRoad.className = 'button road';
+        this.nodeButtonRoad.textContent = 'ok';
+        this.nodeButtonRoad.onclick = model._onRoadBuilded.bind(model);
+        this.node.appendChild(this.nodeButtonRoad);
+
         this.updateState(model);
 
     }
@@ -67,12 +74,20 @@ module.exports = class BuildingMenu {
             this.hideNode(this.nodeButtonOpen);
             this.hideNode(this.nodeBuildingsContainer);
             this.hideNode(this.nodeButtonClose);
-            this.hideNode(this.nodeCategoriesContainer);
+            return;
+        }
+
+        if(model.roadEditor){
+            this.showNode(this.nodeButtonRoad);
+            this.hideNode(this.nodeButtonOpen);
+            this.hideNode(this.nodeBuildingsContainer);
+            this.hideNode(this.nodeButtonClose);
             return;
         }
 
         if(model.displayed) {
             this.hideNode(this.nodeEditor);
+            this.hideNode(this.nodeButtonRoad);
             this.hideNode(this.nodeButtonOpen);
             this.showNode(this.nodeButtonClose);
             if(model.currentCategory.length) {
@@ -89,6 +104,7 @@ module.exports = class BuildingMenu {
             this.hideNode(this.nodeButtonClose);
             this.hideNode(this.nodeCategoriesContainer);
             this.hideNode(this.nodeEditor);
+            this.hideNode(this.nodeButtonRoad);
         }
     }
 

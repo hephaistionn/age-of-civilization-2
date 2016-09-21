@@ -22,6 +22,7 @@ module.exports = class BuildingMenu {
         this.currentFocus = null;
         this.displayed = false;
         this.entityEditor = false;
+        this.roadEditor = false;
 
         this.type = 'UI';
 
@@ -60,18 +61,30 @@ module.exports = class BuildingMenu {
         return true;
     }
 
-    showEditor() {
+    showEntityEditor() {
         this.entityEditor = true;
+        ee.emit('onUpdate', 'buildingMenu', this);
+    }
+
+    showRoadEditor() {
+        this.roadEditor = true;
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
     hideEditor() {
         this.entityEditor = false;
+        this.roadEditor = false;
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
     onConstructEditor(fct) {
         this._onConstructEditor = () => {
+            fct();
+        };
+    }
+
+    onRoadBuilded(fct) {
+        this._onRoadBuilded = () => {
             fct();
         };
     }
