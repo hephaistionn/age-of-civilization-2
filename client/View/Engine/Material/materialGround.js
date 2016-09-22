@@ -70,9 +70,7 @@ const fragShader = "" +
     "    shadowCoord.z += shadowBias; \n" +
     "    bvec4 inFrustumVec = bvec4 ( shadowCoord.x >= 0.0, shadowCoord.x <= 1.0, shadowCoord.y >= 0.0, shadowCoord.y <= 1.0 ); \n" +
     "    bool inFrustum = all( inFrustumVec ); \n" +
-    "    bvec2 frustumTestVec = bvec2( inFrustum, shadowCoord.z <= 1.0 ); \n" +
-    "    bool frustumTest = all( frustumTestVec ); \n" +
-    "    if ( frustumTest ) { \n" +
+    "    if ( inFrustum ) { \n" +
     "        return max(texture2DCompare( shadowMap, shadowCoord.xy, shadowCoord.z ),0.5); \n" +
     "    } \n" +
     "    return 1.0; \n" +

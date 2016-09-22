@@ -18,7 +18,7 @@ class ScreenMap {
     constructor() {
 
         this.camera = new Camera({x: 25, z: 25});
-        this.light = new Light({x: -9, y: 25, z: 6});
+        this.light = new Light({});
         this.buildingMenu = new BuildingMenu();
 
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);

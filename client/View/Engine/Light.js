@@ -12,10 +12,10 @@ module.exports = class Light {
         this.directionalLight = new THREE.DirectionalLight(model.directionalColor);
         this.directionalLight.matrixAutoUpdate = false;
         this.directionalLight.castShadow = true;
-        this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-120, 110, 110, -120, 1, 500));
-        this.directionalLight.shadow.bias = 0.000001;
-        this.directionalLight.shadow.mapSize.width = 1024;
-        this.directionalLight.shadow.mapSize.height = 1024;
+        this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-100, 100, 100, -100, 10, 1000));
+        this.directionalLight.shadow.bias = 0.1;
+        this.directionalLight.shadow.mapSize.width = 512;
+        this.directionalLight.shadow.mapSize.height = 512;
 
         this.element.add(this.ambient);
         this.element.add(this.directionalLight);

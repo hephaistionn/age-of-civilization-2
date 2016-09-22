@@ -3,9 +3,9 @@ class Light {
     constructor(config) {
         this.ambientColor = 0x555522;
         this.directionalColor = 0xffffff;
-        this.offsetX = config.offsetX||60;
-        this.offsetY = config.offsetY||-100;
-        this.offsetZ = config.offsetZ||-60;
+        this.offsetX = config.offsetX||120;
+        this.offsetY = config.offsetY||-200;
+        this.offsetZ = config.offsetZ||-120;
         this.x = 100;
         this.y = 100;
         this.z = 100;
