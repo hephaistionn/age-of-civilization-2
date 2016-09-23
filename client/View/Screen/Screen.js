@@ -8,7 +8,8 @@ const COMPONENTS = {
     Render: require('./../Engine/Render'),
     Positioner: require('./../Engine/Positioner'),
     RoadPositioner: require('./../Engine/RoadPositioner'),
-    BuildingMenu: require('../UI/BuildingMenu')
+    BuildingMenu: require('../UI/BuildingMenu'),
+    MonitoringPanel: require('../UI/MonitoringPanel')
 };
 
 class Screen {

@@ -1,6 +1,7 @@
 const ee = require('../../../services/eventEmitter');
 
 const BuildingMenu = require('../../UI/BuildingMenu');
+const MonitoringPanel = require('../../UI/MonitoringPanel');
 
 const Map = require('../../Engine/Map');
 const Light = require('../../Engine/Light');
@@ -20,6 +21,7 @@ class ScreenMap {
         this.camera = new Camera({x: 25, z: 25});
         this.light = new Light({});
         this.buildingMenu = new BuildingMenu();
+        this.monitoringPanel = new MonitoringPanel();
 
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         this.light.scaleOffset(-this.camera.offsetY);

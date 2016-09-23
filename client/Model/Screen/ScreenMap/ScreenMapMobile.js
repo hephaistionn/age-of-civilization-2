@@ -7,6 +7,7 @@ const Light = require('../../Engine/Light');
 const Camera = require('../../Engine/Camera');
 const Positioner = require('../../Engine/Positioner');
 const RoadPositioner = require('../../Engine/RoadPositioner');
+const MonitoringPanel = require('../../UI/MonitoringPanel');
 
 var PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
