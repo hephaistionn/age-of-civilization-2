@@ -1,0 +1,76 @@
+.monitoringPanel.mobile {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+
+  .previewContainer {
+    position: relative;
+    width: 600px;
+    top: 0;
+    left: 0;
+    height: 45px;
+    background-color: #333333;
+    margin: 0 auto;
+
+    .item {
+      position: relative;
+      display: inline-block;
+      width: 70px;
+      height: 40px;
+      margin: 3px 10px 3px 10px;
+      background-color: #696868;
+      .name {
+        text-align: center;
+      }
+      .value {
+        text-align: center;
+      }
+
+    }
+
+  }
+
+  .monitoringContainer {
+    position: fixed;
+    background: #9E9E9E;
+    width: 600px;
+    height: 90%;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-300px);
+    .button.close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+
+  .button {
+    border: solid 1px black;
+    background-color: grey;
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px;
+    width: 40px;
+    &:hover {
+      background-color: #4444ff;
+    }
+  }
+
+  .button.open {
+    position: fixed;
+    top: 16px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+  .hide {
+    display: none;
+  }
+
+}

@@ -1,13 +1,13 @@
 const ee = require('../../../services/eventEmitter');
 
 const BuildingMenu = require('../../UI/BuildingMenu');
+const MonitoringPanel = require('../../UI/MonitoringPanel');
 
 const Map = require('../../Engine/Map');
 const Light = require('../../Engine/Light');
 const Camera = require('../../Engine/Camera');
 const Positioner = require('../../Engine/Positioner');
 const RoadPositioner = require('../../Engine/RoadPositioner');
-const MonitoringPanel = require('../../UI/MonitoringPanel');
 
 var PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
@@ -20,6 +20,7 @@ class ScreenMap {
         this.camera = new Camera({x: 25, z: 25});
         this.light = new Light({});
         this.buildingMenu = new BuildingMenu();
+        this.monitoringPanel = new MonitoringPanel();
 
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         this.light.scaleOffset(-this.camera.offsetY);
@@ -52,12 +53,15 @@ class ScreenMap {
             if(this.positioner.selected && !this.positioner.undroppable) {
                 const entity = this.positioner.selected;
                 const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
+                const built = entity.construction();
+                if(!built) return; //not enough resources
                 this.positioner.unselectEnity();
                 this.map.newEntity(params);
                 this.map.updateEntity('EntityRoad', null); //remove road under entity
                 this.buildingMenu.hideEditor();
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'positioner', this.positioner);
+                ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             }
         });
 
@@ -135,9 +139,12 @@ class ScreenMap {
         if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {
+            const built = this.roadPositioner.construction(params);
+            if(!built) return; //not enough resources
             this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
+            ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
         }
     }
 
