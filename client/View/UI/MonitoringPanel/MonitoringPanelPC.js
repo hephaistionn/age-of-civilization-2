@@ -75,7 +75,6 @@ module.exports = class MonitoringPanelPC {
         }
 
         const resources = stateManager.resources;
-        debugger;
         for(let i = 0; i < model.previewes.length; i++) {
             const node = this.nodePreviewItems[i];
             node.lastChild.textContent = resources[model.previewes[i]];

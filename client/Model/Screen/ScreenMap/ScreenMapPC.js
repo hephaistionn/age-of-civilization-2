@@ -144,18 +144,24 @@ class ScreenMap {
             ee.emit('onUpdate', 'map', this.map);
         } else if(this.positioner.selected && !this.positioner.undroppable) {
             const entity = this.positioner.selected;
+            const built = entity.construction();
+            if(!built) return; //not enough resources
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             this.map.newEntity(params);
             ee.emit('onUpdate', 'map', this.map);
             this.map.updateEntity('EntityRoad', null); //remove road under entity
             ee.emit('onUpdate', 'map', this.map);
+            ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
         } else if(this.roadPositioner.selected) {
             this.roadPositioner.placeSelectedEntity(x, z, this.map);
             const params = this.roadPositioner.getNewRoad();
             if(params) {
+                const built = this.roadPositioner.construction(params);
+                if(!built) return; //not enough resources
                 this.map.updateEntity('EntityRoad', null, params);
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
+                ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             }
         }
     }
@@ -165,9 +171,12 @@ class ScreenMap {
         if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {
+            const built = this.roadPositioner.construction(params);
+            if(!built) return; //not enough resources
             this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
+            ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
         }
     }
 

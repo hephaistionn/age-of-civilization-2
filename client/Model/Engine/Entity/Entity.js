@@ -1,3 +1,4 @@
+const stateManager = require('../../stateManager');
 const pf = require('../../../services/pathfinding');
 const finder = new pf.AStarFinder({
     allowDiagonal: true,
@@ -12,7 +13,7 @@ module.exports = class Entity {
         this.z = 0;
         this.a = 0;
         this.timer = 0;
-        this.move(params.x||0, params.y||0, params.z||0, params.a||0);
+        this.move(params.x || 0, params.y || 0, params.z || 0, params.a || 0);
     }
 
     move(x, y, z, a) {
@@ -115,6 +116,22 @@ module.exports = class Entity {
             distance += Math.sqrt(dX1 * dX1 + dZ1 * dZ1);
         }
         return distance;
+    }
+
+    construction() {
+        const cost = this.constructor.cost;
+        const resources = stateManager.resources;
+
+        for(var resourceId in cost) {
+            const valueRequired = cost[resourceId];
+            const value = resources[resourceId];
+            if(valueRequired > value) {
+                return false;
+            }
+            resources[resourceId] -= valueRequired;
+        }
+
+        return true;
     }
 
 };

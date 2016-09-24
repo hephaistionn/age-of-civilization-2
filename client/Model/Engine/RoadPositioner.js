@@ -1,3 +1,6 @@
+const stateManager = require('../stateManager');
+const EntityRoad = require('./Entity/Road/EntityRoad');
+
 module.exports = class RoadPositioner {
 
     constructor(config) {
@@ -76,7 +79,6 @@ module.exports = class RoadPositioner {
                 walkable[i] = this.selected;
             }
         }
-
         this.road.length = length;
     }
 
@@ -108,6 +110,21 @@ module.exports = class RoadPositioner {
     unselectEnity() {
         this.road.length = 0;
         this.selected = null;
+    }
+
+    construction(newRoad) {
+        const cost = EntityRoad.cost[this.selected];
+        const resources = stateManager.resources;
+        for(var resourceId in cost) {
+            const valueRequired = cost[resourceId] * newRoad.length;
+            const value = resources[resourceId];
+            if(valueRequired > value) {
+                return false;
+            }
+            resources[resourceId] -= valueRequired;
+        }
+
+        return true;
     }
 
 
