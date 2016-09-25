@@ -1,3 +1,5 @@
+const stateManager = require('../../../stateManager');
+
 class EntityRoad {
 
     constructor(params) {
@@ -16,7 +18,34 @@ class EntityRoad {
     }
 }
 
+EntityRoad.construction = function construction(newRoad) {
+    const roadType = newRoad.walkable[0];
+    const cost = this.cost[roadType];
+    const resources = stateManager.resources;
+    for(var resourceId in cost) {
+        const valueRequired = cost[resourceId] * newRoad.length;
+        const value = resources[resourceId];
+        if(valueRequired > value) {
+            return false;
+        }
+        resources[resourceId] -= valueRequired;
+    }
+    return true;
+};
+
+EntityRoad.available = function available(roadType) {
+    const require = this.require[roadType];
+    for(var stateId in require) {
+        const valueRequired = require[stateId];
+        const value = stateManager[stateId];
+        if(valueRequired > value) {
+            return false;
+        }
+    }
+    return true;
+};
+
 EntityRoad.walkable = true;
 EntityRoad.cost = [{}, {stone: 1}, {stone: 1}];
-
+EntityRoad.require = [{},{population:4},{population:8}];
 module.exports = EntityRoad;

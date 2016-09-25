@@ -8,6 +8,8 @@ const Light = require('../../Engine/Light');
 const Camera = require('../../Engine/Camera');
 const Positioner = require('../../Engine/Positioner');
 const RoadPositioner = require('../../Engine/RoadPositioner');
+const Road = require('../../Engine/Entity/Road/EntityRoad');
+const Entity = require('../../Engine/Entity/Entity');
 
 var PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
@@ -53,15 +55,17 @@ class ScreenMap {
             if(this.positioner.selected && !this.positioner.undroppable) {
                 const entity = this.positioner.selected;
                 const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
-                const built = entity.construction();
+                const built = entity.constructor.construction();
                 if(!built) return; //not enough resources
                 this.positioner.unselectEnity();
+                entity.onConstruct();
                 this.map.newEntity(params);
                 this.map.updateEntity('EntityRoad', null); //remove road under entity
                 this.buildingMenu.hideEditor();
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'positioner', this.positioner);
                 ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
+                ee.emit('onUpdate', 'buildingMenu', this.buildingMenu);
             }
         });
 
@@ -139,7 +143,7 @@ class ScreenMap {
         if(!this.roadPositioner.selected) return;
         const params = this.roadPositioner.getNewRoad();
         if(params) {
-            const built = this.roadPositioner.construction(params);
+            const built = Road.construction(params);
             if(!built) return; //not enough resources
             this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);

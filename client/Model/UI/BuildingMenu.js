@@ -1,24 +1,26 @@
 const ee = require('../../services/eventEmitter');
 const stateManager = require('../stateManager');
+const ENTITIES = require('../Engine/Entity/list');
 
 
 module.exports = class BuildingMenu {
 
     constructor(config) {
         this.categories = {
-            resource: [{id: 'Destroy'}],
-            factory: [{id: 'Destroy'}],
-            service: [{id: 'Destroy'}],
-            culture: [{id: 'EntityChurch', required: {}}, {id: 'Destroy'}],
+            resource: ['Destroy'],
+            factory: ['Destroy'],
+            service: ['Destroy'],
+            culture: ['EntityChurch', 'Destroy'],
             state: [
-                {id: 'EntityHouse', required: {}, cost: {stone: 5}},
-                {id: 'EntityChurch', required: {}, cost: {stone: 5, wood: 5}},
-                {id: 'Road', required: {}, cost: {stone: 1}},
-                {id: 'Destroy'},
-                {id: 'Destroy'},
-                {id: 'Destroy'}]
+                'EntityHouse',
+                'EntityChurch',
+                'Road',
+                'Destroy',
+                'Destroy',
+                'Destroy']
         };
         this.currentCategory = [];
+        this.currentCategoryId = '';
         this.currentFocus = null;
         this.displayed = false;
         this.entityEditor = false;
@@ -43,22 +45,22 @@ module.exports = class BuildingMenu {
     }
 
 
-    openCategory(cetegoryId) {
+    openCategory(categoryId) {
         this.displayed = true;
-        const category = this.categories[cetegoryId];
-        this.currentCategory = category.filter(this.filterEnableBuilding);
+        this.currentCategoryId = categoryId;
+        this.updateCurrentCategory();
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
-    filterEnableBuilding(buildings) {
-        const required = buildings.required;
-        if(!required) return true;
-        for(let key in required) {
-            if(stateManager.states[key] < required[key]) {
-                return false;
-            }
-        }
-        return true;
+    updateCurrentCategory() {
+        const category = this.categories[this.currentCategoryId];
+        this.currentCategory = category.filter(this.filterEnableBuilding);
+    }
+
+    filterEnableBuilding(entityId) {
+        const Entity = ENTITIES[entityId];
+        if(!Entity) return true;
+        return Entity.available();
     }
 
     showEntityEditor() {

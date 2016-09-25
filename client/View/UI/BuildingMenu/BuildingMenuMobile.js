@@ -127,14 +127,14 @@ module.exports = class BuildingMenu {
         }
 
         for(let i = 0; i < modelBuildings.length; i++) {
-            const modelBuilding = modelBuildings[i];
+            const id = modelBuildings[i];
             const nodeButtonBuilding = document.createElement('div');
-            nodeButtonBuilding.className = 'item ' + modelBuilding.id;
-            if(model.currentFocus === modelBuilding.id) {
+            nodeButtonBuilding.className = 'item ' + id;
+            if(model.currentFocus === id) {
                 nodeButtonBuilding.className += ' focus';
             }
-            nodeButtonBuilding.textContent = modelBuilding.id;
-            nodeButtonBuilding.onclick = model._onClickBuilding.bind(model, modelBuilding.id);
+            nodeButtonBuilding.textContent = id;
+            nodeButtonBuilding.onclick = model._onClickBuilding.bind(model, id);
             this.nodeBuildingsContent.appendChild(nodeButtonBuilding);
         }
     }

@@ -15,6 +15,7 @@ module.exports = class BuildingMenu {
         this.buildingContainer = document.createElement('div');
         this.buildingContainer.className = 'buildingContainer';
         this.node.appendChild(this.buildingContainer);
+        this.displayed = false;
 
         for(let categoryId in model.categories) {
             const nodeButtonCategory = document.createElement('div');
@@ -28,10 +29,20 @@ module.exports = class BuildingMenu {
 
     updateState(model) {
 
+        if(this.displayed === true && this.displayed === model.displayed) {
+            this.update
+        }
         model.displayed ? this.open() : this.close();
 
-        if(model.currentCategory.length) {
-            this.computeCurrentCategory(model.currentCategory, model);
+        if(model.currentCategory.length && model.displayed) {
+            if(this.displayed === model.displayed) { //avoid to redraw opened menu
+                this.updateCurrentCategory(model.currentCategory, model);
+            } else {
+                this.computeCurrentCategory(model.currentCategory, model);
+                this.displayed = true;
+            }
+        } else {
+            this.displayed = false;
         }
     }
 
@@ -42,15 +53,31 @@ module.exports = class BuildingMenu {
         }
 
         for(let i = 0; i < modelBuildings.length; i++) {
-            const modelBuilding = modelBuildings[i];
+            const id = modelBuildings[i];
             const nodeButtonBuilding = document.createElement('div');
-            nodeButtonBuilding.className = 'item ' + modelBuilding.id;
-            if(model.currentFocus === modelBuilding.id) {
+            nodeButtonBuilding.className = 'item ' + id;
+            if(model.currentFocus === id) {
                 nodeButtonBuilding.className += ' focus';
             }
-            nodeButtonBuilding.textContent = modelBuilding.id;
-            nodeButtonBuilding.onclick = model._onClickBuilding.bind(model, modelBuilding.id);
+            nodeButtonBuilding.textContent = id;
+            nodeButtonBuilding.onclick = model._onClickBuilding.bind(model, id);
             this.buildingContainer.appendChild(nodeButtonBuilding);
+        }
+    }
+
+    updateCurrentCategory(modelBuildings, model) {
+        for(let i = 0; i < modelBuildings.length; i++) {
+            const id = modelBuildings[i];
+            if(this.buildingContainer.childNodes[i].className.indexOf(id) === -1) {
+                const nodeButtonBuilding = document.createElement('div');
+                nodeButtonBuilding.className = 'item ' + id;
+                if(model.currentFocus === id) {
+                    nodeButtonBuilding.className += ' focus';
+                }
+                nodeButtonBuilding.textContent = id;
+                nodeButtonBuilding.onclick = model._onClickBuilding.bind(model, id);
+                this.buildingContainer.insertBefore(nodeButtonBuilding, this.buildingContainer.childNodes[i]);
+            }
         }
     }
 

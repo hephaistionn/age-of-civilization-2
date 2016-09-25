@@ -13,6 +13,7 @@ class StateManager {
         };
 
         this.population = 0;
+        this.workers = 0;
 
         this.trade = {
             wood: this.CLOSE,
@@ -21,19 +22,29 @@ class StateManager {
         }
     }
 
-    updateWood(value){
+    updateWood(value) {
         this.resources.wood += value;
     }
 
+    updatePopulation(value) {
+        this.population += value;
+    }
+
+    updateWorkers(value) {
+        this.workers += value;
+    }
+
     switchTrade(id) {
-        if(this.trade[id] === this.CLOSE){
+        if(this.trade[id] === this.CLOSE) {
             this.trade[id] = this.EXPORT;
-        }else if(this.trade[id] === this.EXPORT){
+        } else if(this.trade[id] === this.EXPORT) {
             this.trade[id] = this.IMPORT;
-        }else if(this.trade[id] === this.IMPORT){
+        } else if(this.trade[id] === this.IMPORT) {
             this.trade[id] = this.CLOSE;
         }
     }
 }
 
 module.exports = new StateManager();
+
+window.stateManager = module.exports

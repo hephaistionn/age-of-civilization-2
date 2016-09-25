@@ -1,5 +1,6 @@
 const Entity = require('../Entity.js');
 const ee = require('../../../../services/eventEmitter');
+const stateManager = require('../../../stateManager');
 
 class EntityChurch extends Entity {
 
@@ -7,6 +8,8 @@ class EntityChurch extends Entity {
         super(params);
         this.power = 0;
         this.cycle = 2000;
+        this.workers = 0;
+        this.workplaces = 2;
     }
 
     update() {
@@ -26,10 +29,16 @@ class EntityChurch extends Entity {
             this.power = 0;
         }
     }
+
+    onConstruct() {
+        this.workers = Math.min(stateManager.population - stateManager.workers, this.workplaces);
+        stateManager.updateWorkers(this.workers);
+    }
 }
 
 EntityChurch.tile_x = 2;
 EntityChurch.tile_z = 1;
 EntityChurch.cost = {wood: 10, stone: 100};
+EntityChurch.require = {population: 4};
 EntityChurch.walkable = false;
 module.exports = EntityChurch;

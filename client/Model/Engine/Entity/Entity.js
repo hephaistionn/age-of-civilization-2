@@ -5,7 +5,7 @@ const finder = new pf.AStarFinder({
     dontCrossCorners: true
 });
 
-module.exports = class Entity {
+class Entity {
 
     constructor(params) {
         this.x = 0;
@@ -118,20 +118,34 @@ module.exports = class Entity {
         return distance;
     }
 
-    construction() {
-        const cost = this.constructor.cost;
-        const resources = stateManager.resources;
+}
 
-        for(var resourceId in cost) {
-            const valueRequired = cost[resourceId];
-            const value = resources[resourceId];
-            if(valueRequired > value) {
-                return false;
-            }
-            resources[resourceId] -= valueRequired;
+Entity.construction = function construction() {
+    const cost = this.cost;
+    const resources = stateManager.resources;
+
+    for(var resourceId in cost) {
+        const valueRequired = cost[resourceId];
+        const value = resources[resourceId];
+        if(valueRequired > value) {
+            return false;
         }
-
-        return true;
+        resources[resourceId] -= valueRequired;
     }
-
+    return true;
 };
+
+Entity.available = function available() {
+    const require = this.require;
+
+    for(var stateId in require) {
+        const valueRequired = require[stateId];
+        const value = stateManager[stateId];
+        if(valueRequired > value) {
+            return false;
+        }
+    }
+    return true;
+};
+
+module.exports = Entity;
