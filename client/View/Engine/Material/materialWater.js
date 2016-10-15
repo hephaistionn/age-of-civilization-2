@@ -10,7 +10,9 @@ const vertShader = "" +
 
 const fragShader = "" +
     "uniform float time; \n" +
+    "uniform float opacity; \n" +
     "uniform float progress; \n" +
+    "uniform float size; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "uniform sampler2D textureA; \n" +
     "uniform vec3 ambientLightColor; \n" +
@@ -27,15 +29,15 @@ const fragShader = "" +
     "#endif \n" +
     "" +
     "void main(void) { \n" +
-    "" +
-    "vec2 UV1 = vec2(vAbsolutePosition.x, vAbsolutePosition.z+progress)/40.0; \n" +
-    "vec2 UV2 = vec2(vAbsolutePosition.x+10.0, vAbsolutePosition.z+10.0+progress)/40.0; \n" +
+    "float offset = size/4.0;  \n" +
+    "vec2 UV1 = vec2(vAbsolutePosition.x, vAbsolutePosition.z+progress)/size; \n" +
+    "vec2 UV2 = vec2(vAbsolutePosition.x+offset, vAbsolutePosition.z+offset+progress)/size; \n" +
     "vec3 colorA = texture2D( textureA, UV1 ).xyz; \n" +
     "vec3 colorB = texture2D( textureA, UV2 ).xyz; \n" +
     "vec3 colorFinal = vec3(0.0); \n" +
     "colorFinal += colorA*time; \n" +
     "colorFinal += colorB*(1.0-time); \n" +
-    "colorFinal *= vec3(0.5,0.8,1.0); \n" +
+    "colorFinal *= vec3(0.40,0.60,0.99); \n" +
     "" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
@@ -52,7 +54,7 @@ const fragShader = "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +
     "gl_FragColor.xyz = colorFinal * sumLights; \n" +
-    "gl_FragColor.a = 0.35; \n" +
+    "gl_FragColor.a = opacity; \n" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([
@@ -63,6 +65,8 @@ const uniforms = THREE.UniformsUtils.merge([
 uniforms.textureA = {type: 't', value: THREE.loadTexture('pic/water_1.jpg')};
 uniforms.time = { type: 'f', value: 0.0 };
 uniforms.progress = { type: 'f', value: 0.0 };
+uniforms.opacity = { type: 'f', value: 0.35 };
+uniforms.size = { type: 'f', value: 40.0 };
 uniforms.cameraPosition  = { type: 'v3', value: new THREE.Vector3(1.0,0.0,0.0) };
 
 const mat = new THREE.ShaderMaterial({

@@ -1,5 +1,5 @@
 const THREE = require('../../services/threejs');
-const ENTITIES = require('./Entity/list');
+const ENTITIES = require('./Entity/listEntity');
 const config = require('./config');
 
 

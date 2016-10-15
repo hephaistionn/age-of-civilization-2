@@ -8,7 +8,6 @@ const PixelMap = require('../../../services/PixelMap');
 let moveDx = 0;
 let moveDz = 0;
 
-
 class ScreenWorldmap {
 
     constructor() {
@@ -51,14 +50,14 @@ class ScreenWorldmap {
         }
     }
 
-    mouseMovePress(x, z) {
+    touchMove(x, z) {
         this.camera.dragg(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);
         ee.emit('onUpdate', 'light', this.light);
     }
 
-    mouseUp() {
+    touchEnd() {
         this.camera.cleatMove();
     }
 
@@ -71,9 +70,8 @@ class ScreenWorldmap {
         moveDx = 0;
         moveDz = 0;
     }
-
-    mouseWheel(delta) {
-        this.camera.mouseWheel(delta);
+    zoom(delta) {
+        this.camera.scale(delta);
         this.light.scaleOffset(-this.camera.offsetY);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         ee.emit('onUpdate', 'camera', this.camera);

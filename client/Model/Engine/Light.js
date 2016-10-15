@@ -1,18 +1,19 @@
 class Light {
 
     constructor(config) {
-        this.ambientColor = 0x555522;
+        this.ambientColor = config.ambient || 0x555522;
         this.directionalColor = 0xffffff;
-        this.offsetX = config.offsetX||120;
-        this.offsetY = config.offsetY||-200;
-        this.offsetZ = config.offsetZ||-120;
+        this.offsetX = config.offsetX || 120;
+        this.offsetY = config.offsetY || -200;
+        this.offsetZ = config.offsetZ || -120;
         this.x = 100;
         this.y = 100;
         this.z = 100;
         this.targetX = 0;
         this.targetY = 0;
         this.targetZ = 0;
-        this.move(config.x || this.x, config.z||this.y, config.z || this.z);
+        this.shadow = config.shadow || false;
+        this.move(config.x || this.x, config.z || this.y, config.z || this.z);
     }
 
     move(x, y, z) {

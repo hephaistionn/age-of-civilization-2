@@ -1,5 +1,5 @@
 const pathfinding = require('../../services/pathfinding');
-const ENTITIES = require('./Entity/list');
+const ENTITIES = require('./Entity/listEntity');
 
 class Map {
 
@@ -36,7 +36,7 @@ class Map {
         const entityId = params.entityId;
         const entity = new ENTITIES[entityId](params);
         this.entityGroups[entityId].push(entity);
-        if(this.entityGroupUpdated.indexOf(entityId)===-1)
+        if(this.entityGroupUpdated.indexOf(entityId) === -1)
             this.entityGroupUpdated.push(entityId);
         if(!entity.constructor.walkable) {
             this.setWalkableTile(entity, 0);
@@ -50,7 +50,7 @@ class Map {
         const entityId = entity.constructor.name;
         let index = this.entityGroups[entityId].indexOf(entity);
         this.entityGroups[entityId].splice(index, 1);
-        if(this.entityGroupUpdated.indexOf(entityId)===-1)
+        if(this.entityGroupUpdated.indexOf(entityId) === -1)
             this.entityGroupUpdated.push(entityId);
         if(!entity.constructor.walkable) {
             this.setWalkableTile(entity, 1);
@@ -100,9 +100,9 @@ class Map {
     }
 
     clearTile(x, z, model) {
-        if(model){
+        if(model) {
             this.removeEntity(model)
-        }else {
+        } else {
             this.grid.setWalkableAt(Math.floor(x), Math.floor(z), 1);
             if(this.updatedEntity.indexOf('EntityRoad') === -1) {
                 this.updatedEntity.push(0);
@@ -144,7 +144,7 @@ class Map {
             let height = this.tilesHeight[i];
             if(tilt > this.tiltMax) {
                 this.grid.setWalkableAt(x, z, 0);
-            }else if(height < 45){
+            } else if(height < 45) {
                 this.grid.setWalkableAt(x, z, 0);
             }
         }

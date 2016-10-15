@@ -1,4 +1,4 @@
-const ENTITIES = require('./Entity/list');
+const ENTITIES = require('./Entity/listEntity');
 
 module.exports = class Positioner {
 

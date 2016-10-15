@@ -2,18 +2,22 @@ const THREE = require('../../../services/threejs');
 const materialGround = require('./../Material/materialGround');
 const materialWater = require('./../Material/materialWater');
 
-module.exports = Map=> {
+module.exports = Worldmap=> {
 
-    Map.prototype.initGround = function initGround(model) {
+    Worldmap.prototype.initGround = function initGround(model) {
         this.materialGround = materialGround;
-        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/rock_1.jpg");
-        this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0.jpg");
-        this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/grass_1.jpg");
-        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg.jpg");
+        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/desert_0big.jpg");
+        this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0big.jpg");
+        this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/forest_0big.jpg");
+        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/grass_1.jpg");
+
         //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
         //this.materialGround = new THREE.MeshPhongMaterial( { color: 0x555555 } );
         //this.materialWater = new THREE.MeshPhongMaterial({color: 0x3333ff, map : THREE.ImageUtils.loadTexture('pic/water_0.jpg'), transparent: true, shininess: 90, opacity: 0.66 });
         this.materialWater = materialWater;
+        this.materialWater.uniforms.opacity.value = 0.80;
+        this.materialWater.uniforms.size.value = 10.0;
+
         this.waterOscillation = 1;
 
         const nbPointX = model.nbPointX;
@@ -21,78 +25,38 @@ module.exports = Map=> {
         const nbTileX = model.nbTileX;
         const nbTileZ = model.nbTileZ;
 
-        const chunksTiles = [0];
-        for(let x = 0; x < nbTileX; x++) {
-            if(chunksTiles[chunksTiles.length - 1] === this.tileByChunk) {
-                chunksTiles.push(1);
-            } else {
-                chunksTiles[chunksTiles.length - 1]++;
-            }
-        }
+        this.mapGeo = this.createSurface(nbTileX, nbTileZ, model);
 
-        const chunks = [];
-        const length = chunksTiles.length;
-        let x, z, offsetXTiles, offsetZTiles, nbXTiles, nbZTiles;
-        //prepare chunk geo
-        for(x = 0; x < length; x++) {
-            chunks[x] = [];
-            for(z = 0; z < length; z++) {
-                nbXTiles = chunksTiles[x];
-                nbZTiles = chunksTiles[z];
-                offsetXTiles = x * this.tileByChunk;
-                offsetZTiles = z * this.tileByChunk;
-                let chunkGeo = this.createSurface(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
-                chunks[x][z] = chunkGeo;
-            }
-        }
+        let mapMesh = new THREE.Mesh(this.mapGeo, this.materialGround);
+        mapMesh.position.set(0, 0, 0);
+        this.element.add(mapMesh);
+        mapMesh.updateMatrixWorld();
+        mapMesh.matrixAutoUpdate = false;
+        mapMesh.matrixWorldNeedsUpdate = false;
+        mapMesh.receiveShadow = true;
 
-        function findVextexUnderWater(vertex) {
-            return vertex < 3;
-        }
+        this.waterMesh = this.createWater(nbTileX, nbTileZ, mapMesh);
 
-        this.chunks = [];
-        this.chunksList = [];
-        for(x = 0; x < length; x++) {
-            this.chunks[x] = [];
-            for(z = 0; z < length; z++) {
-                offsetXTiles = x * this.tileByChunk * this.tileSize;
-                offsetZTiles = z * this.tileByChunk * this.tileSize;
-                let xSize = chunksTiles[x] * this.tileSize;
-                let zSize = chunksTiles[z] * this.tileSize;
+        this.touchSurface = [this.waterMesh];
 
-                let chunkGeo = chunks[x][z];
-                let chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
-                chunkMesh.position.set(offsetXTiles, 0, offsetZTiles);
-                chunkGeo.computeBoundingBox();
-                this.element.add(chunkMesh);
-                chunkMesh.updateMatrixWorld();
-                chunkMesh.matrixAutoUpdate = false;
-                chunkMesh.matrixWorldNeedsUpdate = false;
-                chunkMesh.receiveShadow = true;
-
-                this.chunks[x][z] = chunkMesh;
-                this.chunksList.push(chunkMesh);
-
-                if(chunkGeo.boundingBox.min.y <= 3) {
-                    this.createWater(xSize, zSize, chunkMesh);
-                }
-            }
-        }
     };
 
-    Map.prototype.createWater = function createWater(xSize, zSize, chunkMesh) {
+    Worldmap.prototype.createWater = function createWater(nbTileX, nbTileZ, mapMesh) {
+        const xSize = nbTileX * this.tileSize * 2;
+        const zSize = nbTileZ * this.tileSize * 2;
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
-        chunkMesh.add(waterMesh);
-        waterMesh.position.set(0, 3, 0);
+        mapMesh.add(waterMesh);
+        waterMesh.position.set(-xSize / 4, 3, -zSize / 4);
         waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();
         waterMesh.matrixAutoUpdate = false;
         waterMesh.matrixWorldNeedsUpdate = false;
         waterMesh.receiveShadow = true;
+        return waterMesh;
     };
 
-    Map.prototype.updateWater = function updateWater(dt) {
+    Worldmap.prototype.updateWater = function updateWater(dt) {
         const uniformTime = this.materialWater.uniforms.time;
         const uniformProgress = this.materialWater.uniforms.progress;
         const uniformCameraPosition = this.materialWater.uniforms.cameraPosition;
@@ -112,7 +76,7 @@ module.exports = Map=> {
         }
     };
 
-    Map.prototype.createSurface = function createSurface(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
+    Worldmap.prototype.createSurface = function createSurface(nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
 
@@ -125,8 +89,8 @@ module.exports = Map=> {
         const groundArry = new Float32Array(length);
 
         for(let i = 0; i < length; i++) {
-            let tileX = offsetXTiles + posArray[i * 3] / this.tileSize;
-            let tileZ = offsetZTiles + posArray[i * 3 + 2] / this.tileSize;
+            let tileX = posArray[i * 3] / this.tileSize;
+            let tileZ = posArray[i * 3 + 2] / this.tileSize;
             let index = tileZ * model.nbPointX + tileX;
 
             let pointsType = model.pointsType[index] || 0;

@@ -1,5 +1,5 @@
 const THREE = require('../../../services/threejs');
-const ENTITIES = require('../Entity/list');
+const ENTITIES = require('../Entity/listEntity');
 const config = require('../config');
 
 class Map {
@@ -17,7 +17,6 @@ class Map {
         this.nbPointZ = model.nbPointZ;
         this.pointsNormal = model.pointsNormal;
 
-
         this.entityDynamicList = [];
         this.entityGroups = {};
         for(let id in ENTITIES) {
@@ -27,21 +26,18 @@ class Map {
         this.initGround(model);
 
         this.updateStateEntities('EntityTree', model);
-
-
     }
 
     updateState(model) {
 
-        while(model.entityGroupUpdated.length !==0){
+        while(model.entityGroupUpdated.length !== 0) {
             this.updateStateEntities(model.entityGroupUpdated.pop(), model);
         }
 
-        while(model.updatedEntity.length !==0){
+        while(model.updatedEntity.length !== 0) {
             this.updateStateOfOneEntities(model.updatedEntity.pop(), model.updatedEntity.pop());
         }
     }
-
 
     update(dt) {
         this.updateDynamicEntities(dt);
@@ -51,7 +47,6 @@ class Map {
     remove() {
 
     }
-
 }
 
 require('./MapGround')(Map);

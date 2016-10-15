@@ -1,4 +1,4 @@
-const ENTITIES = require('../Entity/list');
+const ENTITIES = require('../Entity/listEntity');
 
 module.exports = Map=> {
 
@@ -16,20 +16,20 @@ module.exports = Map=> {
             if(!entityView) {
                 let newEntityView = new ENTITIES[entityId](entityModel);
                 groupView[i] = newEntityView;
-                if(newEntityView.update){
+                if(newEntityView.update) {
                     this.entityDynamicList.push(newEntityView);
                 }
-                if(entityModel.x !== undefined && entityModel.z !== undefined && !newEntityView.absolute){
+                if(entityModel.x !== undefined && entityModel.z !== undefined && !newEntityView.absolute) {
                     let chunkX = Math.floor(entityModel.x / this.tileByChunk);
                     let chunkZ = Math.floor(entityModel.z / this.tileByChunk);
                     this.chunks[chunkX][chunkZ].add(newEntityView.element);
-                }else{
+                } else {
                     this.element.add(newEntityView.element);
                 }
             } else if(entityView.model !== entityModel) {
                 groupView.splice(i, 1);
                 entityView.element.parent.remove(entityView.element);
-                if(entityView.update){
+                if(entityView.update) {
                     let k = this.entityDynamicList.indexOf(entityView);
                     this.entityDynamicList.splice(k, 1);
                 }
@@ -42,24 +42,23 @@ module.exports = Map=> {
             for(let i = lengthModel; i < lengthView; i++) {
                 let entityView = groupView[i];
                 entityView.element.parent.remove(entityView.element);
-                if(entityView.update){
+                if(entityView.update) {
                     let k = this.entityDynamicList.indexOf(entityView);
                     this.entityDynamicList.splice(k, 1);
                 }
             }
             groupView.splice(lengthModel, lengthView);
         }
-
     };
 
-    Map.prototype.updateStateOfOneEntities = function updateStateOfOneEntities(entityId, entityIndex){
+    Map.prototype.updateStateOfOneEntities = function updateStateOfOneEntities(entityId, entityIndex) {
         const groupView = this.entityGroups[entityId];
         groupView[entityIndex].updateState();
     };
 
-    Map.prototype.updateDynamicEntities = function updateDynamicEntities(dt){
+    Map.prototype.updateDynamicEntities = function updateDynamicEntities(dt) {
         const l = this.entityDynamicList.length;
-        for(let i = 0; i < l ; i++) {
+        for(let i = 0; i < l; i++) {
             this.entityDynamicList[i].update(dt);
         }
     }

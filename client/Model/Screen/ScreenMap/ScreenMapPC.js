@@ -11,7 +11,7 @@ const RoadPositioner = require('../../Engine/RoadPositioner');
 const Road = require('../../Engine/Entity/Road/EntityRoad');
 const Entity = require('../../Engine/Entity/Entity');
 
-var PixelMap = require('../../../services/PixelMap');
+const PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
 let moveDx = 0;
 let moveDz = 0;
@@ -21,7 +21,7 @@ class ScreenMap {
     constructor() {
 
         this.camera = new Camera({x: 25, z: 25});
-        this.light = new Light({});
+        this.light = new Light({shadow: true});
         this.buildingMenu = new BuildingMenu();
         this.monitoringPanel = new MonitoringPanel();
 

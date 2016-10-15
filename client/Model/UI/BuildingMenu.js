@@ -1,6 +1,6 @@
 const ee = require('../../services/eventEmitter');
 const stateManager = require('../stateManager');
-const ENTITIES = require('../Engine/Entity/list');
+const ENTITIES = require('../Engine/Entity/listEntity');
 
 
 module.exports = class BuildingMenu {

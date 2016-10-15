@@ -50,7 +50,7 @@ module.exports = class PixelMap {
 
         data.pointsHeights = dataHeights;
         data.pointsType = dataSurfaces;
-        data.pointsNormal = this.computeNormals(dataHeights,data.nbPointZ,data.nbPointZ);
+        data.pointsNormal = this.computeNormals(dataHeights, data.nbPointX, data.nbPointZ);
         data.tilesHeight = this.averageByTile(dataHeights, data.nbTileX, data.nbTileZ, data.nbPointX);
         data.tilesTilt = this.rangeByTile(dataHeights, data.nbTileX, data.nbTileZ, data.nbPointX);
         data.tilesType = this.averageByTile(dataSurfaces, data.nbTileX, data.nbTileZ, data.nbPointX);
@@ -121,30 +121,30 @@ module.exports = class PixelMap {
     }
 
 
-    computeNormals(dataHeights,nbPointX, nbPointZ){
+    computeNormals(dataHeights, nbPointX, nbPointZ) {
         const points = new Int8Array(nbPointX * nbPointZ * 3);
         let i = 0;
         for(let z = 0; z < nbPointZ; z++) {
             for(let x = 0; x < nbPointX; x++) {
 
                 const Ax = 0;
-                const Ay = dataHeights[z * nbPointX + x]/255;
+                const Ay = dataHeights[z * nbPointX + x] / 255;
                 const Az = 0;
 
                 const Bx = 0;
-                const By = z-1 < 0 ? Ay : dataHeights[(z-1) * nbPointX + x]/255;
+                const By = z - 1 < 0 ? Ay : dataHeights[(z - 1) * nbPointX + x] / 255;
                 const Bz = -1;
 
                 const Cx = -1;
-                const Cy = x-1 < 0 ? Ay : dataHeights[z * nbPointX + (x-1)]/255;
+                const Cy = x - 1 < 0 ? Ay : dataHeights[z * nbPointX + (x - 1)] / 255;
                 const Cz = 0;
 
                 const Dx = 0;
-                const Dy = z+1 > nbPointZ-1 ? Ay : dataHeights[(z+1) * nbPointX + x]/255;
+                const Dy = z + 1 > nbPointZ - 1 ? Ay : dataHeights[(z + 1) * nbPointX + x] / 255;
                 const Dz = 1;
 
                 const Ex = 1;
-                const Ey = x+1 > nbPointX-1 ? Ay :  dataHeights[z * nbPointX + (x+1)]/255;
+                const Ey = x + 1 > nbPointX - 1 ? Ay : dataHeights[z * nbPointX + (x + 1)] / 255;
                 const Ez = 0;
 
                 const v1x = Bx - Ax;
@@ -171,10 +171,10 @@ module.exports = class PixelMap {
                 let dy = nor1y + nor2y;
                 let dz = nor1z + nor2z;
 
-                const length = Math.sqrt(dx*dx+dz*dz+dy*dy);
-                points[i++] = Math.floor(127 * dx/length);
-                points[i++] = Math.floor(127 * dy/length);
-                points[i++] = Math.floor(127 * dz/length);
+                const length = Math.sqrt(dx * dx + dz * dz + dy * dy);
+                points[i++] = Math.floor(127 * dx / length);
+                points[i++] = Math.floor(127 * dy / length);
+                points[i++] = Math.floor(127 * dz / length);
 
             }
         }

@@ -99,6 +99,9 @@ const fragShader = "" +
     "colorFinal += colorB * vGrounds.y; \n" +
     "colorFinal += colorC * vGrounds.z; \n" +
     "colorFinal += colorD * vGrounds.w; \n" +
+    "if(vAbsolutePosition.y>12.5){" +
+    "colorFinal = mix(vec3(0.90,0.90,0.90), colorFinal, min(-vAbsolutePosition.y+15.0 ,1.0)); \n" +
+    "}" +
     "" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
@@ -117,11 +120,8 @@ const fragShader = "" +
     "if(vAbsolutePosition.y<3.0){ \n" +
     "   colorFinal = mix(vec3(0.33,0.7,0.99), colorFinal, vAbsolutePosition.y/3.0); \n" +
     "}" +
-    "" +
     "gl_FragColor = vec4(colorFinal , 1.0); \n" +
     "} ";
-
-
 
 const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['lights'],

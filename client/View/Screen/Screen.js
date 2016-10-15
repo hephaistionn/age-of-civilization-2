@@ -2,14 +2,15 @@ const THREE = require('../../services/threejs');
 const isMobile = require('../../services/mobileDetection')();
 
 const COMPONENTS = {
-    Map: require('./../Engine/Map'),
-    Light: require('./../Engine/Light'),
-    Camera: require('./../Engine/Camera'),
-    Render: require('./../Engine/Render'),
+    Map: require('../Engine/Map'),
+    Light: require('../Engine/Light'),
+    Camera: require('../Engine/Camera'),
+    Render: require('../Engine/Render'),
     Positioner: require('./../Engine/Positioner'),
     RoadPositioner: require('./../Engine/RoadPositioner'),
     BuildingMenu: require('../UI/BuildingMenu'),
-    MonitoringPanel: require('../UI/MonitoringPanel')
+    MonitoringPanel: require('../UI/MonitoringPanel'),
+    Worldmap: require('../Engine/Worldmap')
 };
 
 class Screen {
@@ -37,7 +38,7 @@ class Screen {
         for(let id in model) {
             this.removeComponent(id)
         }
-        clearTimeout( this.timer );
+        clearTimeout(this.timer);
     }
 
     newComponent(id, model) {
@@ -80,14 +81,22 @@ class Screen {
     }
 
     getPointOnMap(screenX, screenY) {
-        if(!this.map || !this.camera)return;
+        if(!this.map && !this.worldmap)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this.camera.element);
-        const intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+        let intersects;
+        let tileSize;
+        if(this.map) {
+            intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+            tileSize = this.map.tileSize;
+        }
+        else {
+            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, true);
+            tileSize = this.worldmap.tileSize;
+        }
         if(intersects.length) {
             const point = intersects[0].point;
-            const tileSize = this.map.tileSize;
             point.x /= tileSize;
             point.z /= tileSize;
             const mesh = intersects[0].object;
@@ -107,22 +116,28 @@ class Screen {
     }
 
     getPointOnMapCameraRelative(screenX, screenY) {
-        if(!this.map || !this.camera)return;
+        if(!this.map && !this.worldmap)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         const camera = this.camera.element;
         this.raycaster.setFromCamera(this.mouse, this.camera.element);
-        const intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+        let intersects;
+        let tileSize;
+        if(this.map) {
+            intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+            tileSize = this.map.tileSize;
+        }
+        else {
+            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, true);
+            tileSize = this.worldmap.tileSize;
+        }
         if(intersects.length) {
             const point = intersects[0].point;
-            const tileSize = this.map.tileSize;
             point.x /= tileSize;
             point.z /= tileSize;
-            point.x -= camera.matrixWorld.elements[12]/ this.camera.tileSize;
-            point.z -= camera.matrixWorld.elements[14]/ this.camera.tileSize;
+            point.x -= camera.matrixWorld.elements[12] / this.camera.tileSize;
+            point.z -= camera.matrixWorld.elements[14] / this.camera.tileSize;
             return point;
-        } else {
-            return;
         }
     }
 
