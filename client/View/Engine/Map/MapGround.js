@@ -9,7 +9,7 @@ module.exports = Map=> {
         this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/rock_1.jpg");
         this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0.jpg");
         this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/grass_1.jpg");
-        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg.jpg");
+        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg");
         //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
         //this.materialGround = new THREE.MeshPhongMaterial( { color: 0x555555 } );
         //this.materialWater = new THREE.MeshPhongMaterial({color: 0x3333ff, map : THREE.ImageUtils.loadTexture('pic/water_0.jpg'), transparent: true, shininess: 90, opacity: 0.66 });

@@ -8,7 +8,7 @@ module.exports = class Scene {
         this.camera = null;
 
         this.renderer = new THREE.WebGLRenderer({canvas: this.canvas});
-        this.renderer.setClearColor(0x54b2e5);
+        this.renderer.setClearColor(0x000000);
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
         this.scene = new THREE.Scene();
         this.scene.matrixAutoUpdate = false;
@@ -45,5 +45,9 @@ module.exports = class Scene {
 
     dismount() {
         this.canvas.removeEventListener('resize', this._resize);
+    }
+
+    updateState(color) {
+        this.renderer.setClearColor(color);
     }
 };

@@ -1,0 +1,25 @@
+.worldmapMenu.pc {
+
+  .button {
+    border: solid 1px black;
+    background-color: grey;
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px;
+    width: 40px;
+    &:hover {
+      background-color: #4444ff;
+    }
+  }
+
+
+  .button.back {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 80px;
+    height: 40px;
+    line-height: 40px;
+  }
+
+}

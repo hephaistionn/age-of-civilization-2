@@ -5,6 +5,8 @@ const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
 const PixelMap = require('../../../services/PixelMap');
 
+const WorldmapMenu = require('../../UI/WorldmapMenu');
+
 let moveDx = 0;
 let moveDz = 0;
 
@@ -28,6 +30,8 @@ class ScreenWorldmap {
             ambient: 0x776666
         });
 
+        this.worldmapMenu = new WorldmapMenu();
+
         const pixelMap = new PixelMap();
         pixelMap.compute('map/worldmap3.png', (dataMap)=> {
             this.worldmap = new Worldmap(dataMap);
@@ -36,6 +40,8 @@ class ScreenWorldmap {
             ee.emit('onUpdate', 'worldmap', this.worldmap);
             ee.emit('onUpdate', 'light', this.light);
         });
+
+        ee.emit('onUpdate', 'render', 0x54b2e5);
     }
 
     update(dt) {

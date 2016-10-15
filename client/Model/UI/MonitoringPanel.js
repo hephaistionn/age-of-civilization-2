@@ -28,4 +28,8 @@ module.exports = class MonitoringPanel {
         ee.emit('onUpdate', 'monitoringPanel', this);
     }
 
+    goWorldmap() {
+        ee.emit('screen', 'ScreenWorldmap');
+    }
+
 };

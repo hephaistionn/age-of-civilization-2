@@ -8,9 +8,10 @@ const COMPONENTS = {
     Render: require('../Engine/Render'),
     Positioner: require('./../Engine/Positioner'),
     RoadPositioner: require('./../Engine/RoadPositioner'),
+    Worldmap: require('../Engine/Worldmap'),
     BuildingMenu: require('../UI/BuildingMenu'),
     MonitoringPanel: require('../UI/MonitoringPanel'),
-    Worldmap: require('../Engine/Worldmap')
+    WorldmapMenu: require('../UI/WorldmapMenu')
 };
 
 class Screen {
@@ -63,7 +64,7 @@ class Screen {
 
     updateComponent(id, model) {
         if(this[id]) {
-            if(model) {
+            if(model !== undefined) {
                 this[id].updateState(model);
             } else {
                 this.removeComponent(id);

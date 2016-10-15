@@ -44,6 +44,12 @@ module.exports = class MonitoringPanelPC {
         this.nodeButtonClose.onclick = model.close.bind(model);
         this.nodeMonitoringContainer.appendChild(this.nodeButtonClose);
 
+        this.nodeButtonWorld = document.createElement('div');
+        this.nodeButtonWorld.className = 'button world';
+        this.nodeButtonWorld.textContent = 'Worldmap';
+        this.nodeButtonWorld.onclick = model.goWorldmap.bind(model);
+        this.nodeMonitoringContainer.appendChild(this.nodeButtonWorld);
+
         this.updateState(model);
     }
 

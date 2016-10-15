@@ -68,6 +68,10 @@ uniforms.progress = { type: 'f', value: 0.0 };
 uniforms.opacity = { type: 'f', value: 0.35 };
 uniforms.size = { type: 'f', value: 40.0 };
 uniforms.cameraPosition  = { type: 'v3', value: new THREE.Vector3(1.0,0.0,0.0) };
+uniforms.blending = THREE.AddOperation;
+uniforms.blendSrc = THREE.AddOperation;
+uniforms.blendDst= THREE.AddOperation;
+uniforms.blendEquation = THREE.AddOperation;
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,
