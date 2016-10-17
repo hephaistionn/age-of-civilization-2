@@ -20,6 +20,7 @@ class ScreenMap {
 
     constructor() {
 
+        console.log('ScreenMap');
         this.camera = new Camera({x: 25, z: 25});
         this.light = new Light({shadow: true});
         this.buildingMenu = new BuildingMenu();
@@ -50,6 +51,7 @@ class ScreenMap {
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
+            console.log('rebuild map');
             this.map = new Map(dataMap);
             this.positioner = new Positioner(dataMap);
             this.roadPositioner = new RoadPositioner(dataMap);

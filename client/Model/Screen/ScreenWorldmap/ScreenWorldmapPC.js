@@ -14,7 +14,7 @@ let moveDz = 0;
 class ScreenWorldmap {
 
     constructor() {
-
+        console.log('ScreenWorldmap');
         this.camera = new Camera({
             x: 100, y: 40, z: 70,
             offsetX: 0.0001,
@@ -34,6 +34,7 @@ class ScreenWorldmap {
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/worldmap3.png', (dataMap)=> {
+            console.log('rebuild worldmap3');
             this.worldmap = new Worldmap(dataMap);
             this.camera.setMapBorder(dataMap);
             this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);

@@ -21,27 +21,29 @@ module.exports = Worldmap=> {
         const nbTileZ = model.nbTileZ;
 
         this.mapGeo = this.createSurface(nbTileX, nbTileZ, model);
+        const mapMesh = new THREE.Mesh(this.mapGeo, this.materialWorldmap);
+        const waterMesh = this.createWater(nbTileX, nbTileZ, mapMesh);
 
-        let mapMesh = new THREE.Mesh(this.mapGeo, this.materialWorldmap);
+        mapMesh.add(waterMesh);
         mapMesh.position.set(0, 0, 0);
-        this.element.add(mapMesh);
         mapMesh.updateMatrixWorld();
         mapMesh.matrixAutoUpdate = false;
         mapMesh.matrixWorldNeedsUpdate = false;
         mapMesh.receiveShadow = true;
 
-        this.waterMesh = this.createWater(nbTileX, nbTileZ, mapMesh);
+        this.element.add(mapMesh);
 
-        this.touchSurface = [this.waterMesh];
+        this.touchSurface = [waterMesh];
+        this.waterMesh = waterMesh
+
 
     };
 
-    Worldmap.prototype.createWater = function createWater(nbTileX, nbTileZ, mapMesh) {
+    Worldmap.prototype.createWater = function createWater(nbTileX, nbTileZ) {
         const xSize = nbTileX * this.tileSize * 2;
         const zSize = nbTileZ * this.tileSize * 2;
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
-        mapMesh.add(waterMesh);
         waterMesh.position.set(-xSize / 4, 3, -zSize / 4);
         waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();

@@ -30,21 +30,8 @@ module.exports = Map=> {
             }
         }
 
-        const chunks = [];
         const length = chunksTiles.length;
         let x, z, offsetXTiles, offsetZTiles, nbXTiles, nbZTiles;
-        //prepare chunk geo
-        for(x = 0; x < length; x++) {
-            chunks[x] = [];
-            for(z = 0; z < length; z++) {
-                nbXTiles = chunksTiles[x];
-                nbZTiles = chunksTiles[z];
-                offsetXTiles = x * this.tileByChunk;
-                offsetZTiles = z * this.tileByChunk;
-                let chunkGeo = this.createSurface(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
-                chunks[x][z] = chunkGeo;
-            }
-        }
 
         function findVextexUnderWater(vertex) {
             return vertex < 3;
@@ -55,41 +42,39 @@ module.exports = Map=> {
         for(x = 0; x < length; x++) {
             this.chunks[x] = [];
             for(z = 0; z < length; z++) {
-                offsetXTiles = x * this.tileByChunk * this.tileSize;
-                offsetZTiles = z * this.tileByChunk * this.tileSize;
-                let xSize = chunksTiles[x] * this.tileSize;
-                let zSize = chunksTiles[z] * this.tileSize;
 
-                let chunkGeo = chunks[x][z];
-                let chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
-                chunkMesh.position.set(offsetXTiles, 0, offsetZTiles);
-                chunkGeo.computeBoundingBox();
-                this.element.add(chunkMesh);
+                nbXTiles = chunksTiles[x];
+                nbZTiles = chunksTiles[z];
+
+                offsetXTiles = x * this.tileByChunk;
+                offsetZTiles = z * this.tileByChunk;
+
+                let chunkMesh = this.createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
+
+                chunkMesh.position.set(offsetXTiles * this.tileSize, 0, offsetZTiles * this.tileSize);
                 chunkMesh.updateMatrixWorld();
                 chunkMesh.matrixAutoUpdate = false;
                 chunkMesh.matrixWorldNeedsUpdate = false;
                 chunkMesh.receiveShadow = true;
+                this.element.add(chunkMesh);
 
                 this.chunks[x][z] = chunkMesh;
                 this.chunksList.push(chunkMesh);
 
-                if(chunkGeo.boundingBox.min.y <= 3) {
-                    this.createWater(xSize, zSize, chunkMesh);
-                }
             }
         }
     };
 
-    Map.prototype.createWater = function createWater(xSize, zSize, chunkMesh) {
+    Map.prototype.createWater = function createWater(xSize, zSize) {
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
-        chunkMesh.add(waterMesh);
         waterMesh.position.set(0, 3, 0);
         waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();
         waterMesh.matrixAutoUpdate = false;
         waterMesh.matrixWorldNeedsUpdate = false;
         waterMesh.receiveShadow = true;
+        return waterMesh;
     };
 
     Map.prototype.updateWater = function updateWater(dt) {
@@ -112,7 +97,18 @@ module.exports = Map=> {
         }
     };
 
-    Map.prototype.createSurface = function createSurface(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
+    Map.prototype.createSurfaceMesh = function createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model){
+        const chunkGeo = this.createSurfaceGeo(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
+        const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
+        chunkGeo.computeBoundingBox();
+        if(chunkGeo.boundingBox.min.y <= 3) {
+            const waterMesh = this.createWater(nbXTiles * this.tileSize, nbZTiles * this.tileSize, chunkMesh);
+            chunkMesh.add(waterMesh);
+        }
+        return chunkMesh;
+    };
+
+    Map.prototype.createSurfaceGeo = function createSurfaceGeo(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
 

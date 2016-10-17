@@ -123,7 +123,7 @@ const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/rock_1.jpg")};
+uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/rock_0.jpg")};
 uniforms.textureB = {type: 't', value: THREE.loadTexture("pic/grass_0.jpg")};
 uniforms.textureC = {type: 't', value: THREE.loadTexture("pic/grass_1.jpg")};
 uniforms.textureD = {type: 't', value: THREE.loadTexture("pic/soil_0.jpg")};
