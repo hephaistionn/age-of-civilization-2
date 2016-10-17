@@ -1,18 +1,13 @@
 const THREE = require('../../../services/threejs');
-const materialGround = require('./../Material/materialGround');
+const materialWorldmap = require('./../Material/materialWorldmap');
 const materialWater = require('./../Material/materialWater');
 
 module.exports = Worldmap=> {
 
     Worldmap.prototype.initGround = function initGround(model) {
-        this.materialGround = materialGround;
-        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/desert_0big.jpg");
-        this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0big.jpg");
-        this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/forest_0big.jpg");
-        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/grass_1.jpg");
-
-        //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
-        //this.materialGround = new THREE.MeshPhongMaterial( { color: 0x555555 } );
+        this.materialWorldmap = materialWorldmap;
+        //this.materialWorldmap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
+        //this.materialWorldmap = new THREE.MeshPhongMaterial( { color: 0x555555 } );
         //this.materialWater = new THREE.MeshPhongMaterial({color: 0x3333ff, map : THREE.ImageUtils.loadTexture('pic/water_0.jpg'), transparent: true, shininess: 90, opacity: 0.66 });
         this.materialWater = materialWater;
         this.materialWater.uniforms.opacity.value = 0.80;
@@ -27,7 +22,7 @@ module.exports = Worldmap=> {
 
         this.mapGeo = this.createSurface(nbTileX, nbTileZ, model);
 
-        let mapMesh = new THREE.Mesh(this.mapGeo, this.materialGround);
+        let mapMesh = new THREE.Mesh(this.mapGeo, this.materialWorldmap);
         mapMesh.position.set(0, 0, 0);
         this.element.add(mapMesh);
         mapMesh.updateMatrixWorld();

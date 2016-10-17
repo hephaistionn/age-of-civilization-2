@@ -6,7 +6,7 @@ module.exports = Map=> {
 
     Map.prototype.initGround = function initGround(model) {
         this.materialGround = materialGround;
-        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/rock_1.jpg");
+        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/rock_0.jpg");
         this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0.jpg");
         this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/grass_1.jpg");
         this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg");
