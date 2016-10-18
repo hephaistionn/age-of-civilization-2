@@ -29,6 +29,7 @@ class Camera {
         this.moveReady = false;
         this.zoomMax = config.zoomMax || 30;
         this.zoomMin = config.zoomMin || 5;
+        this.AngleXZ = Math.atan2(-this.offsetZ, -this.offsetX);
     }
 
     move(x, y, z) {
@@ -43,7 +44,7 @@ class Camera {
 
     moveTo(dx, dz, dt) {
         let module = Math.sqrt(dx * dx + dz * dz);
-        let a = -Math.atan2(dx, dz) + Math.PI / 4;
+        let a = -Math.atan2(dx, dz) + this.AngleXZ;
         dx = module * Math.cos(a);
         dz = module * Math.sin(a);
         this.x -= dx * this.speed * dt * this.offsetZ;

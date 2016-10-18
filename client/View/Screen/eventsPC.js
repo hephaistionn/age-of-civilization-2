@@ -102,13 +102,13 @@ module.exports = Screen => {
     };
 
     Screen.prototype._mouseLeave = function _mouseLeave(e) {
-        let rx = event.clientX - this.canvas.width / 2;
-        let ry = event.clientY - this.canvas.height / 2;
-        const l = Math.sqrt(rx * rx + ry * ry);
-        rx /= l;
-        ry /= l;
+        const midScreenW = this.canvas.width / 2;
+        const midScreenH = this.canvas.height / 2;
+        let rx = event.clientX - midScreenW;
+        let ry = event.clientY - midScreenH;
+        rx = Math.abs(rx) > midScreenW * 0.5 ? Math.sign(rx) : 0;
+        ry = Math.abs(ry) > midScreenH * 0.5 ? Math.sign(ry) : 0;
         ee.emit('mouseLeave', rx, ry);
-
         e.preventDefault();
     };
 
