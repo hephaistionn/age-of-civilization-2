@@ -12,7 +12,7 @@ module.exports = class WorldmapMenu {
     }
 
     back() {
-        ee.emit('screen', 'ScreenMap');
+        ee.emit('openScreen', 'ScreenMap');
     }
 
 };

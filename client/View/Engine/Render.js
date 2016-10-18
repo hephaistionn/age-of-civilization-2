@@ -1,12 +1,10 @@
 const THREE = require('../../services/threejs');
 
-
 module.exports = class Scene {
 
     constructor(canvas) {
         this.canvas = canvas;
         this.camera = null;
-
         this.renderer = new THREE.WebGLRenderer({canvas: this.canvas});
         this.renderer.setClearColor(0x000000);
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);

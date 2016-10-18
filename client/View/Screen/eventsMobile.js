@@ -1,22 +1,39 @@
 const ee = require('../../services/eventEmitter');
 const THREE = require('../../services/threejs');
 
-module.exports = Component => {
+module.exports = Screen => {
 
-    Component.prototype.initObservers = function initObservers() {
-        this.canvas.addEventListener('touchstart', this._touchStart.bind(this));
-        this.canvas.addEventListener('touchend', this._touchEnd.bind(this));
-        this.canvas.addEventListener('touchcancel', this._touchCancel.bind(this));
-        this.canvas.addEventListener('touchleave', this._touchleave.bind(this));
-        this.canvas.addEventListener('touchmove', this._touchMove.bind(this));
-        window.addEventListener('resize', this._resize.bind(this), false);
+    Screen.prototype.initObservers = function initObservers() {
+        this.events.__touchStart = this._touchStart.bind(this);
+        this.canvas.addEventListener('touchstart', this.events.__touchStart);
+        this.events.__touchEnd = this._touchEnd.bind(this);
+        this.canvas.addEventListener('touchend', this.events.__touchEnd);
+        this.events.__touchCancel = this._touchCancel.bind(this);
+        this.canvas.addEventListener('touchcancel', this.events.__touchCancel);
+        this.events.__touchleave = this._touchleave.bind(this);
+        this.canvas.addEventListener('touchleave', this.events.__touchleave);
+        this.events.__touchMove = this._touchMove.bind(this);
+        this.canvas.addEventListener('touchmove', this.events.__touchMove);
+        this.events.__resize = this._resize.bind(this);
+        window.addEventListener('resize', this.__resize, false);
+        this.events.__updateComponent = this.updateComponent.bind(this);
+        ee.on('onUpdate', this.events.__updateComponent);
         this.selected = false;
         this.startSpace = 0;
-        this.timer;
-        ee.on('onUpdate', this.updateComponent.bind(this));
+        this.timer = null;
     };
 
-    Component.prototype._resize = function _resize(e) {
+    Screen.prototype.removeObservers = function removeObservers() {
+        this.canvas.removeEventListener('touchstart', this.events.__touchStart);
+        this.canvas.removeEventListener('touchend', this.events.__touchEnd);
+        this.canvas.removeEventListener('touchcancel', this.events.__touchCancel);
+        this.canvas.removeEventListener('touchleave', this.events.__touchleave);
+        this.container.removeEventListener('touchmove', this.events.__touchMove);
+        window.removeEventListener('resize', this.events.__resize);
+        ee.off('onUpdate', this.events.__updateComponent);
+    };
+
+    Screen.prototype._resize = function _resize(e) {
         this.canvas.style = '';
         const width = this.canvas.clientWidth;
         const height = this.canvas.clientHeight;
@@ -24,7 +41,7 @@ module.exports = Component => {
         this.render.resize(width, height);
     };
 
-    Component.prototype._touchStart = function _touchStart(e) {
+    Screen.prototype._touchStart = function _touchStart(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
         let point = this.getPointOnMapCameraRelative(touch.clientX, touch.clientY);
@@ -34,7 +51,7 @@ module.exports = Component => {
         point = this.getPointOnMap(touch.clientX, touch.clientY);
         ee.emit('touchStartOnMap', point.x, point.z, point.model);
     };
-    Component.prototype._touchEnd = function _touchEnd(e) {
+    Screen.prototype._touchEnd = function _touchEnd(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
         ee.emit('touchEnd', touch.clientX, touch.clientY);
@@ -44,17 +61,17 @@ module.exports = Component => {
         }, 200);
         this.selected = false;
     };
-    Component.prototype._touchCancel = function _touchCancel(e) {
+    Screen.prototype._touchCancel = function _touchCancel(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
         ee.emit('touchCancel', touch.clientX, touch.clientY);
     };
-    Component.prototype._touchleave = function _touchleave(e) {
+    Screen.prototype._touchleave = function _touchleave(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
         ee.emit('touchleave', touch.clientX, touch.clientY);
     };
-    Component.prototype._touchMove = function _touchMove(e) {
+    Screen.prototype._touchMove = function _touchMove(e) {
         e.preventDefault();
         const touch1 = e.changedTouches[0];
         const touch2 = e.changedTouches[1];

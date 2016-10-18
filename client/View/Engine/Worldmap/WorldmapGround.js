@@ -1,6 +1,7 @@
 const THREE = require('../../../services/threejs');
 const materialWorldmap = require('./../Material/materialWorldmap');
 const materialWater = require('./../Material/materialWater');
+const ee = require('../../../services/eventEmitter');
 
 module.exports = Worldmap=> {
 

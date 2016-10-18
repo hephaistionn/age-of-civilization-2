@@ -9,12 +9,16 @@ window.addEventListener('load', () => {
 
     const app = new App(ScreenWorldmap, ScreenMap);
 
-    ee.on('screen', id => {
-        app.hideScreen();
-        app.showScreen(id);
+
+    ee.on('closeScreen', id => {
+        app.closeScreen(id);
     });
 
-    app.showScreen('ScreenMap');
+    ee.on('openScreen', id => {
+        app.openScreen(id);
+    });
+
+    app.openScreen('ScreenWorldmap');
 
 });
 

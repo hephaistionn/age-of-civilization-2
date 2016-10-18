@@ -26,20 +26,43 @@ class Screen {
         this.raycaster = new THREE.Raycaster();
         this.pressX = 0;
         this.pressZ = 0;
-        this.initObservers();
+        this.events = {}
     }
 
     mount(model) {
         for(let id in model) {
             this.newComponent(id, model[id]);
         }
+        this.initObservers();
     }
 
     dismount(model) {
+        this.removeObservers();
         for(let id in model) {
             this.removeComponent(id)
         }
-        clearTimeout(this.timer);
+    }
+
+    hide(models) {
+        let model;
+        this.removeObservers();
+        for(let id in models) {
+            model = models[id];
+            if(model.type === 'UI') {
+                this.dom.removeChild(this[id].node)
+            }
+        }
+    }
+
+    show(models) {
+        let model;
+        for(let id in models) {
+            model = models[id];
+            if(model.type === 'UI') {
+                this.dom.appendChild(this[id].node);
+            }
+        }
+        this.initObservers();
     }
 
     newComponent(id, model) {

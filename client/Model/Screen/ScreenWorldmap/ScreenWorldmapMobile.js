@@ -40,7 +40,6 @@ class ScreenWorldmap {
             ee.emit('onUpdate', 'light', this.light);
         });
 
-        ee.emit('onUpdate', 'render', 0x54b2e5);
     }
 
     update(dt) {
@@ -76,6 +75,7 @@ class ScreenWorldmap {
         moveDx = 0;
         moveDz = 0;
     }
+
     zoom(delta) {
         this.camera.scale(delta);
         this.light.scaleOffset(-this.camera.offsetY);

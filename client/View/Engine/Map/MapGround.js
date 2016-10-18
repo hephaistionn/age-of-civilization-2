@@ -1,6 +1,7 @@
 const THREE = require('../../../services/threejs');
 const materialGround = require('./../Material/materialGround');
 const materialWater = require('./../Material/materialWater');
+const ee = require('../../../services/eventEmitter');
 
 module.exports = Map=> {
 
@@ -63,6 +64,7 @@ module.exports = Map=> {
 
             }
         }
+
     };
 
     Map.prototype.createWater = function createWater(xSize, zSize) {
@@ -97,7 +99,7 @@ module.exports = Map=> {
         }
     };
 
-    Map.prototype.createSurfaceMesh = function createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model){
+    Map.prototype.createSurfaceMesh = function createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
         const chunkGeo = this.createSurfaceGeo(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
         const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
         chunkGeo.computeBoundingBox();

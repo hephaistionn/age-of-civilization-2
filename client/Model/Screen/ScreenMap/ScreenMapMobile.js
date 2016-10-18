@@ -89,8 +89,6 @@ class ScreenMap {
             ee.emit('onUpdate', 'light', this.light);
         });
 
-        ee.emit('onUpdate', 'render', 0x000000);
-
     }
 
     update(dt) {

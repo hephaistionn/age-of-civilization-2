@@ -8,7 +8,8 @@ class App {
 
         this.models = {};
         this.model = null;
-        this.view = new Screen();
+        this.modelInstances = {};
+        this.viewInstances = {};
         this.requestAnimation = null;
 
         for(let i = 0; i < arguments.length; i++) {
@@ -45,17 +46,45 @@ class App {
         ee.on('zoom', this.zoom.bind(this));
     }
 
-    hideScreen() {
+    closeScreen() {
         this._stop();
         this.view.dismount(this.model);
         this.model.dismount();
+        delete this.modelInstances[id];
+        delete this.viewInstances[id];
         this.model = null;
+        this.view = null;
     }
 
-    showScreen(id) {
-        this.model = new this.models[id]();
-        this.view.mount(this.model);
+    openScreen(id) {
+        this._stop();
+        if(this.model) {
+            this.hideScreen();
+        }
+        if(this.modelInstances[id]) {
+            this.displayScreen(id);
+        } else {
+            this.createScreen(id);
+        }
         this._start();
+    }
+
+    displayScreen(id) {
+        this.model = this.modelInstances[id];
+        this.view = this.viewInstances[id];
+        this.view.show(this.model);
+    }
+
+    hideScreen() {
+        this.view.hide(this.model);
+    }
+
+    createScreen(id) {
+        this.modelInstances[id] = new this.models[id]();
+        this.viewInstances[id] = new Screen();
+        this.model = this.modelInstances[id];
+        this.view = this.viewInstances[id];
+        this.view.mount(this.model);
     }
 
     _start() {

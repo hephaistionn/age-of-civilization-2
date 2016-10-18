@@ -6,7 +6,7 @@ module.exports = class MonitoringPanel {
     constructor() {
         this.opened = false;
         this.type = 'UI';
-        this.previewes = ['wood','stone', 'meat'];
+        this.previewes = ['wood', 'stone', 'meat'];
 
         this.stateManager = stateManager;
     }
@@ -29,7 +29,8 @@ module.exports = class MonitoringPanel {
     }
 
     goWorldmap() {
-        ee.emit('screen', 'ScreenWorldmap');
+        this.close();
+        ee.emit('openScreen', 'ScreenWorldmap');
     }
 
 };
