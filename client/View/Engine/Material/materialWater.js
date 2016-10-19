@@ -37,7 +37,8 @@ const fragShader = "" +
     "vec3 colorFinal = vec3(0.0); \n" +
     "colorFinal += colorA*time; \n" +
     "colorFinal += colorB*(1.0-time); \n" +
-    "colorFinal *= vec3(0.40,0.60,0.99); \n" +
+    "colorFinal *= vec3(0.40,0.80,0.99); \n" +
+   // "colorFinal *= vec3(0.40,0.60,0.99); \n" +
     "" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
@@ -46,10 +47,18 @@ const fragShader = "" +
     "    directionalLight = directionalLights[ 0 ]; \n" +
     "    sumLights.rgb += dot(directionalLight.direction, vec3(0.0,1.0,0.0) )* directionalLight.color; \n" +
     "vec3 eyeDirection = normalize(cameraPosition - vAbsolutePosition); \n" +
-    "vec3 reflectionDirection  = normalize(vec3(0.5,1.0,0.5)); \n" +
-    "float specAngle = max(dot(eyeDirection,reflectionDirection), 0.0); \n" +
-    "float specValue = pow(specAngle, 65.0); \n" +
-    "sumLights.rgb *= max(specValue*4.0,0.7);" +
+    "vec3 reflection = normalize(vec3(0.1,0.8,0.5));"+
+    "float s = max(1.0-abs(eyeDirection.x-reflection.x)*1.4,0.01);\n" +
+
+    "float direction = max(0.0, dot(eyeDirection, reflection));\n"+
+    "vec3 specularColor = pow(direction, 100.0)*vec3(0.9,0.9,0.9)*0.9*s;\n"+
+    "sumLights.rgb += specularColor;\n"+
+
+    "reflection = normalize(vec3(0.1,0.8,0.8));"+
+    "direction = max(0.0, dot(eyeDirection, reflection));\n"+
+    "specularColor = pow(direction, 100.0)*vec3(0.9,0.9,0.9)*0.7*s;\n"+
+    "sumLights.rgb += specularColor;\n"+
+
     "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +

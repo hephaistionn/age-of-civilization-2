@@ -1,7 +1,7 @@
 class Light {
 
     constructor(config) {
-        this.ambientColor = config.ambient || 0x555522;
+        this.ambientColor = config.ambient || 0x666666;
         this.directionalColor = 0xffffff;
         this.offsetX = config.offsetX || 120;
         this.offsetY = config.offsetY || -200;

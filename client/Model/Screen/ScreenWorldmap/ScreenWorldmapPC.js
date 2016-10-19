@@ -26,8 +26,7 @@ class ScreenWorldmap {
         this.light = new Light({
             offsetX: -10,
             offsetY: -40,
-            offsetZ: -10,
-            ambient: 0x776666
+            offsetZ: -10
         });
 
         this.worldmapMenu = new WorldmapMenu();
