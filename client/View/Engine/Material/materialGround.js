@@ -113,7 +113,7 @@ const fragShader = "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "colorFinal *= sumLights; \n" +
     "if(vAbsolutePosition.y<3.0){ \n" +
-    "   colorFinal = mix(vec3(0.0,0.0,0.0), colorFinal, vAbsolutePosition.y/3.0); \n" +
+    "   colorFinal = mix(vec3(0.2,0.6,0.7), colorFinal, vAbsolutePosition.y/3.0); \n" +
     "}" +
     "gl_FragColor = vec4(colorFinal , 1.0); \n" +
     "} ";

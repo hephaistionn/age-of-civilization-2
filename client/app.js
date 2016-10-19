@@ -18,7 +18,7 @@ window.addEventListener('load', () => {
         app.openScreen(id);
     });
 
-    app.openScreen('ScreenWorldmap');
+    app.openScreen('ScreenMap');
 
 });
 
