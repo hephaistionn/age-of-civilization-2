@@ -10,7 +10,6 @@ const WorldmapMenu = require('../../UI/WorldmapMenu');
 let moveDx = 0;
 let moveDz = 0;
 
-
 class ScreenWorldmap {
 
     constructor() {
@@ -39,7 +38,12 @@ class ScreenWorldmap {
             ee.emit('onUpdate', 'worldmap', this.worldmap);
             ee.emit('onUpdate', 'light', this.light);
         });
+    }
 
+    newCity(x, y, z, level, name) {
+        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia'};
+        this.worldmap.newCity(params);
+        ee.emit('onUpdate', 'worldmap', this.worldmap);
     }
 
     update(dt) {
@@ -74,6 +78,14 @@ class ScreenWorldmap {
     mouseEnter() {
         moveDx = 0;
         moveDz = 0;
+    }
+
+    mouseClick(x, z, model) {
+        if(this.worldmapMenu.constructMode) {
+            const y = this.worldmap.getHeightTile(x, z);
+            this.newCity(x, y, z, 1, 'myCity');
+            ee.emit('onUpdate', 'worldmap', this.worldmap);
+        }
     }
 
     mouseWheel(delta) {

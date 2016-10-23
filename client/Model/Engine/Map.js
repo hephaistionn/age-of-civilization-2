@@ -62,8 +62,8 @@ class Map {
     }
 
     updateEntity(entityId, model, params) {
-        const indexOfEntity = model ? entityGroup.indexOf(model) : 0;
         const entityGroup = this.entityGroups[entityId];
+        const indexOfEntity = model ? this.entityGroup.indexOf(model) : 0;
         entityGroup[indexOfEntity].updateState(params);
         this.updatedEntity.push(indexOfEntity);
         this.updatedEntity.push(entityId);

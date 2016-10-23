@@ -5,6 +5,8 @@ module.exports = class WorldmapMenu {
 
     constructor(config) {
         this.type = 'UI';
+        this.construct = null;
+        this.constructMode = false;
     }
 
     goCity() {
@@ -15,4 +17,12 @@ module.exports = class WorldmapMenu {
         ee.emit('openScreen', 'ScreenMap');
     }
 
+    switchConstrucMode(status) {
+        this.constructMode = !this.constructMode;
+        ee.emit('onUpdate', 'worldmapMenu', this);
+    }
+
+    constructCity(fct) {
+        this.construct = fct;
+    }
 };

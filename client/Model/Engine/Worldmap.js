@@ -1,5 +1,5 @@
 const pathfinding = require('../../services/pathfinding');
-const CITIES = require('./Entity/listCity');
+const City = require('./Entity/City');
 
 class Worldmap {
 
@@ -15,58 +15,29 @@ class Worldmap {
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
         this.tilesType = config.tilesType;
-        this.cityGroupUpdated = [];
+        this.cities = [];
         this.updatedCity = [];
-        this.cityGroups = {};
-
-        for(let id in CITIES) {
-            this.cityGroups[id] = [];
-        }
 
     }
 
-    newEntity(params) {
-
+    newCity(params) {
+        const city = new City(params);
+        this.cities.push(city);
     }
 
-    removeEntity(entity) {
-
+    removeCity(city) {
+        let index = this.cities.indexOf(city);
+        this.cities.splice(index, 1);
     }
 
-    updateEntity(entityId, model, params) {
-
+    updateCity(model) {
+        let index = this.cities.indexOf(city);
+        this.updatedCity.push(index);
     }
 
-    initRoad() {
-
-    }
-
-    setWalkableTile(entity, walkable) {
-
-    }
-
-    clearTile(x, z, model) {
-
-    }
-
-
-    getNearestEntities(EntityId, x, z, max) {
-
-    }
-
-    initGridByHeight() {
-        let length = this.tilesTilt.length;
-        for(let i = 0; i < length; i++) {
-            let x = i % this.nbTileX;
-            let z = Math.floor(i / this.nbTileX);
-            let tilt = this.tilesTilt[i];
-            let height = this.tilesHeight[i];
-            if(tilt > this.tiltMax) {
-                this.grid.setWalkableAt(x, z, 0);
-            } else if(height < 45) {
-                this.grid.setWalkableAt(x, z, 0);
-            }
-        }
+    getHeightTile(x, z) {
+        const index = Math.floor(z) * this.nbTileX + Math.floor(x);
+        return this.tilesHeight[index] / 255;
     }
 
     update(dt) {

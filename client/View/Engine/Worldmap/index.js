@@ -15,11 +15,17 @@ class Worldmap {
         this.nbPointZ = model.nbPointZ;
         this.pointsNormal = model.pointsNormal;
 
+        this.cities = [];
+
         this.initGround(model);
     }
 
     updateState(model) {
+        this.updateStateCities(model);
 
+        while(model.updatedCity.length !== 0) {
+            this.updateStateOfOneCities(model.updatedCity.pop());
+        }
     }
 
     update(dt) {

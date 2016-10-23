@@ -42,6 +42,12 @@ class ScreenWorldmap {
 
     }
 
+    newCity(x, y, z, level, name) {
+        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia'};
+        this.worldmap.newCity(params);
+        ee.emit('onUpdate', 'worldmap', this.worldmap);
+    }
+
     update(dt) {
         if(this.worldmap) {
             this.worldmap.update(dt);

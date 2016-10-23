@@ -10,12 +10,24 @@
     &:hover {
       background-color: #4444ff;
     }
+    &.focus {
+      background-color: #ffffff;
+    }
   }
 
 
   .button.back {
     position: fixed;
     top: 80px;
+    right: 20px;
+    width: 80px;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .button.construct {
+    position: fixed;
+    top: 180px;
     right: 20px;
     width: 80px;
     height: 40px;
