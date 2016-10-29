@@ -3,7 +3,7 @@ const materialWorldmap = require('./../Material/materialWorldmap');
 const materialWater = require('./../Material/materialWater');
 const ee = require('../../../services/eventEmitter');
 
-module.exports = Worldmap=> {
+module.exports = Worldmap => {
 
     Worldmap.prototype.initGround = function initGround(model) {
         this.materialWorldmap = materialWorldmap;
@@ -32,12 +32,10 @@ module.exports = Worldmap=> {
         mapMesh.matrixWorldNeedsUpdate = false;
         mapMesh.receiveShadow = true;
 
-        this.element.add(mapMesh);
-
         this.touchSurface = [waterMesh];
-        this.waterMesh = waterMesh
+        this.waterMesh = waterMesh;
 
-
+        return mapMesh;
     };
 
     Worldmap.prototype.createWater = function createWater(nbTileX, nbTileZ) {

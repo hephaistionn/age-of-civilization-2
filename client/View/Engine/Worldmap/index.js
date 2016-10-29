@@ -5,10 +5,6 @@ class Worldmap {
 
     constructor(model) {
 
-        this.element = new THREE.Object3D();
-        this.element.matrixAutoUpdate = false;
-        this.element.frustumCulled = false;
-
         this.tileSize = config.tileSize;
         this.tileHeight = config.tileHeight;
         this.nbPointX = model.nbPointX;
@@ -17,7 +13,9 @@ class Worldmap {
 
         this.cities = [];
 
-        this.initGround(model);
+        this.element = this.initGround(model);
+        this.element.matrixAutoUpdate = false;
+        this.element.frustumCulled = false;
     }
 
     updateState(model) {

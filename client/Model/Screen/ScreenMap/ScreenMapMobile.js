@@ -128,12 +128,13 @@ class ScreenMap {
     }
 
     touchStartOnMap(x, z, model) {
-        if(this.roadPositioner && this.roadPositioner.selected) {
-            this.roadPositioner.mouseDown(x, z);
-        }
         if(removeMode) {
             this.map.clearTile(x, z, model);
             ee.emit('onUpdate', 'map', this.map);
+        }else if(this.roadPositioner && this.roadPositioner.selected) {
+            this.roadPositioner.mouseDown(x, z);
+        } else if (model){
+            console.log('select Entity', model );
         }
     }
 

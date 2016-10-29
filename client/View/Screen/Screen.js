@@ -114,8 +114,7 @@ class Screen {
         if(this.map) {
             intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
             tileSize = this.map.tileSize;
-        }
-        else {
+        } else {
             intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, true);
             tileSize = this.worldmap.tileSize;
         }

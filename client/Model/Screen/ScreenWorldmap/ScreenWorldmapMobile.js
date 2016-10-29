@@ -52,13 +52,6 @@ class ScreenWorldmap {
         if(this.worldmap) {
             this.worldmap.update(dt);
         }
-
-        if(moveDx !== 0 || moveDz !== 0) {
-            this.camera.moveTo(moveDx, moveDz, dt);
-            this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            ee.emit('onUpdate', 'camera', this.camera);
-            ee.emit('onUpdate', 'light', this.light);
-        }
     }
 
     touchMove(x, z) {
@@ -72,14 +65,15 @@ class ScreenWorldmap {
         this.camera.cleatMove();
     }
 
-    mouseLeave(dx, dy) {
-        moveDx = dx;
-        moveDz = dy;
-    }
-
-    mouseEnter() {
-        moveDx = 0;
-        moveDz = 0;
+    touchStartOnMap(x, z, model) {
+        if(removeMode) {
+            this.map.clearTile(x, z, model);
+            ee.emit('onUpdate', 'map', this.map);
+        }else if(this.roadPositioner && this.roadPositioner.selected) {
+            this.roadPositioner.mouseDown(x, z);
+        } else if (model){
+            console.log('select Entity', model );
+        }
     }
 
     zoom(delta) {

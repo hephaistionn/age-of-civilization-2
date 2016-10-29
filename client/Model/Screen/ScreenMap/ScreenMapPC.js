@@ -151,7 +151,6 @@ class ScreenMap {
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             entity.onConstruct();
             this.map.newEntity(params);
-
             ee.emit('onUpdate', 'map', this.map);
             this.map.updateEntity('EntityRoad', null); //remove road under entity
             ee.emit('onUpdate', 'map', this.map);
@@ -169,6 +168,8 @@ class ScreenMap {
                 ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
                 ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             }
+        } else if (model){
+            console.log('select Entity', model );
         }
     }
 

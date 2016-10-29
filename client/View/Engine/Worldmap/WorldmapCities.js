@@ -15,12 +15,12 @@ module.exports = Worldmap=> {
             if(!cityView) {
                 let newCityView = new City(cityModel);
                 citiesView[i] = newCityView;
-                this.element.add(newCityView.element);
-
+                this.waterMesh.add(newCityView.element);
+                //waterMesh is used because water surface is used for check click collision
 
             } else if(cityView.model !== cityModel) {
                 citiesView.splice(i, 1);
-                cityView.element.parent.remove(cityView.element);
+                cityView.waterMesh.parent.remove(cityView.element);
                 i--;
             }
         }
@@ -29,7 +29,7 @@ module.exports = Worldmap=> {
         if(lengthView > lengthModel) {
             for(let i = lengthModel; i < lengthView; i++) {
                 cityView = citiesView[i];
-                cityView.element.parent.remove(cityView.element);
+                cityView.waterMesh.parent.remove(cityView.element);
             }
             citiesView.splice(lengthModel, lengthView);
         }

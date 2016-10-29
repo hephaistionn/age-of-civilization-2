@@ -85,6 +85,8 @@ class ScreenWorldmap {
             const y = this.worldmap.getHeightTile(x, z);
             this.newCity(x, y, z, 1, 'myCity');
             ee.emit('onUpdate', 'worldmap', this.worldmap);
+        }else if(model){
+            console.log('select : ', model);
         }
     }
 
