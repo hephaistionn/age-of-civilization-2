@@ -1,5 +1,5 @@
 const ee = require('../../services/eventEmitter');
-const stateManager = require('../stateManager');
+const stateManager = require('../../services/stateManager');
 
 module.exports = class WorldmapMenu {
 

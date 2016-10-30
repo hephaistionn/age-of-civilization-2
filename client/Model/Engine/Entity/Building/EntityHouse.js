@@ -1,5 +1,5 @@
 const Entity = require('../Entity.js');
-const stateManager = require('../../../stateManager');
+const stateManager = require('../../../../services/stateManager');
 
 class EntityHouse extends Entity {
 

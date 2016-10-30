@@ -1,6 +1,6 @@
 const Entity = require('../Entity.js');
 const ee = require('../../../../services/eventEmitter');
-const stateManager = require('../../../stateManager');
+const stateManager = require('../../../../services/stateManager');
 
 class EntityChurch extends Entity {
 

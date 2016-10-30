@@ -1,6 +1,6 @@
 const THREE = require('../../../../services/threejs');
 const materialRoad = require('../../Material/materialRoad');
-const UVpath = require('../../../../services/UVpath');
+const UVpath = require('../../../../services/threejs/UVpath');
 const config = require('../../config');
 const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;

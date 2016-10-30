@@ -1,5 +1,5 @@
 const ee = require('../../services/eventEmitter');
-const stateManager = require('../stateManager');
+const stateManager = require('../../services/stateManager');
 const ENTITIES = require('../Engine/Entity/listEntity');
 
 

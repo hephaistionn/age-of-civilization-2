@@ -1,4 +1,4 @@
-const stateManager = require('../../../Model/stateManager');
+const stateManager = require('../../../services/stateManager');
 
 module.exports = class EntityManagerPanel {
 
@@ -35,7 +35,7 @@ module.exports = class EntityManagerPanel {
         } else {
             this.node.className += ' hide';
             if(this.nodeDescription)
-                this.nodePanel.removeChild(this.nodeDescription);
+            this.nodePanel.removeChild(this.nodeDescription);
         }
     }
 

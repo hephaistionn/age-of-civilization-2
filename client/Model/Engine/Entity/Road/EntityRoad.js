@@ -1,4 +1,4 @@
-const stateManager = require('../../../stateManager');
+const stateManager = require('../../../../services/stateManager');
 
 class EntityRoad {
 

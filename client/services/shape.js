@@ -1,4 +1,3 @@
-const THREE = require('./threejs');
 
 module.exports = class Shape {
 

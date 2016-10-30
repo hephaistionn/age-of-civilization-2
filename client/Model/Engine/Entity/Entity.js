@@ -1,4 +1,4 @@
-const stateManager = require('../../stateManager');
+const stateManager = require('../../../services/stateManager');
 const pf = require('../../../services/pathfinding');
 const finder = new pf.AStarFinder({
     allowDiagonal: true,
