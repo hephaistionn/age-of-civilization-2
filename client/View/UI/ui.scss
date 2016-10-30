@@ -4,6 +4,7 @@
 @import "./MonitoringPanel/MonitoringPanelPC";
 @import "./WorldmapMenu/WorldmapMenuMobile";
 @import "./WorldmapMenu/WorldmapMenuPC";
+@import "./EntityManagerPanel/EntityManagerPanelPC";
 div {
   position: relative;
   -webkit-user-select: none;
@@ -14,5 +15,14 @@ div {
 
 .picture {
   background-size: cover;
+}
+
+.nodeOverlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.45);
 }
 

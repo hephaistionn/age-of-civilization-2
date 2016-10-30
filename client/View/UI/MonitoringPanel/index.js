@@ -15,8 +15,12 @@ module.exports = class MonitoringPanelPC {
         this.node.appendChild(this.nodePreviewContainer);
 
         this.nodeMonitoringContainer = document.createElement('div');
-        this.nodeMonitoringContainer.className = 'monitoringContainer';
+        this.nodeMonitoringContainer.className = 'monitoringContainer nodeOverlay';
         this.node.appendChild(this.nodeMonitoringContainer);
+
+        this.nodeMonitoringPanel = document.createElement('div');
+        this.nodeMonitoringPanel.className = 'panel';
+        this.nodeMonitoringContainer.appendChild(this.nodeMonitoringPanel);
 
         this.nodePreviewItems = [];
 
@@ -42,13 +46,13 @@ module.exports = class MonitoringPanelPC {
         this.nodeButtonClose.className = 'button close';
         this.nodeButtonClose.textContent = 'X';
         this.nodeButtonClose.onclick = model.close.bind(model);
-        this.nodeMonitoringContainer.appendChild(this.nodeButtonClose);
+        this.nodeMonitoringPanel.appendChild(this.nodeButtonClose);
 
         this.nodeButtonWorld = document.createElement('div');
         this.nodeButtonWorld.className = 'button world';
         this.nodeButtonWorld.textContent = 'Worldmap';
         this.nodeButtonWorld.onclick = model.goWorldmap.bind(model);
-        this.nodeMonitoringContainer.appendChild(this.nodeButtonWorld);
+        this.nodeMonitoringPanel.appendChild(this.nodeButtonWorld);
 
         this.updateState(model);
     }

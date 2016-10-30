@@ -28,7 +28,7 @@ module.exports = Screen => {
         this.canvas.removeEventListener('touchend', this.events.__touchEnd);
         this.canvas.removeEventListener('touchcancel', this.events.__touchCancel);
         this.canvas.removeEventListener('touchleave', this.events.__touchleave);
-        this.container.removeEventListener('touchmove', this.events.__touchMove);
+        this.canvas.removeEventListener('touchmove', this.events.__touchMove);
         window.removeEventListener('resize', this.events.__resize);
         ee.off('onUpdate', this.events.__updateComponent);
     };

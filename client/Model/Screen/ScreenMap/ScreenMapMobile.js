@@ -2,6 +2,7 @@ const ee = require('../../../services/eventEmitter');
 
 const BuildingMenu = require('../../UI/BuildingMenu');
 const MonitoringPanel = require('../../UI/MonitoringPanel');
+const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 
 const Map = require('../../Engine/Map');
 const Light = require('../../Engine/Light');
@@ -23,6 +24,7 @@ class ScreenMap {
         this.light = new Light({shadow: true});
         this.buildingMenu = new BuildingMenu();
         this.monitoringPanel = new MonitoringPanel();
+        this.entityManagerPanel = new EntityManagerPanel();
 
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         this.light.scaleOffset(-this.camera.offsetY);
@@ -134,7 +136,7 @@ class ScreenMap {
         }else if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
         } else if (model){
-            console.log('select Entity', model );
+            this.entityManagerPanel.open(model);
         }
     }
 

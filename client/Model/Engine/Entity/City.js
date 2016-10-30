@@ -12,4 +12,7 @@ class City {
     }
 }
 
+City.selectable = true;
+City.description = 'This is a City';
+
 module.exports = City;

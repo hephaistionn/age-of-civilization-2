@@ -6,6 +6,7 @@ const Worldmap = require('../../Engine/Worldmap');
 const PixelMap = require('../../../services/PixelMap');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
+const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 
 let moveDx = 0;
 let moveDz = 0;
@@ -29,6 +30,7 @@ class ScreenWorldmap {
         });
 
         this.worldmapMenu = new WorldmapMenu();
+        this.entityManagerPanel = new EntityManagerPanel();
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/worldmap3.png', (dataMap)=> {
@@ -86,7 +88,7 @@ class ScreenWorldmap {
             this.newCity(x, y, z, 1, 'myCity');
             ee.emit('onUpdate', 'worldmap', this.worldmap);
         }else if(model){
-            console.log('select : ', model);
+            this.entityManagerPanel.open(model);
         }
     }
 

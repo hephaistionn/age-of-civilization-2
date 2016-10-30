@@ -11,7 +11,8 @@ const COMPONENTS = {
     Worldmap: require('../Engine/Worldmap'),
     BuildingMenu: require('../UI/BuildingMenu'),
     MonitoringPanel: require('../UI/MonitoringPanel'),
-    WorldmapMenu: require('../UI/WorldmapMenu')
+    WorldmapMenu: require('../UI/WorldmapMenu'),
+    EntityManagerPanel: require('../UI/EntityManagerPanel')
 };
 
 class Screen {
@@ -56,7 +57,7 @@ class Screen {
 
     show(models) {
         const map = this.map || this.worldmap;
-        if(map){
+        if(map) {
             map.refreshTexture();
         }
 

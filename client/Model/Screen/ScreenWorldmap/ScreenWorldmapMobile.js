@@ -6,9 +6,7 @@ const Worldmap = require('../../Engine/Worldmap');
 const PixelMap = require('../../../services/PixelMap');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
-
-let moveDx = 0;
-let moveDz = 0;
+const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 
 class ScreenWorldmap {
 
@@ -30,6 +28,7 @@ class ScreenWorldmap {
         });
 
         this.worldmapMenu = new WorldmapMenu();
+        this.entityManagerPanel = new EntityManagerPanel();
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/worldmap3.png', (dataMap)=> {
@@ -39,7 +38,6 @@ class ScreenWorldmap {
             ee.emit('onUpdate', 'worldmap', this.worldmap);
             ee.emit('onUpdate', 'light', this.light);
         });
-
     }
 
     newCity(x, y, z, level, name) {
@@ -66,13 +64,9 @@ class ScreenWorldmap {
     }
 
     touchStartOnMap(x, z, model) {
-        if(removeMode) {
-            this.map.clearTile(x, z, model);
-            ee.emit('onUpdate', 'map', this.map);
-        }else if(this.roadPositioner && this.roadPositioner.selected) {
-            this.roadPositioner.mouseDown(x, z);
-        } else if (model){
-            console.log('select Entity', model );
+
+        if (model){
+            this.entityManagerPanel.open(model);
         }
     }
 
