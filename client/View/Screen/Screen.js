@@ -55,6 +55,11 @@ class Screen {
     }
 
     show(models) {
+        const map = this.map || this.worldmap;
+        if(map){
+            map.refreshTexture();
+        }
+
         let model;
         for(let id in models) {
             model = models[id];

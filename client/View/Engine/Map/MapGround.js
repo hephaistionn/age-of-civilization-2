@@ -148,5 +148,12 @@ module.exports = Map=> {
         return chunkGeometry;
     };
 
+    Map.prototype.refreshTexture = function refreshTexture() {
+        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/rock_0.jpg");
+        this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0.jpg");
+        this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/grass_1.jpg");
+        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg");
+    }
+
 
 };

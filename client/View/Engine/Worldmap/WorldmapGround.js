@@ -110,5 +110,12 @@ module.exports = Worldmap => {
         return chunkGeometry;
     };
 
+    Worldmap.prototype.refreshTexture = function refreshTexture() {
+        this.materialWorldmap.uniforms.textureA.value = THREE.loadTexture("pic/desert_0big.jpg");
+        this.materialWorldmap.uniforms.textureB.value = THREE.loadTexture("pic/grass_0big.jpg");
+        this.materialWorldmap.uniforms.textureC.value = THREE.loadTexture("pic/forest_0big.jpg");
+        this.materialWorldmap.uniforms.textureD.value = THREE.loadTexture("pic/grass_1.jpg");
+    }
+
 
 };
