@@ -25,6 +25,8 @@ class EntityPeon extends Entity {
 
 }
 
+EntityPeon.selectable = true;
+EntityPeon.description = 'I will go to an home to transmit my knowledge';
 EntityPeon.tile_x = 1;
 EntityPeon.tile_z = 1;
 EntityPeon.walkable = true;

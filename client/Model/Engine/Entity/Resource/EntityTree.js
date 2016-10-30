@@ -8,7 +8,7 @@ class EntityTree extends Entity {
     }
 
 }
-
+EntityTree.selectable = false;
 EntityTree.tile_x = 1;
 EntityTree.tile_z = 1;
 EntityTree.walkable = false;

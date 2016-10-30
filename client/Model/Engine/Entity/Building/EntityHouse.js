@@ -14,6 +14,8 @@ class EntityHouse extends Entity {
 
 }
 
+EntityHouse.selectable = true;
+EntityHouse.description = 'This building increase the enable places for your population';
 EntityHouse.tile_x = 1;
 EntityHouse.tile_z = 1;
 EntityHouse.walkable = false;

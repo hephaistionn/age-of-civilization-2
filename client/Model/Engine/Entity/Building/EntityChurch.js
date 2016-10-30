@@ -36,6 +36,8 @@ class EntityChurch extends Entity {
     }
 }
 
+EntityChurch.selectable = true;
+EntityChurch.description = 'This building increase the prosperity of your city';
 EntityChurch.tile_x = 2;
 EntityChurch.tile_z = 1;
 EntityChurch.cost = {wood: 10, stone: 100};
