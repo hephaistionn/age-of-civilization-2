@@ -122,7 +122,7 @@ class Entity {
 
 Entity.construction = function construction() {
     const cost = this.cost;
-    const resources = stateManager.resources;
+    const resources = stateManager.currentCity.resources;
 
     for(var resourceId in cost) {
         const valueRequired = cost[resourceId];

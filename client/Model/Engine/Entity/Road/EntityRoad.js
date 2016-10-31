@@ -21,7 +21,7 @@ class EntityRoad {
 EntityRoad.construction = function construction(newRoad) {
     const roadType = newRoad.walkable[0];
     const cost = this.cost[roadType];
-    const resources = stateManager.resources;
+    const resources = stateManager.currentCity.resources;
     for(var resourceId in cost) {
         const valueRequired = cost[resourceId] * newRoad.length;
         const value = resources[resourceId];

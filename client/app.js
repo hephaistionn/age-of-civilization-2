@@ -3,9 +3,10 @@ window.addEventListener('load', () => {
     const ee = require('./services/eventEmitter');
 
     const App = require('./services/App');
-
     const ScreenWorldmap = require('./Model/Screen/ScreenWorldmap');
     const ScreenMap = require('./Model/Screen/ScreenMap');
+
+    const stateManager = require('./services/stateManager');
 
     const app = new App(ScreenWorldmap, ScreenMap);
 
@@ -18,7 +19,11 @@ window.addEventListener('load', () => {
         app.openScreen(id);
     });
 
-    app.openScreen('ScreenMap');
+    if(stateManager.cityId){
+        app.openScreen('ScreenMap');
+    }else{
+        app.openScreen('ScreenWorldmap');
+    }
 
 });
 
