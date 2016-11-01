@@ -44,7 +44,7 @@ class StateManager {
     updateLeaderLevel(level) {
         this.currentLeader.level = level;
     }
-    updateLeaderCity(cityId) {
+    updateLeaderCity(cityId) { //add new city on worldmap of gamer
         if(this.currentLeader.cities.indexOf(cityId) !== -1) return;
         this.currentLeader.cities.push(cityId);
     }
@@ -70,6 +70,20 @@ class StateManager {
         }
     }
 
+    getCity(id) {
+        if(this.cities[id]) {
+            return this.cities[id];
+        } else {
+            const city = this.constructor.load(id);
+            if(city) {
+                this.cities[id] = city;
+                return city;
+            } else {
+                throw 'No City with id ' + id;
+            }
+        }
+    }
+
     loadCurrentLeader(id){
         if(!id) id = this.getCurrentLeaderId();
         this.playerId = id;
@@ -91,6 +105,14 @@ class StateManager {
         this.currentCity =  null;
     }
 
+    getCities() {
+        if(!this.currentLeader) return [];
+        const citiesId = this.currentLeader.cities;
+        return citiesId.map(cityId => {
+            return this.getCity(cityId);
+        })
+    }
+
     newLeader(params) {
         const id = this.constructor.computeUUID('leader_');
         const leader = {
@@ -104,6 +126,8 @@ class StateManager {
         this.leaders[id] = leader;
         this.playerId = id;
         this.setCurrentLeaderId(id);
+        this.currentLeader = id;
+        this.currentLeader = leader;
         this.savePlayersId(id);
     }
 
@@ -112,6 +136,8 @@ class StateManager {
         const city = {
             name: params.name,
             leader: params.leader,
+            level: params.level||1,
+            type: params.type||0,
             states: {
                 population: 0,
                 workers: 0
@@ -134,6 +160,7 @@ class StateManager {
         };
         this.constructor.save(city);
         this.cities[id] = city;
+        this.currentLeader.cities.push(id);
         return city;
     }
 

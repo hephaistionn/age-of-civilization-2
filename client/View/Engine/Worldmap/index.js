@@ -16,11 +16,12 @@ class Worldmap {
         this.element = this.initGround(model);
         this.element.matrixAutoUpdate = false;
         this.element.frustumCulled = false;
+
+        this.updateState(model);
     }
 
     updateState(model) {
         this.updateStateCities(model);
-
         while(model.updatedCity.length !== 0) {
             this.updateStateOfOneCities(model.updatedCity.pop());
         }

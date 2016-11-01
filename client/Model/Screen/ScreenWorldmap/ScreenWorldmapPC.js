@@ -57,6 +57,11 @@ class ScreenWorldmap {
             this.camera.setMapBorder(dataMap);
             this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
             this.cityPositioner = new CityPositioner(dataMap);
+
+            const cities = stateManager.getCities();
+            cities.map(city => {
+                this.worldmap.addCity(city);
+            });
             ee.emit('onUpdate', 'light', this.light);
             ee.emit('onUpdate', 'worldmap', this.worldmap);
             ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
@@ -69,8 +74,8 @@ class ScreenWorldmap {
     }
 
     newCity(x, y, z, level, name) {
-        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia'};
-        this.worldmap.newCity(params);
+        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia', leader:stateManager.playerId };
+        this.worldmap.addCity(params);
         stateManager.newCity(params);
         ee.emit('onUpdate', 'worldmap', this.worldmap);
     }
@@ -120,6 +125,7 @@ class ScreenWorldmap {
         if(this.cityPositioner.enabled && this.cityPositioner.buildable) {
             const y = this.worldmap.getHeightTile(x, z);
             this.newCity(x, y, z, 1, 'myCity');
+
             this.worldmapMenu.switchConstrucMode();
             ee.emit('onUpdate', 'worldmap', this.worldmap);
         }else if(model){

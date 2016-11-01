@@ -20,7 +20,7 @@ class Worldmap {
 
     }
 
-    newCity(params) {
+    addCity(params) {
         const city = new City(params);
         this.cities.push(city);
     }
