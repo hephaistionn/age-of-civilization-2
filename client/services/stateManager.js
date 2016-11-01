@@ -5,17 +5,10 @@ const CLOSE = 0;
 class StateManager {
 
     constructor() {
-
         this.cities = {};
         this.leaders = {};
-        this.playerId = this.getPlayerId() || this.newLeader({name: 'SARGON'}).id; //get playerId, previous player or new player
-        this.setPlayerId(this.playerId); //save the current playerId, used for case of a new player
-        this.currentLeader = this.getLeader(this.playerId); //get data about currentPlayer
-        this.cityId = this.getCityId(); //get a previous displayed city;
-        this.currentCity =  this.cityId ? this.getCity(this.cityId) : null; //get a data of previous displayed city if there are a previous displayed city
-
-        this.players = this.getPlayersId();
-
+        this.firstBoot = true;
+        this.loadCurrentLeader();
         window.addEventListener('beforeunload', this.saveGame.bind(this));
     }
 
@@ -45,10 +38,6 @@ class StateManager {
         }
     }
 
-    loadCurrentCity(id) {
-        this.currentCity = this.getCity(id);
-    }
-
     updateLeaderName(name) {
         this.currentLeader.name = name;
     }
@@ -62,6 +51,9 @@ class StateManager {
     updateLeaderChallengers(leaderId) {
         if(this.currentLeader.challengers.indexOf(leaderId) !== -1) return;
         this.currentLeader.challengers.push(leaderId);
+    }
+    updateLeaderCurrentCity(cityId) {
+        this.currentLeader.currentCity = cityId;
     }
 
     getLeader(id) {
@@ -78,18 +70,25 @@ class StateManager {
         }
     }
 
-    getCity(id) {
-        if(this.cities[id]) {
-            return this.cities[id];
-        } else {
-            const city = this.constructor.load(id);
-            if(city) {
-                this.cities[id] = city;
-                return city;
-            } else {
-                throw 'No city with id ' + id;
-            }
+    loadCurrentLeader(id){
+        if(!id) id = this.getCurrentLeaderId();
+        this.playerId = id;
+        if(this.playerId) {
+            this.firstBoot = false;
+            console.info('load local gamer');
+            this.currentLeader = this.getLeader(id);
+            this.loadCurrentCity();
+        }else{
+            console.info('new gamer');
         }
+    }
+
+    loadCurrentCity(){
+        this.currentCity =  this.currentLeader.currentCityId ? this.getCity(this.currentLeader.currentCityId) : null;
+    }
+    clearCurrentCity(){
+        this.currentLeader.currentCityId = null;
+        this.currentCity =  null;
     }
 
     newLeader(params) {
@@ -103,8 +102,9 @@ class StateManager {
         };
         this.constructor.save(leader);
         this.leaders[id] = leader;
+        this.playerId = id;
+        this.setCurrentLeaderId(id);
         this.savePlayersId(id);
-        return leader;
     }
 
     newCity(params) {
@@ -126,6 +126,9 @@ class StateManager {
                 stone: CLOSE,
                 meat: CLOSE
             },
+            x: params.x,
+            y: params.y,
+            z: params.z,
             map: {},
             id: id
         };
@@ -134,30 +137,24 @@ class StateManager {
         return city;
     }
 
-    getPlayerId() {
+    getCurrentLeaderId() {
         return (localStorage.getItem('player'));
     }
 
-    getCityId() {
-        return (localStorage.getItem('city'));
-    }
-
-    setPlayerId(id) {
+    setCurrentLeaderId(id) {
         return (localStorage.setItem('player', id||''));
     }
 
-    setCityId(id) {
-        return (localStorage.setItem('city', id||''));
-    }
 
     getPlayersId() {
         return this.constructor.load('players')||[];
     }
 
     savePlayersId(playerId) {
+        this.players = this.getPlayersId();
         if(this.players.indexOf(playerId) !== -1) return;
         this.players.push(playerId);
-        this.constructor.save('players',this.players);
+        this.constructor.save(this.players, 'players');
     }
 
     saveGame() {
@@ -167,9 +164,9 @@ class StateManager {
         }
     }
 
-    static save(model) {
+    static save(model, id) {
         const modelString = JSON.stringify(model);
-        localStorage.setItem(model.id, modelString);
+        localStorage.setItem(model.id||id, modelString);
     }
 
     static load(id) {

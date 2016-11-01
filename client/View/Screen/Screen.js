@@ -12,7 +12,9 @@ const COMPONENTS = {
     BuildingMenu: require('../UI/BuildingMenu'),
     MonitoringPanel: require('../UI/MonitoringPanel'),
     WorldmapMenu: require('../UI/WorldmapMenu'),
-    EntityManagerPanel: require('../UI/EntityManagerPanel')
+    EntityManagerPanel: require('../UI/EntityManagerPanel'),
+    FirstStartPanel: require('../UI/FirstStartPanel'),
+    LeaderCreationPanel: require('../UI/LeaderCreationPanel')
 };
 
 class Screen {

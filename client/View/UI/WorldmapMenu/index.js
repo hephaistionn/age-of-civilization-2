@@ -26,10 +26,30 @@ module.exports = class WorldmapMenu {
     }
 
     updateState(model) {
+
+        if(stateManager.currentCity){
+            this.showNode(this.nodeButtonBack);
+        }else{
+            this.hideNode(this.nodeButtonBack);
+        }
+
         if(model.constructMode) {
             this.nodeButtonConstruct.className = 'button construct focus';
         } else {
             this.nodeButtonConstruct.className = 'button construct';
+        }
+    }
+
+    showNode(node) {
+        const index = node.className.indexOf('hide');
+        if(index !== -1) {
+            node.className = node.className.replace(' hide', '');
+        }
+    }
+
+    hideNode(node) {
+        if(node.className.indexOf('hide') === -1) {
+            node.className += ' hide';
         }
     }
 

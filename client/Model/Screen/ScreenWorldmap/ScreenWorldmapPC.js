@@ -1,4 +1,5 @@
 const ee = require('../../../services/eventEmitter');
+const stateManager = require('../../../services/stateManager');
 
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
@@ -7,6 +8,8 @@ const PixelMap = require('../../../services/PixelMap');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
+const FirstStartPanel = require('../../UI/FirstStartPanel');
+const LeaderCreationPanel = require('../../UI/LeaderCreationPanel');
 
 let moveDx = 0;
 let moveDz = 0;
@@ -32,6 +35,21 @@ class ScreenWorldmap {
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
 
+        if(stateManager.firstBoot){
+            this.firstStartPanel = new FirstStartPanel();
+            this.firstStartPanel.onClose(()=>{
+                delete this.firstStartPanel;
+                ee.emit('onUpdate', 'firstStartPanel');
+                this.leaderCreationPanel = new LeaderCreationPanel();
+                ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel );
+                this.leaderCreationPanel.onClose( params => {
+                    stateManager.newLeader(params);
+                    delete this.leaderCreationPanel;
+                    ee.emit('onUpdate', 'leaderCreationPanel');
+                });
+            });
+        }
+
         const pixelMap = new PixelMap();
         pixelMap.compute('map/worldmap3.png', (dataMap)=> {
             this.worldmap = new Worldmap(dataMap);
@@ -45,6 +63,7 @@ class ScreenWorldmap {
     newCity(x, y, z, level, name) {
         const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia'};
         this.worldmap.newCity(params);
+        stateManager.newCity(params);
         ee.emit('onUpdate', 'worldmap', this.worldmap);
     }
 
@@ -84,8 +103,10 @@ class ScreenWorldmap {
 
     mouseClick(x, z, model) {
         if(this.worldmapMenu.constructMode) {
+            if(!this.worldmap.isBuildable(x, z)) return;
             const y = this.worldmap.getHeightTile(x, z);
             this.newCity(x, y, z, 1, 'myCity');
+            this.worldmapMenu.switchConstrucMode();
             ee.emit('onUpdate', 'worldmap', this.worldmap);
         }else if(model){
             this.entityManagerPanel.open(model);

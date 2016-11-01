@@ -128,7 +128,9 @@ module.exports = Screen => {
             ee.emit('mouseRotate', event.keyCode);
         }
         this.pressBorder();
-        event.preventDefault();
+        if(arrowTopPress || arrowDownPress) {
+            event.preventDefault();
+        }
     };
 
 

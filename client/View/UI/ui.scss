@@ -5,6 +5,8 @@
 @import "./WorldmapMenu/WorldmapMenuMobile";
 @import "./WorldmapMenu/WorldmapMenuPC";
 @import "./EntityManagerPanel/EntityManagerPanelPC";
+@import "./FirstStartPanel/FirstStartPanelPC";
+@import "./LeaderCreationPanel/LeaderCreationPanelPC";
 div {
   position: relative;
   -webkit-user-select: none;
@@ -25,4 +27,3 @@ div {
   width: 100%;
   background-color: rgba(0, 0, 0, 0.45);
 }
-

@@ -19,7 +19,7 @@ window.addEventListener('load', () => {
         app.openScreen(id);
     });
 
-    if(stateManager.cityId){
+    if(stateManager.currentCityId){
         app.openScreen('ScreenMap');
     }else{
         app.openScreen('ScreenWorldmap');

@@ -1,4 +1,5 @@
 const ee = require('../../../services/eventEmitter');
+const stateManager = require('../../../services/stateManager');
 
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
@@ -7,6 +8,7 @@ const PixelMap = require('../../../services/PixelMap');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
+const FirstStartPanel = require('../../UI/FirstStartPanel');
 
 class ScreenWorldmap {
 
@@ -29,6 +31,20 @@ class ScreenWorldmap {
 
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
+        if(stateManager.firstBoot){
+            this.firstStartPanel = new FirstStartPanel();
+            this.firstStartPanel.onClose(()=>{
+                delete this.firstStartPanel;
+                ee.emit('onUpdate', 'firstStartPanel');
+                this.leaderCreationPanel = new LeaderCreationPanel();
+                ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel );
+                this.leaderCreationPanel.onClose( params => {
+                    stateManager.newLeader(params);
+                    delete this.leaderCreationPanel;
+                    ee.emit('onUpdate', 'leaderCreationPanel');
+                });
+            });
+        }
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/worldmap3.png', (dataMap)=> {
