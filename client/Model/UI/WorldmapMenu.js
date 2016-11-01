@@ -5,8 +5,9 @@ module.exports = class WorldmapMenu {
 
     constructor(config) {
         this.type = 'UI';
-        this.construct = null;
         this.constructMode = false;
+        this.onConstructModeFct = ()=>{};
+        this.onConstructFct = ()=>{};
     }
 
     goCity() {
@@ -19,10 +20,12 @@ module.exports = class WorldmapMenu {
 
     switchConstrucMode(status) {
         this.constructMode = !this.constructMode;
+        this.onConstructModeFct(this.constructMode);
         ee.emit('onUpdate', 'worldmapMenu', this);
     }
 
-    constructCity(fct) {
-        this.construct = fct;
+    onConstructMode(fct){
+        this.onConstructModeFct = fct;
     }
+
 };

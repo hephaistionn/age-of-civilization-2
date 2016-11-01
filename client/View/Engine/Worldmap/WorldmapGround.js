@@ -32,7 +32,7 @@ module.exports = Worldmap => {
         mapMesh.matrixWorldNeedsUpdate = false;
         mapMesh.receiveShadow = true;
 
-        this.touchSurface = [waterMesh];
+        this.touchSurface = [mapMesh];
         this.waterMesh = waterMesh;
 
         return mapMesh;

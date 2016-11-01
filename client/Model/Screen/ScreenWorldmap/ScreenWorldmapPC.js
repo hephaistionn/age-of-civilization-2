@@ -5,6 +5,7 @@ const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
 const PixelMap = require('../../../services/PixelMap');
+const CityPositioner = require('../../Engine/CityPositioner');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
@@ -55,8 +56,15 @@ class ScreenWorldmap {
             this.worldmap = new Worldmap(dataMap);
             this.camera.setMapBorder(dataMap);
             this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            ee.emit('onUpdate', 'worldmap', this.worldmap);
+            this.cityPositioner = new CityPositioner(dataMap);
             ee.emit('onUpdate', 'light', this.light);
+            ee.emit('onUpdate', 'worldmap', this.worldmap);
+            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+        });
+
+        this.worldmapMenu.onConstructMode((enabled) => {
+            enabled ? this.cityPositioner.enable(): this.cityPositioner.disable();
+            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
         });
     }
 
@@ -101,9 +109,15 @@ class ScreenWorldmap {
         moveDz = 0;
     }
 
+    mouseMoveOnMap(x, z) {
+        if( this.cityPositioner.enabled) {
+            this.cityPositioner.moveCity(x, z);
+            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+        }
+    }
+
     mouseClick(x, z, model) {
-        if(this.worldmapMenu.constructMode) {
-            if(!this.worldmap.isBuildable(x, z)) return;
+        if(this.cityPositioner.enabled && this.cityPositioner.buildable) {
             const y = this.worldmap.getHeightTile(x, z);
             this.newCity(x, y, z, 1, 'myCity');
             this.worldmapMenu.switchConstrucMode();

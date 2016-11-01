@@ -15,8 +15,7 @@ module.exports = Worldmap=> {
             if(!cityView) {
                 let newCityView = new City(cityModel);
                 citiesView[i] = newCityView;
-                this.waterMesh.add(newCityView.element);
-                //waterMesh is used because water surface is used for check click collision
+                this.element.add(newCityView.element);
 
             } else if(cityView.model !== cityModel) {
                 citiesView.splice(i, 1);
