@@ -15,13 +15,14 @@ window.addEventListener('load', () => {
         app.closeScreen(id);
     });
 
-    ee.on('openScreen', id => {
-        app.openScreen(id);
+    ee.on('openScreen', (id, params) => {
+        app.openScreen(id, params);
     });
 
-    if(stateManager.currentCityId){
-        app.openScreen('ScreenMap');
-    }else{
+    const CityId = stateManager.getCurrentCityId();
+    if(CityId) {
+        app.openScreen('ScreenMap', CityId);
+    } else {
         app.openScreen('ScreenWorldmap');
     }
 

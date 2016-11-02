@@ -1,4 +1,5 @@
 const ee = require('../../../services/eventEmitter');
+const stateManager = require('../../../services/stateManager');
 
 const BuildingMenu = require('../../UI/BuildingMenu');
 const MonitoringPanel = require('../../UI/MonitoringPanel');
@@ -19,8 +20,8 @@ let moveDz = 0;
 
 class ScreenMap {
 
-    constructor() {
-
+    constructor(cityId) {
+        stateManager.loadCity(cityId);
         this.camera = new Camera({x: 25, z: 25});
         this.light = new Light({shadow: true});
         this.buildingMenu = new BuildingMenu();
@@ -170,7 +171,7 @@ class ScreenMap {
                 ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
                 ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             }
-        } else if (model) {
+        } else if(model) {
             this.entityManagerPanel.open(model);
         }
     }

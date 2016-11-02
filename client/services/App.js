@@ -10,6 +10,7 @@ class App {
         this.model = null;
         this.modelInstances = {};
         this.viewInstances = {};
+        this.params = {};
         this.requestAnimation = null;
 
         for(let i = 0; i < arguments.length; i++) {
@@ -46,25 +47,32 @@ class App {
         ee.on('zoom', this.zoom.bind(this));
     }
 
-    closeScreen() {
+    closeScreen(id) {
         this._stop();
-        this.view.dismount(this.model);
-        this.model.dismount();
+        this.viewInstances[id].dismount(this.modelInstances[id]);
+        this.modelInstances[id].dismount();
         delete this.modelInstances[id];
         delete this.viewInstances[id];
+        delete this.params[id];
         this.model = null;
         this.view = null;
     }
 
-    openScreen(id) {
+    openScreen(id, params) {
         this._stop();
         if(this.model) {
             this.hideScreen();
         }
+
         if(this.modelInstances[id]) {
-            this.displayScreen(id);
+            if(!params || this.params[id] === params) {
+                this.displayScreen(id);
+            } else {
+                this.closeScreen(id);
+                this.createScreen(id, params);
+            }
         } else {
-            this.createScreen(id);
+            this.createScreen(id, params);
         }
         this._start();
     }
@@ -79,8 +87,9 @@ class App {
         this.view.hide(this.model);
     }
 
-    createScreen(id) {
-        this.modelInstances[id] = new this.models[id]();
+    createScreen(id, params) {
+        this.modelInstances[id] = new this.models[id](params);
+        this.params[id] = params;
         this.viewInstances[id] = new Screen();
         this.model = this.modelInstances[id];
         this.view = this.viewInstances[id];

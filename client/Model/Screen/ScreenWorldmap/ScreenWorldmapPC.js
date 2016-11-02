@@ -17,7 +17,9 @@ let moveDz = 0;
 
 class ScreenWorldmap {
 
-    constructor() {
+    constructor(params) {
+
+        stateManager.clearCurrentCity();
 
         this.camera = new Camera({
             x: 100, y: 40, z: 70,
@@ -36,14 +38,14 @@ class ScreenWorldmap {
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
 
-        if(stateManager.firstBoot){
+        if(stateManager.firstBoot) {
             this.firstStartPanel = new FirstStartPanel();
-            this.firstStartPanel.onClose(()=>{
+            this.firstStartPanel.onClose(()=> {
                 delete this.firstStartPanel;
                 ee.emit('onUpdate', 'firstStartPanel');
                 this.leaderCreationPanel = new LeaderCreationPanel();
-                ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel );
-                this.leaderCreationPanel.onClose( params => {
+                ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel);
+                this.leaderCreationPanel.onClose(params => {
                     stateManager.newLeader(params);
                     delete this.leaderCreationPanel;
                     ee.emit('onUpdate', 'leaderCreationPanel');
@@ -68,13 +70,13 @@ class ScreenWorldmap {
         });
 
         this.worldmapMenu.onConstructMode((enabled) => {
-            enabled ? this.cityPositioner.enable(): this.cityPositioner.disable();
+            enabled ? this.cityPositioner.enable() : this.cityPositioner.disable();
             ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
         });
     }
 
     newCity(x, y, z, level, name) {
-        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia', leader:stateManager.playerId };
+        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia', leader: stateManager.playerId};
         this.worldmap.addCity(params);
         stateManager.newCity(params);
         ee.emit('onUpdate', 'worldmap', this.worldmap);
@@ -115,7 +117,7 @@ class ScreenWorldmap {
     }
 
     mouseMoveOnMap(x, z) {
-        if( this.cityPositioner.enabled) {
+        if(this.cityPositioner.enabled) {
             this.cityPositioner.moveCity(x, z);
             ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
         }
@@ -128,7 +130,7 @@ class ScreenWorldmap {
 
             this.worldmapMenu.switchConstrucMode();
             ee.emit('onUpdate', 'worldmap', this.worldmap);
-        }else if(model){
+        } else if(model) {
             this.entityManagerPanel.open(model);
         }
     }

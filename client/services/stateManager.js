@@ -15,18 +15,23 @@ class StateManager {
     updateStone(value) {
         this.currentCity.resources.stone += value;
     }
+
     updateWood(value) {
         this.currentCity.resources.wood += value;
     }
+
     updateMeat(value) {
         this.currentCity.resources.meat += value;
     }
+
     updatePopulation(value) {
         this.currentCity.population += value;
     }
+
     updateWorkers(value) {
         this.currentCity.workers += value;
     }
+
     updateTrade(id) {
         const trade = this.currentCity.trade;
         if(trade[id] === CLOSE) {
@@ -41,17 +46,21 @@ class StateManager {
     updateLeaderName(name) {
         this.currentLeader.name = name;
     }
+
     updateLeaderLevel(level) {
         this.currentLeader.level = level;
     }
+
     updateLeaderCity(cityId) { //add new city on worldmap of gamer
         if(this.currentLeader.cities.indexOf(cityId) !== -1) return;
         this.currentLeader.cities.push(cityId);
     }
+
     updateLeaderChallengers(leaderId) {
         if(this.currentLeader.challengers.indexOf(leaderId) !== -1) return;
         this.currentLeader.challengers.push(leaderId);
     }
+
     updateLeaderCurrentCity(cityId) {
         this.currentLeader.currentCity = cityId;
     }
@@ -84,27 +93,29 @@ class StateManager {
         }
     }
 
-    loadCurrentLeader(id){
+    loadCurrentLeader(id) {
         if(!id) id = this.getCurrentLeaderId();
         this.playerId = id;
         if(this.playerId) {
             this.firstBoot = false;
             console.info('load local gamer');
             this.currentLeader = this.getLeader(id);
-            if(this.currentLeader.currentCityId){
-                this.loadCurrentCity(this.currentLeader.currentCityId);
-            }
-        }else{
+        } else {
             console.info('new gamer');
         }
     }
 
-    loadCity(cityId){
+    loadCity(cityId) {
         this.currentCity = this.getCity(cityId);
+        this.currentLeader.currentCityId = cityId;
     }
-    clearCurrentCity(){
+
+    clearCurrentCity() { //play is on worldmap
         this.currentLeader.currentCityId = null;
-        this.currentCity =  null;
+    }
+
+    getCurrentCityId() {
+        return this.currentLeader ? this.currentLeader.currentCityId : null;
     }
 
     getCities() {
@@ -138,8 +149,8 @@ class StateManager {
         const city = {
             name: params.name,
             leader: params.leader,
-            level: params.level||1,
-            type: params.type||0,
+            level: params.level || 1,
+            type: params.type || 0,
             states: {
                 population: 0,
                 workers: 0
@@ -171,12 +182,12 @@ class StateManager {
     }
 
     setCurrentLeaderId(id) {
-        return (localStorage.setItem('player', id||''));
+        return (localStorage.setItem('player', id || ''));
     }
 
 
     getPlayersId() {
-        return this.constructor.load('players')||[];
+        return this.constructor.load('players') || [];
     }
 
     savePlayersId(playerId) {
@@ -188,14 +199,14 @@ class StateManager {
 
     saveGame() {
         this.constructor.save(this.currentLeader);
-        if(this.currentCity){
+        if(this.currentCity) {
             this.constructor.save(this.currentCity);
         }
     }
 
     static save(model, id) {
         const modelString = JSON.stringify(model);
-        localStorage.setItem(model.id||id, modelString);
+        localStorage.setItem(model.id || id, modelString);
     }
 
     static load(id) {

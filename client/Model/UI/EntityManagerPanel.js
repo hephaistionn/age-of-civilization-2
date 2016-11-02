@@ -30,9 +30,9 @@ module.exports = class EntityManagerPanel {
     }
 
     visit() {
-        stateManager.loadCity(this.currentEntity.id);
+        const cityId = this.currentEntity.id;
         this.close();
-        ee.emit('openScreen', 'ScreenMap');
+        ee.emit('openScreen', 'ScreenMap', cityId);
     }
 
 };

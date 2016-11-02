@@ -86,7 +86,9 @@ class Screen {
 
     removeComponent(id) {
         if(this[id].type === 'UI') {
-            this.dom.removeChild(this[id].node)
+            if(this[id].node.parentNode) {
+                this.dom.removeChild(this[id].node)
+            }
         } else {
             this[id].remove();
             this.render.removeChild(this[id])
