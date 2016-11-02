@@ -21,22 +21,36 @@ module.exports = class EntityManagerPanel {
         this.nodePanel.appendChild(this.nodeButtonBack);
 
         this.nodeDescription = null;
+        this.nodeVisitButton = null;
 
         this.updateState(model);
     }
 
     updateState(model) {
         if(model.opened) {
-            this.nodeDescription = document.createElement('div');
-            this.nodeDescription.className = 'description';
-            this.nodeDescription.textContent = model.description;
-            this.nodePanel.appendChild(this.nodeDescription);
+            if(model.description) this.createDescription(model);
+            if(model.yourCity) this.createVisiteButton(model);
             this.node.className = this.node.className.replace(' hide', '');
         } else {
             this.node.className += ' hide';
-            if(this.nodeDescription)
-            this.nodePanel.removeChild(this.nodeDescription);
+            if(this.nodeDescription) this.nodePanel.removeChild(this.nodeDescription);
+            if(this.nodeVisitButton) this.nodePanel.removeChild(this.nodeVisitButton);
         }
+    }
+
+    createDescription(model){
+        this.nodeDescription = document.createElement('div');
+        this.nodeDescription.className = 'description';
+        this.nodeDescription.textContent = model.description;
+        this.nodePanel.appendChild(this.nodeDescription);
+    }
+
+    createVisiteButton(model){
+        this.nodeVisitButton = document.createElement('div');
+        this.nodeVisitButton.className = 'button visit';
+        this.nodeVisitButton.textContent = 'Go to';
+        this.nodeVisitButton.onclick = model.visit.bind(model);
+        this.nodePanel.appendChild(this.nodeVisitButton);
     }
 
     update() {

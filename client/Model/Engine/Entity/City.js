@@ -9,6 +9,8 @@ class City {
         this.level = params.level || 0;
         this.type = params.type || 0;
         this.name = params.name || 'no name';
+        this.leader = params.leader || 'free';
+        this.id = params.id;
     }
 }
 

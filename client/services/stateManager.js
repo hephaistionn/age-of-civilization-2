@@ -91,14 +91,16 @@ class StateManager {
             this.firstBoot = false;
             console.info('load local gamer');
             this.currentLeader = this.getLeader(id);
-            this.loadCurrentCity();
+            if(this.currentLeader.currentCityId){
+                this.loadCurrentCity(this.currentLeader.currentCityId);
+            }
         }else{
             console.info('new gamer');
         }
     }
 
-    loadCurrentCity(){
-        this.currentCity =  this.currentLeader.currentCityId ? this.getCity(this.currentLeader.currentCityId) : null;
+    loadCity(cityId){
+        this.currentCity = this.getCity(cityId);
     }
     clearCurrentCity(){
         this.currentLeader.currentCityId = null;

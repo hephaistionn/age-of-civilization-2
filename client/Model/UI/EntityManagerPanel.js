@@ -5,8 +5,10 @@ module.exports = class EntityManagerPanel {
 
     constructor() {
         this.opened = false;
+        this.yourCity = false;
         this.type = 'UI';
         this.description = '';
+        this.currentEntity = null;
     }
 
     open(entity) {
@@ -14,6 +16,8 @@ module.exports = class EntityManagerPanel {
         if(!entity.constructor.selectable) return;
         this.description = entity.constructor.description;
         this.opened = true;
+        this.yourCity = entity.leader === stateManager.playerId;
+        this.currentEntity = entity;
         ee.emit('onUpdate', 'entityManagerPanel', this);
     }
 
@@ -21,7 +25,14 @@ module.exports = class EntityManagerPanel {
         if(this.opened === false) return;
         this.description = '';
         this.opened = false;
+        this.currentEntity = null;
         ee.emit('onUpdate', 'entityManagerPanel', this);
+    }
+
+    visit() {
+        stateManager.loadCity(this.currentEntity.id);
+        this.close();
+        ee.emit('openScreen', 'ScreenMap');
     }
 
 };
