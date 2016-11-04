@@ -19,11 +19,13 @@ window.addEventListener('load', () => {
         app.openScreen(id, params);
     });
 
-    const CityId = stateManager.getCurrentCityId();
-    if(CityId) {
-        app.openScreen('ScreenMap', CityId);
+    if(stateManager.getCurrentScreen()) {
+        const cityId = stateManager.getCurrentCityId();
+        const model = stateManager.loadCity(cityId).map;
+        app.openScreen('ScreenMap', model);
     } else {
-        app.openScreen('ScreenWorldmap');
+        const model = stateManager.getCurrentLeader();
+        app.openScreen('ScreenWorldmap', model);
     }
 
 });

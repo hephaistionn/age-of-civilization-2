@@ -17,12 +17,12 @@ let moveDz = 0;
 
 class ScreenWorldmap {
 
-    constructor(params) {
-
-        stateManager.clearCurrentCity();
+    constructor(model) {
 
         this.camera = new Camera({
-            x: 100, y: 40, z: 70,
+            x: model ? model.map.camera.x : 100,
+            y: 40,
+            z: model ? model.map.camera.z : 100,
             offsetX: 0.0001,
             offsetY: -40,
             offsetZ: -30,
@@ -76,9 +76,12 @@ class ScreenWorldmap {
     }
 
     newCity(x, y, z, level, name) {
-        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia', leader: stateManager.playerId};
+        const params = stateManager.newCity({
+            level: level, x: x, y: y, z: z, name: name,
+            type: 'mesopotamia', leader: stateManager.playerId
+        });
         this.worldmap.addCity(params);
-        stateManager.newCity(params);
+
         ee.emit('onUpdate', 'worldmap', this.worldmap);
     }
 
@@ -146,6 +149,7 @@ class ScreenWorldmap {
     dismount() {
         this.camera = null;
     }
+
 }
 
 module.exports = ScreenWorldmap;

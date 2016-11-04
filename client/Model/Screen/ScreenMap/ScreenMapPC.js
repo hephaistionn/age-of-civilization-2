@@ -20,9 +20,9 @@ let moveDz = 0;
 
 class ScreenMap {
 
-    constructor(cityId) {
-        stateManager.loadCity(cityId);
-        this.camera = new Camera({x: 25, z: 25});
+    constructor(model) {
+
+        this.camera = new Camera({x: model.camera.x, z: model.camera.z});
         this.light = new Light({shadow: true});
         this.buildingMenu = new BuildingMenu();
         this.monitoringPanel = new MonitoringPanel();

@@ -1,5 +1,5 @@
 const ee = require('./eventEmitter');
-
+const stateManager = require('./stateManager');
 const Screen = require('./../View/Screen/Screen');
 
 class App {
@@ -11,6 +11,7 @@ class App {
         this.modelInstances = {};
         this.viewInstances = {};
         this.params = {};
+        this.currentScreenId = null;
         this.requestAnimation = null;
 
         for(let i = 0; i < arguments.length; i++) {
@@ -45,6 +46,8 @@ class App {
         ee.on('touchStartOnMap', this.touchStartOnMap.bind(this));
         ee.on('touchDragg', this.touchDragg.bind(this));
         ee.on('zoom', this.zoom.bind(this));
+
+        window.addEventListener('beforeunload', this.exit.bind(this));
     }
 
     closeScreen(id) {
@@ -56,6 +59,7 @@ class App {
         delete this.params[id];
         this.model = null;
         this.view = null;
+        this.currentScreenId = null;
     }
 
     openScreen(id, params) {
@@ -74,6 +78,8 @@ class App {
         } else {
             this.createScreen(id, params);
         }
+        this.currentScreenId = id;
+        stateManager.setCurrentScreen(id);
         this._start();
     }
 
@@ -84,7 +90,14 @@ class App {
     }
 
     hideScreen() {
+        stateManager.saveState(this.model, this.currentScreenId);
+        stateManager.saveGame();
         this.view.hide(this.model);
+    }
+
+    exit() {
+        stateManager.saveState(this.model, this.currentScreenId);
+        stateManager.saveGame();
     }
 
     createScreen(id, params) {

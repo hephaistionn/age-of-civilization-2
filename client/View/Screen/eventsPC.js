@@ -82,6 +82,7 @@ module.exports = Screen => {
         //filter: detect if the user is moving the camera.
         if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 50) {
             const point = this.getPointOnMap(e.offsetX, e.offsetY);
+            if(!point) return;
             ee.emit('mouseClick', point.x, point.z, point.model);
         } else {
             ee.emit('mouseUp', e.offsetX, e.offsetY);
@@ -92,6 +93,7 @@ module.exports = Screen => {
     Screen.prototype._mouseMove = function _mouseMove(e) {
         if(this.mousePress) {
             const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);
+            if(!point) return;
             ee.emit('mouseMovePress', point.x, point.z);
             this._mouseMoveOnMapPress(e.offsetX, e.offsetY);
         } else {

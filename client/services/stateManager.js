@@ -9,7 +9,6 @@ class StateManager {
         this.leaders = {};
         this.firstBoot = true;
         this.loadCurrentLeader();
-        window.addEventListener('beforeunload', this.saveGame.bind(this));
     }
 
     updateStone(value) {
@@ -108,14 +107,15 @@ class StateManager {
     loadCity(cityId) {
         this.currentCity = this.getCity(cityId);
         this.currentLeader.currentCityId = cityId;
-    }
-
-    clearCurrentCity() { //play is on worldmap
-        this.currentLeader.currentCityId = null;
+        return this.currentCity;
     }
 
     getCurrentCityId() {
         return this.currentLeader ? this.currentLeader.currentCityId : null;
+    }
+
+    getCurrentLeader() {
+        return this.currentLeader;
     }
 
     getCities() {
@@ -133,6 +133,9 @@ class StateManager {
             level: 1,
             challengers: [],
             cities: [],
+            map: {
+                camera: {x: 100, z: 70}
+            },
             id: id
         };
         this.constructor.save(leader);
@@ -168,7 +171,10 @@ class StateManager {
             x: params.x,
             y: params.y,
             z: params.z,
-            map: {},
+            map: {
+                camera: {x: 25, z: 25}
+            },
+            screen: 0,
             id: id
         };
         this.constructor.save(city);
@@ -216,6 +222,37 @@ class StateManager {
 
     static computeUUID(prefix) {
         return prefix + Math.floor((1 + Math.random()) * 0x1000000000).toString(16).substring(1);
+    }
+
+    setCurrentScreen(screenId) {
+        if(this.currentLeader)
+            this.currentLeader.screen = screenId === 'ScreenWorldmap' ? 0 : 1;
+        this.firstBoot = false;
+    }
+
+    getCurrentScreen() {
+        if(this.currentLeader) {
+            return this.currentLeader.screen;
+        } else {
+            return 0;
+        }
+    }
+
+    saveState(model, screenId) {
+        if(screenId === 'ScreenWorldmap') {
+            const map = this.currentLeader.map;
+            if(model.camera) {
+                map.camera.x = model.camera.x;
+                map.camera.z = model.camera.z;
+            }
+        } else {
+            const map = this.currentCity.map;
+            if(model.camera) {
+                map.camera.x = model.camera.x;
+                map.camera.z = model.camera.z;
+            }
+        }
+
     }
 
 }

@@ -31,14 +31,14 @@ class ScreenWorldmap {
 
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
-        if(stateManager.firstBoot){
+        if(stateManager.firstBoot) {
             this.firstStartPanel = new FirstStartPanel();
-            this.firstStartPanel.onClose(()=>{
+            this.firstStartPanel.onClose(()=> {
                 delete this.firstStartPanel;
                 ee.emit('onUpdate', 'firstStartPanel');
                 this.leaderCreationPanel = new LeaderCreationPanel();
-                ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel );
-                this.leaderCreationPanel.onClose( params => {
+                ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel);
+                this.leaderCreationPanel.onClose(params => {
                     stateManager.newLeader(params);
                     delete this.leaderCreationPanel;
                     ee.emit('onUpdate', 'leaderCreationPanel');
@@ -81,7 +81,7 @@ class ScreenWorldmap {
 
     touchStartOnMap(x, z, model) {
 
-        if (model){
+        if(model) {
             this.entityManagerPanel.open(model);
         }
     }
@@ -97,6 +97,7 @@ class ScreenWorldmap {
     dismount() {
         this.camera = null;
     }
+
 }
 
 module.exports = ScreenWorldmap;
