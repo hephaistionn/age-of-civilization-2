@@ -9,6 +9,7 @@ class EntityPeon extends Entity {
         this.speed = 0.001;
         this.path = this.computePath(params);
         this.cycle = 0;
+        this.timer = 0;
         if(this.path) {
             this.cycle = this.getPathLength() / this.speed;
         }

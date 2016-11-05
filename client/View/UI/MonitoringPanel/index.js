@@ -31,7 +31,7 @@ module.exports = class MonitoringPanelPC {
             this.nodePreviewContainer.appendChild(node);
         }
 
-        const nodePop = this.createItem('population', stateManager.currentCity.population);
+        const nodePop = this.createItem('population', stateManager.currentCity.states.population);
         this.nodePreviewItems.push(nodePop);
         this.nodePreviewContainer.appendChild(nodePop);
 
@@ -91,7 +91,7 @@ module.exports = class MonitoringPanelPC {
         }
 
         const nodePop = this.nodePreviewItems[model.previewes.length];
-        nodePop.lastChild.textContent = stateManager.currentCity.population;
+        nodePop.lastChild.textContent = stateManager.currentCity.states.population;
 
     }
 

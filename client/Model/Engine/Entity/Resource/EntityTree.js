@@ -5,6 +5,7 @@ class EntityTree extends Entity {
     constructor(params) {
         super(params);
         this.wood = 100;
+        this.exp = false;
     }
 
 }

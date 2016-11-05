@@ -24,8 +24,7 @@ class Map {
         }
 
         this.initGround(model);
-
-        this.updateStateEntities('EntityTree', model);
+        this.updateState(model)
     }
 
     updateState(model) {

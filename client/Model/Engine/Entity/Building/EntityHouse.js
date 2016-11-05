@@ -5,7 +5,7 @@ class EntityHouse extends Entity {
 
     constructor(params) {
         super(params);
-        this.population = 4;
+        this.population = params.population || 4;
     }
 
     onConstruct() {

@@ -21,12 +21,14 @@ class Map {
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.entityGroups = {};
         this.codeToEntities = {};
+        this.isResource = {};
         this.entityDynamicList = [];
 
         for(let id in ENTITIES) {
             this.entityGroups[id] = [];
-            if(ENTITIES[id].code){
+            if(ENTITIES[id].code) {
                 this.codeToEntities[ENTITIES[id].code] = id;
+                this.isResource[id] = true;
             }
         }
 
@@ -37,7 +39,6 @@ class Map {
     }
 
     newEntity(params) {
-
         const entityId = params.entityId;
         const entity = new ENTITIES[entityId](params);
         this.entityGroups[entityId].push(entity);
@@ -163,18 +164,42 @@ class Map {
             params.x = i % this.nbTileX;
             params.y = this.tilesHeight[i] / 255;
             params.a = Math.random() * Math.PI;
-            if(this.grid.isWalkableAt(params.x, params.z)){
+            if(this.grid.isWalkableAt(params.x, params.z)) {
                 this.newEntity(params);
             }
         }
     }
 
-    initEntitiesCity(resources) {
-
+    initEntitiesCity(cityModel) {
+        for(let group in cityModel) {
+            const list = cityModel[group];
+            for(let i = 0; i < list.length; i++) {
+                const params = list[i];
+                params.entityId = group;
+                this.newEntity(params);
+            }
+        }
     }
 
     syncState(model) {
-        //uniquement les entity city
+        for(let group in this.entityGroups) {
+            model[group] = [];
+            const list = this.entityGroups[group];
+            if(group === 'EntityRoad') continue;
+
+            for(let i = 0; i < list.length; i++) {
+                const entity = list[i];
+                const entityState = {};
+                if(this.isResource[group] && !entity.exp) {
+                    continue;
+                }
+                model[group][i] = entityState;
+                for(let props in entity) {
+                    entityState[props] = entity[props];
+                }
+            }
+        }
+
     }
 }
 

@@ -17,9 +17,9 @@ module.exports = StateManager => {
                 workers: 0
             },
             resources: {
-                wood: 20,
-                stone: 0,
-                meat: 10
+                wood: 200,
+                stone: 100,
+                meat: 100
             },
             trade: {
                 wood: CLOSE,
@@ -80,11 +80,11 @@ module.exports = StateManager => {
     };
 
     StateManager.prototype.updatePopulation = function updatePopulation(value) {
-        this.currentCity.population += value;
+        this.currentCity.states.population += value;
     };
 
     StateManager.prototype.updateWorkers = function updateWorkers(value) {
-        this.currentCity.workers += value;
+        this.currentCity.states.workers += value;
     };
 
     StateManager.prototype.updateTrade = function updateTrade(id) {

@@ -12,7 +12,6 @@ class Entity {
         this.y = 0;
         this.z = 0;
         this.a = 0;
-        this.timer = 0;
         this.move(params.x || 0, params.y || 0, params.z || 0, params.a || 0);
     }
 
@@ -136,12 +135,20 @@ Entity.construction = function construction() {
 };
 
 Entity.available = function available() {
+    //Check if a Entity group is available in function to some criterias
     const require = this.require;
-
+    const isObject = 'object';
+    const cityState = stateManager.currentCity;
     for(var stateId in require) {
-        const valueRequired = require[stateId];
-        const value = stateManager[stateId];
-        if(valueRequired > value) {
+        if(typeof require[stateId] === isObject) {
+            const requireChil = require[stateId];
+            const valueChil = cityState[stateId];
+            for(var stateIdChild in requireChil) {
+                if(requireChil[stateIdChild] > valueChil[stateIdChild]) {
+                    return false;
+                }
+            }
+        } else if(require[stateId] > cityState[stateId]) {
             return false;
         }
     }
