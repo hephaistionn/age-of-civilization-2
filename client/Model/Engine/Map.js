@@ -3,7 +3,7 @@ const ENTITIES = require('./Entity/listEntity');
 
 class Map {
 
-    constructor(config) {
+    constructor(config, model) {
 
         this.nbPointX = config.nbPointX;
         this.nbPointZ = config.nbPointZ;

@@ -1,5 +1,4 @@
 const ee = require('./eventEmitter');
-const stateManager = require('./stateManager');
 const Screen = require('./../View/Screen/Screen');
 
 class App {
@@ -79,7 +78,6 @@ class App {
             this.createScreen(id, params);
         }
         this.currentScreenId = id;
-        stateManager.setCurrentScreen(id);
         this._start();
     }
 
@@ -90,14 +88,20 @@ class App {
     }
 
     hideScreen() {
-        stateManager.saveState(this.model, this.currentScreenId);
-        stateManager.saveGame();
+
         this.view.hide(this.model);
     }
 
+    getCurrentScreen(){
+        return this.model;
+    }
+
+    getCurrentScreenId(){
+        return this.currentScreenId;
+    }
+
     exit() {
-        stateManager.saveState(this.model, this.currentScreenId);
-        stateManager.saveGame();
+        ee.emit('exit');
     }
 
     createScreen(id, params) {

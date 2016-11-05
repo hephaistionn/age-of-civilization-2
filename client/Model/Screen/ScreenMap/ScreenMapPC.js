@@ -53,7 +53,7 @@ class ScreenMap {
 
         const pixelMap = new PixelMap();
         pixelMap.compute('map/map.png', (dataMap)=> {
-            this.map = new Map(dataMap);
+            this.map = new Map(dataMap, model);
             this.positioner = new Positioner(dataMap);
             this.roadPositioner = new RoadPositioner(dataMap);
             this.camera.setMapBorder(dataMap);
@@ -218,6 +218,11 @@ class ScreenMap {
     removeEntity(entity) {
         this.map.removeEntity(entity);
         ee.emit('onUpdate', 'map', this.map);
+    }
+
+    syncState(model) {
+        model.camera.x = this.camera.x;
+        model.camera.z = this.camera.z;
     }
 
 }

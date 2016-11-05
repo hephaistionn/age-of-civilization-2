@@ -20,9 +20,9 @@ class ScreenWorldmap {
     constructor(model) {
 
         this.camera = new Camera({
-            x: model ? model.map.camera.x : 100,
+            x: model.camera.x,
             y: 40,
-            z: model ? model.map.camera.z : 100,
+            z: model.camera.z,
             offsetX: 0.0001,
             offsetY: -40,
             offsetZ: -30,
@@ -38,7 +38,7 @@ class ScreenWorldmap {
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
 
-        if(stateManager.firstBoot) {
+        if(!stateManager.getCurrentLeader()) {
             this.firstStartPanel = new FirstStartPanel();
             this.firstStartPanel.onClose(()=> {
                 delete this.firstStartPanel;
@@ -47,6 +47,7 @@ class ScreenWorldmap {
                 ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel);
                 this.leaderCreationPanel.onClose(params => {
                     stateManager.newLeader(params);
+                    //clean map => new worldmap;
                     delete this.leaderCreationPanel;
                     ee.emit('onUpdate', 'leaderCreationPanel');
                 });
@@ -60,10 +61,11 @@ class ScreenWorldmap {
             this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
             this.cityPositioner = new CityPositioner(dataMap);
 
-            const cities = stateManager.getCities();
-            cities.map(city => {
+            model.cities.map(cityId => {
+                const city = stateManager.getCity(cityId);
                 this.worldmap.addCity(city);
             });
+
             ee.emit('onUpdate', 'light', this.light);
             ee.emit('onUpdate', 'worldmap', this.worldmap);
             ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
@@ -75,10 +77,10 @@ class ScreenWorldmap {
         });
     }
 
-    newCity(x, y, z, level, name) {
+    newCity(x, y, z, level, name, leaderId) {
         const params = stateManager.newCity({
             level: level, x: x, y: y, z: z, name: name,
-            type: 'mesopotamia', leader: stateManager.playerId
+            type: 'mesopotamia', leader: leaderId
         });
         this.worldmap.addCity(params);
 
@@ -129,7 +131,7 @@ class ScreenWorldmap {
     mouseClick(x, z, model) {
         if(this.cityPositioner.enabled && this.cityPositioner.buildable) {
             const y = this.worldmap.getHeightTile(x, z);
-            this.newCity(x, y, z, 1, 'myCity');
+            this.newCity(x, y, z, 1, 'myCity', stateManager.getCurrentLeader().id);
 
             this.worldmapMenu.switchConstrucMode();
             ee.emit('onUpdate', 'worldmap', this.worldmap);
@@ -148,6 +150,12 @@ class ScreenWorldmap {
 
     dismount() {
         this.camera = null;
+    }
+
+
+    syncState(model) {
+        model.camera.x = this.camera.x;
+        model.camera.z = this.camera.z;
     }
 
 }

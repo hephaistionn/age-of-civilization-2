@@ -30,7 +30,7 @@ module.exports = class MonitoringPanel {
 
     goWorldmap() {
         this.close();
-        const model = stateManager.getCurrentLeader();
+        const model = stateManager.loadCurrentWorldmap();
         ee.emit('openScreen', 'ScreenWorldmap', model);
     }
 

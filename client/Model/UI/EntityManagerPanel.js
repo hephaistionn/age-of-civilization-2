@@ -16,7 +16,7 @@ module.exports = class EntityManagerPanel {
         if(!entity.constructor.selectable) return;
         this.description = entity.constructor.description;
         this.opened = true;
-        this.yourCity = entity.leader === stateManager.playerId;
+        this.yourCity = entity.leader === stateManager.getCurrentLeader().id;
         this.currentEntity = entity;
         ee.emit('onUpdate', 'entityManagerPanel', this);
     }
@@ -31,7 +31,7 @@ module.exports = class EntityManagerPanel {
 
     visit() {
         const cityId = this.currentEntity.id;
-        const model = stateManager.loadCity(cityId).map;
+        const model = stateManager.loadCurrentCity(cityId);
         this.close();
         ee.emit('openScreen', 'ScreenMap', model);
     }

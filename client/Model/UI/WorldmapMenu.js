@@ -17,8 +17,7 @@ module.exports = class WorldmapMenu {
     }
 
     back() {
-        const cityId = stateManager.getCurrentCityId();
-        const model = stateManager.loadCity(cityId).map;
+        const model = stateManager.loadCurrentCity();
         ee.emit('openScreen', 'ScreenMap', model);
     }
 
