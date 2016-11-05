@@ -32,7 +32,7 @@ class ScreenMap {
         this.monitoringPanel = new MonitoringPanel();
         this.entityManagerPanel = new EntityManagerPanel();
 
-        this.map = new Map(mapProperties, model);
+        this.map = new Map(mapProperties, model.map);
 
         this.positioner = new Positioner(mapProperties);
 
@@ -217,6 +217,7 @@ class ScreenMap {
     syncState(model) {
         model.camera.x = this.camera.x;
         model.camera.z = this.camera.z;
+        this.map.syncState(model.map);
     }
 
 }

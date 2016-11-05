@@ -3,7 +3,7 @@ const ENTITIES = require('./Entity/listEntity');
 
 class Map {
 
-    constructor(config, model) {
+    constructor(config, cityModel) {
 
         this.nbPointX = config.nbPointX;
         this.nbPointZ = config.nbPointZ;
@@ -20,13 +20,18 @@ class Map {
         this.updatedEntity = [];
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.entityGroups = {};
+        this.codeToEntities = {};
         this.entityDynamicList = [];
 
         for(let id in ENTITIES) {
             this.entityGroups[id] = [];
+            if(ENTITIES[id].code){
+                this.codeToEntities[ENTITIES[id].code] = id;
+            }
         }
 
-        this.initEntitiesResource(config.tilesResource, 'EntityTree');
+        this.initEntitiesCity(cityModel);
+        this.initEntitiesResource(config.tilesResource);
         this.initGridByHeight(this.tilesTilt);
         this.initRoad();
     }
@@ -68,20 +73,6 @@ class Map {
         this.updatedEntity.push(indexOfEntity);
         this.updatedEntity.push(entityId);
 
-    }
-
-    initEntitiesResource(resources, id) {
-        let length = resources.length;
-        const params = {x: 0, y: 0, z: 0, a: 0, entityId: id};
-        for(let i = 0; i < length; i++) {
-            let value = resources[i];
-            if(value === 0) continue;
-            params.z = Math.floor(i / this.nbTileX);
-            params.x = i % this.nbTileX;
-            params.y = this.tilesHeight[i] / 255;
-            params.a = Math.random() * Math.PI;
-            this.newEntity(params);
-        }
     }
 
     initRoad() {
@@ -159,6 +150,31 @@ class Map {
 
     dismount() {
 
+    }
+
+    initEntitiesResource(resources) {
+        let length = resources.length;
+        const params = {x: 0, y: 0, z: 0, a: 0};
+        for(let i = 0; i < length; i++) {
+            let value = resources[i];
+            if(value === 0) continue;
+            params.entityId = this.codeToEntities[value];
+            params.z = Math.floor(i / this.nbTileX);
+            params.x = i % this.nbTileX;
+            params.y = this.tilesHeight[i] / 255;
+            params.a = Math.random() * Math.PI;
+            if(this.grid.isWalkableAt(params.x, params.z)){
+                this.newEntity(params);
+            }
+        }
+    }
+
+    initEntitiesCity(resources) {
+
+    }
+
+    syncState(model) {
+        //uniquement les entity city
     }
 }
 
