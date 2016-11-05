@@ -13,23 +13,30 @@ const RoadPositioner = require('../../Engine/RoadPositioner');
 const Road = require('../../Engine/Entity/Road/EntityRoad');
 const Entity = require('../../Engine/Entity/Entity');
 
-const PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
 let moveDx = 0;
 let moveDz = 0;
 
 class ScreenMap {
 
-    constructor(model) {
+    constructor(model, mapProperties) {
 
         this.camera = new Camera({x: model.camera.x, z: model.camera.z});
+        this.camera.setMapBorder(mapProperties);
+
         this.light = new Light({shadow: true});
+        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
+        this.light.scaleOffset(-this.camera.offsetY);
+
         this.buildingMenu = new BuildingMenu();
         this.monitoringPanel = new MonitoringPanel();
         this.entityManagerPanel = new EntityManagerPanel();
 
-        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        this.light.scaleOffset(-this.camera.offsetY);
+        this.map = new Map(mapProperties, model);
+
+        this.positioner = new Positioner(mapProperties);
+
+        this.roadPositioner = new RoadPositioner(mapProperties);
 
         this.buildingMenu.onClickBuilding(entityId => {
             if(entityId === 'Destroy') {
@@ -49,19 +56,6 @@ class ScreenMap {
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
             ee.emit('onUpdate', 'positioner', this.positioner);
 
-        });
-
-        const pixelMap = new PixelMap();
-        pixelMap.compute('map/map.png', (dataMap)=> {
-            this.map = new Map(dataMap, model);
-            this.positioner = new Positioner(dataMap);
-            this.roadPositioner = new RoadPositioner(dataMap);
-            this.camera.setMapBorder(dataMap);
-            this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            ee.emit('onUpdate', 'map', this.map);
-            ee.emit('onUpdate', 'positioner', this.positioner);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-            ee.emit('onUpdate', 'light', this.light);
         });
 
     }

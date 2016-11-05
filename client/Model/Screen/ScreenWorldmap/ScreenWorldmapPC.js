@@ -4,7 +4,6 @@ const stateManager = require('../../../services/stateManager');
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
-const PixelMap = require('../../../services/PixelMap');
 const CityPositioner = require('../../Engine/CityPositioner');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
@@ -17,7 +16,7 @@ let moveDz = 0;
 
 class ScreenWorldmap {
 
-    constructor(model) {
+    constructor(model, mapProperties) {
 
         this.camera = new Camera({
             x: model.camera.x,
@@ -29,14 +28,30 @@ class ScreenWorldmap {
             zoomMax: 70,
             zoomMin: 20
         });
+        this.camera.setMapBorder(mapProperties);
+
         this.light = new Light({
             offsetX: -10,
             offsetY: -40,
             offsetZ: -10
         });
+        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
 
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
+
+        this.cityPositioner = new CityPositioner(mapProperties);
+
+        this.worldmap = new Worldmap(mapProperties);
+        model.cities.map(cityId => {
+            const city = stateManager.getCity(cityId);
+            this.worldmap.addCity(city);
+        });
+
+        this.worldmapMenu.onConstructMode((enabled) => {
+            enabled ? this.cityPositioner.enable() : this.cityPositioner.disable();
+            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+        });
 
         if(!stateManager.getCurrentLeader()) {
             this.firstStartPanel = new FirstStartPanel();
@@ -54,27 +69,6 @@ class ScreenWorldmap {
             });
         }
 
-        const pixelMap = new PixelMap();
-        pixelMap.compute('map/worldmap3.png', (dataMap)=> {
-            this.worldmap = new Worldmap(dataMap);
-            this.camera.setMapBorder(dataMap);
-            this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            this.cityPositioner = new CityPositioner(dataMap);
-
-            model.cities.map(cityId => {
-                const city = stateManager.getCity(cityId);
-                this.worldmap.addCity(city);
-            });
-
-            ee.emit('onUpdate', 'light', this.light);
-            ee.emit('onUpdate', 'worldmap', this.worldmap);
-            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
-        });
-
-        this.worldmapMenu.onConstructMode((enabled) => {
-            enabled ? this.cityPositioner.enable() : this.cityPositioner.disable();
-            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
-        });
     }
 
     newCity(x, y, z, level, name, leaderId) {

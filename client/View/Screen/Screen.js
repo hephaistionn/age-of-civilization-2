@@ -115,7 +115,7 @@ class Screen {
         this.render.update();
     }
 
-    getPointOnMap(screenX, screenY) {
+    getPointOnMap(screenX, screenY, recursive) {
         if(!this.map && !this.worldmap)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
@@ -123,10 +123,10 @@ class Screen {
         let intersects;
         let tileSize;
         if(this.map) {
-            intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+            intersects = this.raycaster.intersectObjects(this.map.chunksList, recursive);
             tileSize = this.map.tileSize;
         } else {
-            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, true);
+            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, recursive);
             tileSize = this.worldmap.tileSize;
         }
         if(intersects.length) {
@@ -149,7 +149,7 @@ class Screen {
         }
     }
 
-    getPointOnMapCameraRelative(screenX, screenY) {
+    getPointOnMapCameraRelative(screenX, screenY, recursive) {
         if(!this.map && !this.worldmap)return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
@@ -158,11 +158,11 @@ class Screen {
         let intersects;
         let tileSize;
         if(this.map) {
-            intersects = this.raycaster.intersectObjects(this.map.chunksList, true);
+            intersects = this.raycaster.intersectObjects(this.map.chunksList, recursive);
             tileSize = this.map.tileSize;
         }
         else {
-            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, true);
+            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, recursive);
             tileSize = this.worldmap.tileSize;
         }
         if(intersects.length) {

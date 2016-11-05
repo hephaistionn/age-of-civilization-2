@@ -44,11 +44,11 @@ module.exports = Screen => {
     Screen.prototype._touchStart = function _touchStart(e) {
         e.preventDefault();
         const touch = e.changedTouches[0];
-        let point = this.getPointOnMapCameraRelative(touch.clientX, touch.clientY);
+        let point = this.getPointOnMapCameraRelative(touch.clientX, touch.clientY, false);
         if(!point) return;
         ee.emit('touchStart', point.x, point.z);
         this.selected = this.touchSelected(touch.clientX, touch.clientY);
-        point = this.getPointOnMap(touch.clientX, touch.clientY);
+        point = this.getPointOnMap(touch.clientX, touch.clientY, false);
         ee.emit('touchStartOnMap', point.x, point.z, point.model);
     };
     Screen.prototype._touchEnd = function _touchEnd(e) {
@@ -89,13 +89,13 @@ module.exports = Screen => {
 
         if(this.startSpace !== 0) return;
 
-        let point = this.getPointOnMap(touch1.clientX, touch1.clientY);
+        let point = this.getPointOnMap(touch1.clientX, touch1.clientY, false);
         if(!point) return;
         if(this.selected) {
             ee.emit('touchDragg', point.x, point.z, touch1.clientX, touch1.clientY);
         } else {
-            ee.emit('touchMoveOnMap', point.x, point.z);
-            point = this.getPointOnMapCameraRelative(touch1.clientX, touch1.clientY);
+            ee.emit('touchMoveOnMap', point.x, point.z, false);
+            point = this.getPointOnMapCameraRelative(touch1.clientX, touch1.clientY, false);
             ee.emit('touchMove', point.x, point.z);
         }
     };

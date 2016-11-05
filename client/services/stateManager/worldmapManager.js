@@ -4,6 +4,7 @@ module.exports = StateManager => {
         const id = this.computeUUID('worldmap_');
         const worldmap = {
             id: id,
+            mapId: 'worldmap3',
             challengers: [],
             cities: [],
             camera: {x: 100, z: 70}

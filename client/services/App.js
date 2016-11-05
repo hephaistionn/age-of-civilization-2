@@ -1,5 +1,6 @@
 const ee = require('./eventEmitter');
 const Screen = require('./../View/Screen/Screen');
+const PixelMap = require('./PixelMap');
 
 class App {
 
@@ -12,6 +13,7 @@ class App {
         this.params = {};
         this.currentScreenId = null;
         this.requestAnimation = null;
+        this.pixelMap = new PixelMap();
 
         for(let i = 0; i < arguments.length; i++) {
             this.models[arguments[i].name] = arguments[i];
@@ -70,15 +72,15 @@ class App {
         if(this.modelInstances[id]) {
             if(!params || this.params[id] === params) {
                 this.displayScreen(id);
+                this._start();
             } else {
                 this.closeScreen(id);
-                this.createScreen(id, params);
+                this.createScreen(id, params, this._start.bind(this));
             }
         } else {
-            this.createScreen(id, params);
+            this.createScreen(id, params, this._start.bind(this));
         }
         this.currentScreenId = id;
-        this._start();
     }
 
     displayScreen(id) {
@@ -104,13 +106,17 @@ class App {
         ee.emit('exit');
     }
 
-    createScreen(id, params) {
-        this.modelInstances[id] = new this.models[id](params);
-        this.params[id] = params;
-        this.viewInstances[id] = new Screen();
-        this.model = this.modelInstances[id];
-        this.view = this.viewInstances[id];
-        this.view.mount(this.model);
+    createScreen(id, params, cb) {
+        const mapPath = 'map/'+params.mapId+'.png';
+        this.pixelMap.compute(mapPath, (dataMap)=> {
+            this.modelInstances[id] = new this.models[id](params, dataMap);
+            this.params[id] = params;
+            this.viewInstances[id] = new Screen();
+            this.model = this.modelInstances[id];
+            this.view = this.viewInstances[id];
+            this.view.mount(this.model);
+            cb();
+        });
     }
 
     _start() {

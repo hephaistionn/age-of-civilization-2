@@ -81,7 +81,7 @@ module.exports = Screen => {
         this.mousePress = false;
         //filter: detect if the user is moving the camera.
         if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 50) {
-            const point = this.getPointOnMap(e.offsetX, e.offsetY);
+            const point = this.getPointOnMap(e.offsetX, e.offsetY, true);
             if(!point) return;
             ee.emit('mouseClick', point.x, point.z, point.model);
         } else {
@@ -92,7 +92,7 @@ module.exports = Screen => {
 
     Screen.prototype._mouseMove = function _mouseMove(e) {
         if(this.mousePress) {
-            const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY);
+            const point = this.getPointOnMapCameraRelative(e.offsetX, e.offsetY, false);
             if(!point) return;
             ee.emit('mouseMovePress', point.x, point.z);
             this._mouseMoveOnMapPress(e.offsetX, e.offsetY);
@@ -153,19 +153,19 @@ module.exports = Screen => {
     };
 
     Screen.prototype._mouseMoveOnMap = function _mouseMoveOnMap(screenX, screenY) {
-        const point = this.getPointOnMap(screenX, screenY);
+        const point = this.getPointOnMap(screenX, screenY, false);
         if(!point) return;
         ee.emit('mouseMoveOnMap', point.x, point.z);
     };
 
     Screen.prototype._mouseMoveOnMapPress = function _mouseMoveOnMapPress(screenX, screenY) {
-        const point = this.getPointOnMap(screenX, screenY);
+        const point = this.getPointOnMap(screenX, screenY, false);
         if(!point) return;
         ee.emit('mouseMoveOnMapPress', point.x, point.z);
     };
 
     Screen.prototype._mouseCheckCollision = function _mouseCheckCollision(screenX, screenY) {
-        const point = this.getPointOnMap(screenX, screenY);
+        const point = this.getPointOnMap(screenX, screenY, true);
         if(!point) return;
         ee.emit('mouseDownOnMap', point.x, point.z);
     };
