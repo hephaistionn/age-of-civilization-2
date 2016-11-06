@@ -35,11 +35,11 @@ class Map {
         this.initEntitiesCity(cityModel);
         this.initEntitiesResource(config.tilesResource);
         this.initGridByHeight(this.tilesTilt);
-        this.initRoad();
     }
 
     newEntity(params) {
         const entityId = params.entityId;
+        params.map = this;//use by road;
         const entity = new ENTITIES[entityId](params);
         this.entityGroups[entityId].push(entity);
         if(this.entityGroupUpdated.indexOf(entityId) === -1)
@@ -74,14 +74,6 @@ class Map {
         this.updatedEntity.push(indexOfEntity);
         this.updatedEntity.push(entityId);
 
-    }
-
-    initRoad() {
-        const params = {
-            map: this,
-            entityId: 'EntityRoad'
-        };
-        this.newEntity(params);
     }
 
     setWalkableTile(entity, walkable) {
@@ -175,6 +167,7 @@ class Map {
             const list = cityModel[group];
             for(let i = 0; i < list.length; i++) {
                 const params = list[i];
+                params.map = this; //use by road;
                 params.entityId = group;
                 this.newEntity(params);
             }
@@ -182,11 +175,10 @@ class Map {
     }
 
     syncState(model) {
+        const hiddenProps = '_';
         for(let group in this.entityGroups) {
             model[group] = [];
             const list = this.entityGroups[group];
-            if(group === 'EntityRoad') continue;
-
             for(let i = 0; i < list.length; i++) {
                 const entity = list[i];
                 const entityState = {};
@@ -195,11 +187,15 @@ class Map {
                 }
                 model[group][i] = entityState;
                 for(let props in entity) {
-                    entityState[props] = entity[props];
+                    if(props[0]===hiddenProps)continue;
+                    if(entity[props] instanceof Uint16Array || entity[props] instanceof Uint8Array ){
+                        entityState[props] = Array.from(entity[props])
+                    }else{
+                        entityState[props] = entity[props];
+                    }
                 }
             }
         }
-
     }
 }
 

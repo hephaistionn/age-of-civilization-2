@@ -3,17 +3,30 @@ const stateManager = require('../../../../services/stateManager');
 class EntityRoad {
 
     constructor(params) {
-        this.map = params.map;
-        this.grid = this.map.grid;
+        this._map = params.map;
+        this._grid = this._map.grid;
+        this.tiles = null;
+        this.walkable = null;
+        this.length = 0;
+        this.updateState(params);
     }
 
-    updateState(params) {
+    updateState(params) {//on peut ajouter ou supprimer des tiles.
         if(!params) return;
-        const tiles = params.tiles;
-        const walkable = params.walkable;
-        const l = params.length * 2;
+        if(params.tiles instanceof Uint16Array){
+            this.tiles = new Uint16Array(params.tiles);
+            this.walkable = new Uint8Array(params.walkable);
+        }else{
+            this.tiles = new Uint16Array(params.tiles);
+            this.walkable = new Uint8Array(params.walkable);
+        }
+        if(params.length)
+            this.length = params.length * 2;
+        const tiles = this.tiles;
+        const walkable = this.walkable;
+        const l = this.length * 2;
         for(let i = 0; i < l; i += 2) {
-            this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkable[i / 2]);
+            this._grid.setWalkableAt(tiles[i], tiles[i + 1], walkable[i / 2]);
         }
     }
 }

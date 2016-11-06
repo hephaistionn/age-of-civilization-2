@@ -12,13 +12,13 @@ class EntityRoad {
 
         this.tileByChunk = config.tileByChunk;
         this.tileSize = config.tileSize;
-        this.nbTileX = this.model.map.nbTileX;
-        this.nbTileZ = this.model.map.nbTileZ;
+        this.nbTileX = this.model._map.nbTileX;
+        this.nbTileZ = this.model._map.nbTileZ;
         this.tileHeight = config.tileHeight;
-        this.nbPointX = this.model.map.nbPointX;
-        this.nbPointZ = this.model.map.nbPointZ;
-        this.pointsHeights = this.model.map.pointsHeights;
-        this.pointsNormal = this.model.map.pointsNormal;
+        this.nbPointX = this.model._map.nbTileX+1;
+        this.nbPointZ = this.model._map.nbTileZ+1;
+        this.pointsHeights = this.model._map.pointsHeights;
+        this.pointsNormal = this.model._map.pointsNormal;
         this.MAX_TILES = 75;
         this.VERTEX_BY_TILE = 6;
         this.MAX_VERTEX = this.VERTEX_BY_TILE * this.MAX_TILES;
@@ -88,7 +88,7 @@ class EntityRoad {
 
     updateState() {
         const chunks = this.chunks;
-        const grid = this.model.map.grid;
+        const grid = this.model._map.grid;
         const nodes = grid.nodes;
         const sizeNode = grid.sizeNode;
         const tileSize = this.tileSize;

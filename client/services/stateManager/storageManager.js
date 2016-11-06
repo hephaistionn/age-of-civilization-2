@@ -17,7 +17,6 @@ module.exports = StateManager => {
         if(modelString === null) {
             return null;
         } else if(isObject.test(modelString)) {
-            const modelString = localStorage.getItem(id);
             return JSON.parse(modelString);
         } else {
             return modelString;

@@ -159,7 +159,10 @@ class ScreenMap {
             const params = this.roadPositioner.getNewRoad();
             if(params) {
                 const built = Road.construction(params);
-                if(!built) return; //not enough resources
+                if(!built) return; //not enough resource
+                if(this.map.entityGroups['EntityRoad'].length===0){
+                    this.map.newEntity({entityId: 'EntityRoad'});
+                }
                 this.map.updateEntity('EntityRoad', null, params);
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
@@ -177,6 +180,9 @@ class ScreenMap {
         if(params) {
             const built = Road.construction(params);
             if(!built) return; //not enough resources
+            if(this.map.entityGroups['EntityRoad'].length===0){
+                this.map.newEntity({entityId: 'EntityRoad'});
+            }
             this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);

@@ -15,6 +15,7 @@ module.exports = StateManager => {
             this.save(worldmap);
             this.worldmaps[id] = worldmap;
             this.currentLeader.worldmapId = id;
+            this.currentWorldmap = worldmap;
         }
 
         return worldmap;
