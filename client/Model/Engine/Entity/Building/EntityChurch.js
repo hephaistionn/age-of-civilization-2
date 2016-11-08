@@ -7,7 +7,7 @@ class EntityChurch extends Entity {
     constructor(params) {
         super(params);
         this.power = params.power || 0;
-        this.cycle = params.cycle || 2000;
+        this._cycle = params._cycle || 2000;
         this.timer = params.timer || 0;
         this.workers = params.workers || 0;
         this.workplaces = params.workplaces || 2;
@@ -32,7 +32,8 @@ class EntityChurch extends Entity {
     }
 
     onConstruct() {
-        this.workers = Math.min(stateManager.states.population - stateManager.states.workers, this.workplaces);
+        const states = stateManager.getCurrentCity().states;
+        this.workers = Math.min(states.population - states.workers, this.workplaces);
         stateManager.updateWorkers(this.workers);
     }
 }
@@ -41,7 +42,7 @@ EntityChurch.selectable = true;
 EntityChurch.description = 'This building increase the prosperity of your city';
 EntityChurch.tile_x = 2;
 EntityChurch.tile_z = 1;
-EntityChurch.cost = {wood: 10, stone: 100};
+EntityChurch.cost = {wood: 5, stone: 5};
 EntityChurch.require = {states:{population: 4}};
 EntityChurch.walkable = false;
 module.exports = EntityChurch;

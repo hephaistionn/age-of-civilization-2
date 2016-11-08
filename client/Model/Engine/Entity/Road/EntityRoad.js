@@ -5,29 +5,31 @@ class EntityRoad {
     constructor(params) {
         this._map = params.map;
         this._grid = this._map.grid;
-        this.tiles = null;
         this.walkable = null;
-        this.length = 0;
-        this.updateState(params);
+        this.index = null;
+        if(params.index){ //used when a map is reloaded
+            const l = params.index.length;
+            this.index = new Uint16Array(params.index);
+            this.walkable = new Uint8Array(params.walkable);
+            for(let i = 0; i < l; i++) {
+                this._grid.setWalkableAtByIndex(this.index[i], this.walkable[i]);
+            }
+        }else{
+            this.updateState(params);
+        }
     }
 
     updateState(params) {//on peut ajouter ou supprimer des tiles.
         if(!params) return;
-        if(params.tiles instanceof Uint16Array){
-            this.tiles = new Uint16Array(params.tiles);
-            this.walkable = new Uint8Array(params.walkable);
-        }else{
-            this.tiles = new Uint16Array(params.tiles);
-            this.walkable = new Uint8Array(params.walkable);
-        }
-        if(params.length)
-            this.length = params.length * 2;
-        const tiles = this.tiles;
-        const walkable = this.walkable;
-        const l = this.length * 2;
+        const tiles = params.tiles;
+        const walkable = params.walkable;
+        const l = params.length * 2;
         for(let i = 0; i < l; i += 2) {
             this._grid.setWalkableAt(tiles[i], tiles[i + 1], walkable[i / 2]);
         }
+        const nodes = this._grid.getSpecialNodes();
+        this.walkable = new Uint8Array(nodes.walkable);
+        this.index = new Uint16Array(nodes.index);
     }
 }
 

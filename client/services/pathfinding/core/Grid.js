@@ -87,6 +87,9 @@ Grid.prototype.setWalkableAt = function setWalkableAt(x, y, walkable) {
     this.nodes[(y * this.width + x) * this.sizeNode + this.indexWalkable] = walkable;
 };
 
+Grid.prototype.setWalkableAtByIndex = function setWalkableAtByIndex(index, walkable) {
+    this.nodes[index + this.indexWalkable] = walkable;
+};
 
 /**
  * Get the neighbors of the given node.
@@ -234,6 +237,28 @@ Grid.prototype.clear = function clear() {
         nodes[i + indexParent] = 0;
     }
 
+};
+
+
+Grid.prototype.getSpecialNodes = function getSpecialNodes(){
+    let i;
+    const nodes = this.nodes;
+    const size = nodes.length;
+    const sizeNode = this.sizeNode;
+    const indexWalkable = this.indexWalkable;
+    const walkable = [];
+    const index = [];
+    for(i = 0; i < size; i += sizeNode) {
+        if(nodes[i + indexWalkable]>1){
+            walkable.push(nodes[i + indexWalkable]);
+            index.push(i);
+        }
+    }
+
+    return {
+        walkable: walkable,
+        index: index
+    }
 };
 
 module.exports = Grid;

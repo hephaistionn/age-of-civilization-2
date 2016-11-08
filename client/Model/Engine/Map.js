@@ -76,22 +76,24 @@ class Map {
 
     }
 
-    setWalkableTile(entity, walkable) {
+    setWalkableTile(entity, walkableStatus) {
         const tiles = entity.getTiles();
-        for(let i = 0; i < tiles.length; i += 2) {
-            this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkable);
+        if(this.entityGroups.EntityRoad.length){
+            const walkable = new Uint8Array(tiles.length/2);
+            for(let i = 0; i < walkable.length; i++) {
+                walkable[i] = walkableStatus;
+            }
+            this.updateEntity('EntityRoad',null, {tiles:tiles,walkable:walkable,length:walkable.length});
+        }else{
+            for(let i = 0; i < tiles.length; i += 2) {
+                this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkableStatus);
+            }
         }
     }
 
     clearTile(x, z, model) {
         if(model) {
             this.removeEntity(model)
-        } else {
-            this.grid.setWalkableAt(Math.floor(x), Math.floor(z), 1);
-            if(this.updatedEntity.indexOf('EntityRoad') === -1) {
-                this.updatedEntity.push(0);
-                this.updatedEntity.push('EntityRoad');
-            }
         }
     }
 

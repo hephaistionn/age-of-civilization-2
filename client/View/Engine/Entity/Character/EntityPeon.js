@@ -25,7 +25,8 @@ class EntityPeon {
         this.absolute = true; //parent is word not chunk
         this.animations = animations;
         this.shape = new Shape(model.path || [], tileSize, tileHeight);
-        this.moveSpeed = model.speed * tileSize;
+        this.moveSpeed = model._speed * tileSize;
+        this.moveProgress = model.timer * this.moveSpeed;
         this.currentAnimation = 'walk';
         this.updateState();
     }

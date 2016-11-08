@@ -64,7 +64,7 @@ class Entity {
 
     updateTimer(dt) {
         this.timer += dt;
-        if(this.timer > this.cycle) {
+        if(this.timer > this._cycle) {
             this.update();
             this.timer = 0;
         }

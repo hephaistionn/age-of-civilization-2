@@ -139,7 +139,11 @@ class ScreenMap {
 
     mouseClick(x, z, model) {
         if(removeMode) {
-            this.map.clearTile(x, z, model);
+            if(model) {
+                this.map.clearTile(x, z, model);
+            }else{
+                this.map.updateEntity('EntityRoad',null, {tiles:[Math.floor(x),Math.floor(z)],walkable:[1],length:1});
+            }
             ee.emit('onUpdate', 'map', this.map);
         } else if(this.positioner.selected && !this.positioner.undroppable) {
             const entity = this.positioner.selected;
