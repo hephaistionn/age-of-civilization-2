@@ -106,6 +106,7 @@ class ScreenWorldmap {
     }
 
     mouseLeave(dx, dy) {
+        if(this.entityManagerPanel.opened) return;
         moveDx = dx;
         moveDz = dy;
     }

@@ -194,7 +194,8 @@ class ScreenMap {
         }
     }
 
-    mouseLeave(dx, dy) {
+    mouseLeave(dx, dy){
+        if(this.monitoringPanel.opened || this.entityManagerPanel.opened) return;
         moveDx = dx;
         moveDz = dy;
     }
