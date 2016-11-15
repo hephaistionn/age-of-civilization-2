@@ -153,7 +153,6 @@ class ScreenMap {
             entity.onConstruct();
             this.map.newEntity(params);
             ee.emit('onUpdate', 'map', this.map);
-            this.map.updateEntity('EntityRoad', null); //remove road under entity
             ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             this.buildingMenu.updateCurrentCategory();

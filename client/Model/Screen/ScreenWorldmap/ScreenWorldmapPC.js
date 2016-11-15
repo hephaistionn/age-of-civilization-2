@@ -77,7 +77,6 @@ class ScreenWorldmap {
             type: 'mesopotamia', leader: leaderId
         });
         this.worldmap.addCity(params);
-
         ee.emit('onUpdate', 'worldmap', this.worldmap);
     }
 
@@ -127,7 +126,6 @@ class ScreenWorldmap {
         if(this.cityPositioner.enabled && this.cityPositioner.buildable) {
             const y = this.worldmap.getHeightTile(x, z);
             this.newCity(x, y, z, 1, 'myCity', stateManager.getCurrentLeader().id);
-
             this.worldmapMenu.switchConstrucMode();
             ee.emit('onUpdate', 'worldmap', this.worldmap);
         } else if(model) {
@@ -146,7 +144,6 @@ class ScreenWorldmap {
     dismount() {
         this.camera = null;
     }
-
 
     syncState(model) {
         model.camera.x = this.camera.x;

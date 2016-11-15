@@ -4,15 +4,16 @@ const stateManager = require('../../../services/stateManager');
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
-const PixelMap = require('../../../services/PixelMap');
+const CityPositioner = require('../../Engine/CityPositioner');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 const FirstStartPanel = require('../../UI/FirstStartPanel');
+const LeaderCreationPanel = require('../../UI/LeaderCreationPanel');
 
 class ScreenWorldmap {
 
-    constructor() {
+    constructor(model, mapProperties) {
 
         this.camera = new Camera({
             x: 100, y: 40, z: 70,
@@ -22,16 +23,43 @@ class ScreenWorldmap {
             zoomMax: 70,
             zoomMin: 20
         });
+        this.camera.setMapBorder(mapProperties);
         this.light = new Light({
             offsetX: -10,
             offsetY: -40,
             offsetZ: -10,
             ambient: 0x776666
         });
+        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
 
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
-        if(stateManager.firstBoot) {
+        this.cityPositioner = new CityPositioner(mapProperties);
+
+        this.worldmap = new Worldmap(mapProperties);
+        model.cities.map(cityId => {
+            const city = stateManager.getCity(cityId);
+            this.worldmap.addCity(city);
+        });
+
+        this.worldmapMenu.onConstructMode((enabled) => {
+            enabled ? this.cityPositioner.enable() : this.cityPositioner.disable();
+            this.cityPositioner.placeCity(this.camera.targetX, this.camera.targetZ, this.worldmap);
+            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+        });
+
+
+        this.worldmapMenu.onConstructEditor(() => {
+            if(this.cityPositioner.enabled && this.cityPositioner.buildable) {
+                const y = this.worldmap.getHeightTile(x, z);
+                this.newCity(x, y, z, 1, 'myCity', stateManager.getCurrentLeader().id);
+                this.worldmapMenu.switchConstrucMode();
+                ee.emit('onUpdate', 'worldmap', this.worldmap);
+            }
+        });
+
+
+        if(!stateManager.getCurrentLeader()) {
             this.firstStartPanel = new FirstStartPanel();
             this.firstStartPanel.onClose(()=> {
                 delete this.firstStartPanel;
@@ -40,25 +68,20 @@ class ScreenWorldmap {
                 ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel);
                 this.leaderCreationPanel.onClose(params => {
                     stateManager.newLeader(params);
+                    //clean map => new worldmap;
                     delete this.leaderCreationPanel;
                     ee.emit('onUpdate', 'leaderCreationPanel');
                 });
             });
         }
-
-        const pixelMap = new PixelMap();
-        pixelMap.compute('map/worldmap3.png', (dataMap)=> {
-            this.worldmap = new Worldmap(dataMap);
-            this.camera.setMapBorder(dataMap);
-            this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            ee.emit('onUpdate', 'worldmap', this.worldmap);
-            ee.emit('onUpdate', 'light', this.light);
-        });
     }
 
-    newCity(x, y, z, level, name) {
-        const params = {level: level, x: x, y: y, z: z, name: name, type: 'mesopotamia'};
-        this.worldmap.newCity(params);
+    newCity(x, y, z, level, name, leaderId) {
+        const params = stateManager.newCity({
+            level: level, x: x, y: y, z: z, name: name,
+            type: 'mesopotamia', leader: leaderId
+        });
+        this.worldmap.addCity(params);
         ee.emit('onUpdate', 'worldmap', this.worldmap);
     }
 
@@ -75,12 +98,18 @@ class ScreenWorldmap {
         ee.emit('onUpdate', 'light', this.light);
     }
 
+    touchDragg(x, z, screenX, screenY) {
+        if(this.cityPositioner.selected) {
+            this.cityPositioner.placeSelectedEntity(x, z, this.worldmap);
+            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+        }
+    }
+
     touchEnd() {
         this.camera.cleatMove();
     }
 
     touchStartOnMap(x, z, model) {
-
         if(model) {
             this.entityManagerPanel.open(model);
         }
@@ -96,6 +125,11 @@ class ScreenWorldmap {
 
     dismount() {
         this.camera = null;
+    }
+
+    syncState(model) {
+        model.camera.x = this.camera.x;
+        model.camera.z = this.camera.z;
     }
 
 }

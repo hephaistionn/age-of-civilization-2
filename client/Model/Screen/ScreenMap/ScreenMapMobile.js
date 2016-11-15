@@ -18,16 +18,24 @@ let selected = false;
 
 class ScreenMap {
 
-    constructor() {
+    constructor(model, mapProperties) {
 
-        this.camera = new Camera({x: 25, z: 25});
+        this.camera = new Camera({x: model.camera.x, z: model.camera.z});
+        this.camera.setMapBorder(mapProperties);
+
         this.light = new Light({shadow: true});
+        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
+        this.light.scaleOffset(-this.camera.offsetY);
+
         this.buildingMenu = new BuildingMenu();
         this.monitoringPanel = new MonitoringPanel();
         this.entityManagerPanel = new EntityManagerPanel();
 
-        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        this.light.scaleOffset(-this.camera.offsetY);
+        this.map = new Map(mapProperties, model.map);
+
+        this.positioner = new Positioner(mapProperties);
+
+        this.roadPositioner = new RoadPositioner(mapProperties);
 
         this.buildingMenu.onClickBuilding(entityId => {
             if(entityId === 'Destroy') {
@@ -62,7 +70,6 @@ class ScreenMap {
                 this.positioner.unselectEnity();
                 entity.onConstruct();
                 this.map.newEntity(params);
-                this.map.updateEntity('EntityRoad', null); //remove road under entity
                 this.buildingMenu.hideEditor();
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'positioner', this.positioner);
@@ -77,20 +84,6 @@ class ScreenMap {
             this.buildingMenu.hideEditor();
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
-
-        const pixelMap = new PixelMap();
-        pixelMap.compute('map/map.png', (dataMap)=> {
-            this.map = new Map(dataMap);
-            this.positioner = new Positioner(dataMap);
-            this.roadPositioner = new RoadPositioner(dataMap);
-            this.camera.setMapBorder(dataMap);
-            this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            ee.emit('onUpdate', 'map', this.map);
-            ee.emit('onUpdate', 'positioner', this.positioner);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-            ee.emit('onUpdate', 'light', this.light);
-        });
-
     }
 
     update(dt) {
@@ -172,6 +165,12 @@ class ScreenMap {
     removeEntity(entity) {
         this.map.removeEntity(entity);
         ee.emit('onUpdate', 'map', this.map);
+    }
+
+    syncState(model) {
+        model.camera.x = this.camera.x;
+        model.camera.z = this.camera.z;
+        this.map.syncState(model.map);
     }
 
 }
