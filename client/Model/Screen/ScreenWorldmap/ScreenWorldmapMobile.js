@@ -100,7 +100,7 @@ class ScreenWorldmap {
 
     touchDragg(x, z, screenX, screenY) {
         if(this.cityPositioner.selected) {
-            this.cityPositioner.placeSelectedEntity(x, z, this.worldmap);
+            this.cityPositioner.moveEntity(x, z, this.worldmap);
             ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
         }
     }

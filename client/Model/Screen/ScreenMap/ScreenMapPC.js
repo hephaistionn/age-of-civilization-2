@@ -14,6 +14,7 @@ const Road = require('../../Engine/Entity/Road/EntityRoad');
 const Entity = require('../../Engine/Entity/Entity');
 
 let removeMode = false;
+let rotation = 0;
 let moveDx = 0;
 let moveDz = 0;
 
@@ -42,6 +43,7 @@ class ScreenMap {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
             removeMode = false;
+            rotation = 0;
 
             if(entityId === 'Destroy') {
                 removeMode = true;
@@ -76,16 +78,19 @@ class ScreenMap {
 
     mouseMoveOnMap(x, z) {
         if(this.positioner.selected) {
-            this.positioner.placeSelectedEntity(x, z, this.map);
+            this.positioner.moveEntity(x, z, rotation, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
         } else if(this.roadPositioner && this.roadPositioner.selected) {
-            this.roadPositioner.placeSelectedEntity(x, z, this.map);
+            this.roadPositioner.moveEntity(x, z, this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
     }
 
     mouseRotate() {
-        this.positioner.increaseRotation(this.map);
+        rotation += rotation >= Math.PI * 2 ? -rotation : Math.PI / 2;
+        var x = this.positioner.x;
+        var z = this.positioner.z;
+        this.positioner.moveEntity(x, z, rotation, this.map);
         ee.emit('onUpdate', 'positioner', this.positioner);
     }
 
@@ -154,7 +159,7 @@ class ScreenMap {
             this.buildingMenu.updateCurrentCategory();
             ee.emit('onUpdate', 'buildingMenu', this.buildingMenu);
         } else if(this.roadPositioner.selected) {
-            this.roadPositioner.placeSelectedEntity(x, z, this.map);
+            this.roadPositioner.moveEntity(x, z, this.map);
             const params = this.roadPositioner.getNewRoad();
             if(params) {
                 const built = Road.construction(params);

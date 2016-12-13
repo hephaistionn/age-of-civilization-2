@@ -103,6 +103,10 @@ module.exports = class BuildingMenu {
         };
     }
 
+    onRotationEditor(fct) {
+        this._onRotationEditor = fct;
+    }
+
     onClose(fct) {
         this._close = fct;
     }

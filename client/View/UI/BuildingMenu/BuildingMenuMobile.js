@@ -56,6 +56,12 @@ module.exports = class BuildingMenu {
         this.nodeCancelConstruct.onclick = model._onCancelEditor.bind(model);
         this.nodeEditor.appendChild(this.nodeCancelConstruct);
 
+        this.nodeRotationConstruct = document.createElement('div');
+        this.nodeRotationConstruct.className = 'button rotate';
+        this.nodeRotationConstruct.textContent = 'Rotate';
+        this.nodeRotationConstruct.onclick = model._onRotationEditor.bind(model);
+        this.nodeEditor.appendChild(this.nodeRotationConstruct);
+
 
         this.nodeButtonRoad = document.createElement('div');
         this.nodeButtonRoad.className = 'button road';

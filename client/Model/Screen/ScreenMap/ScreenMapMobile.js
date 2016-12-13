@@ -15,6 +15,7 @@ const Entity = require('../../Engine/Entity/Entity');
 const PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
 let selected = false;
+let rotation = 0;
 
 class ScreenMap {
 
@@ -40,6 +41,7 @@ class ScreenMap {
         this.buildingMenu.onClickBuilding(entityId => {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
+            rotation = 0;
 
             if(entityId === 'Destroy') {
                 this.buildingMenu.showDeletionEditor();
@@ -49,8 +51,9 @@ class ScreenMap {
                 this.buildingMenu.showRoadEditor();
             } else {
                 this.positioner.selectEnity(entityId);
-                this.positioner.placeSelectedEntity(this.camera.targetX, this.camera.targetZ, this.map);
+                this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, rotation, this.map);
                 this.buildingMenu.showEntityEditor();
+                this.buildingMenu.showRoadEditor();
                 removeMode = false;
             }
             this.buildingMenu.close();
@@ -82,6 +85,14 @@ class ScreenMap {
             this.buildingMenu.hideEditor();
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
+
+        this.buildingMenu.onRotationEditor(() => {
+            rotation += rotation >= Math.PI * 2 ? -rotation : Math.PI / 2;
+            var x = this.positioner.x;
+            var z = this.positioner.z;
+            this.positioner.moveEntity(x, z, rotation, this.map);
+            ee.emit('onUpdate', 'positioner', this.positioner);
+        });
     }
 
     update(dt) {
@@ -111,7 +122,7 @@ class ScreenMap {
 
     touchDragg(x, z, screenX, screenY) {
         if(this.positioner.selected) {
-            this.positioner.placeSelectedEntity(x, z, this.map);
+            this.positioner.moveEntity(x, z, rotation, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }

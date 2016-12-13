@@ -189,6 +189,11 @@ class Map {
         }
     }
 
+    getHeightTile(x, z) {
+        const index = Math.floor(z) * this.nbTileX + Math.floor(x);
+        return this.tilesHeight[index] / 255;
+    }
+
     syncState(model) {
         const hiddenProps = '_';
         for(let group in this.entityGroups) {

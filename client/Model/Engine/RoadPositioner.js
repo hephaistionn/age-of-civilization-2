@@ -20,7 +20,7 @@ module.exports = class RoadPositioner {
         };
     }
 
-    placeSelectedEntity(x, z, map) {
+    moveEntity(x, z, map) {
         x = Math.floor(x);
         z = Math.floor(z);
         this.road.tiles[0] = x;
