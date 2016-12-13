@@ -15,19 +15,6 @@ module.exports = class EditorPanel {
         ee.emit('onUpdate', 'editorPanel', this);
     }
 
-    close() {
-        this._hide();
-        if(this._close)this._close();
-    }
-
-    _hide() {
-        this.displayed = false;
-        this.entityEditor = false;
-        this.roadeEditor = false;
-        this.eraseEditor = false;
-        ee.emit('onUpdate', 'editorPanel', this);
-    }
-
     showEntityEditor() {
         this.entityEditor = true;
         ee.emit('onUpdate', 'editorPanel', this);
@@ -54,8 +41,19 @@ module.exports = class EditorPanel {
         this._onRotate = fct;
     }
 
-    onClose(fct) {
-        this._close = fct;
+    onCancel(fct) {
+        this._onCancel = () => {
+            this._hide();
+            fct();
+        };
+    }
+
+    _hide() {
+        this.displayed = false;
+        this.entityEditor = false;
+        this.roadeEditor = false;
+        this.eraseEditor = false;
+        ee.emit('onUpdate', 'editorPanel', this);
     }
 
 

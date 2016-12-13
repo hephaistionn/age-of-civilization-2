@@ -82,7 +82,7 @@ class ScreenMap {
             }
         });
 
-        this.editorPanel.onClose(() => {
+        this.editorPanel.onCancel(() => {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
             this.buildingMenu.open();

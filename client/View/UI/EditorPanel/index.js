@@ -26,11 +26,11 @@ module.exports = class EditorPanel {
         nodeEntityEditorConfirm.onclick = model._onConfirm.bind(model);
         this.nodeEntityEditor.appendChild(nodeEntityEditorConfirm);
 
-        const nodeEntityEditorClose  = document.createElement('div');
-        nodeEntityEditorClose.className = 'button cancel';
-        nodeEntityEditorClose.textContent = 'cancel';
-        nodeEntityEditorClose.onclick = model.close.bind(model);
-        this.nodeEntityEditor.appendChild(nodeEntityEditorClose);
+        const nodeEntityEditorCancel  = document.createElement('div');
+        nodeEntityEditorCancel.className = 'button cancel';
+        nodeEntityEditorCancel.textContent = 'cancel';
+        nodeEntityEditorCancel.onclick = model._onCancel.bind(model);
+        this.nodeEntityEditor.appendChild(nodeEntityEditorCancel);
 
         if(model._onRotate) {
             const nodeEntityEditorRotate = document.createElement('div');
@@ -46,11 +46,11 @@ module.exports = class EditorPanel {
         nodeRoadeEditorConfirm.onclick = model._onConfirm.bind(model);
         this.nodeRoadeEditor.appendChild(nodeRoadeEditorConfirm);
 
-        const nodeRoadeEditorClose  = document.createElement('div');
-        nodeRoadeEditorClose.className = 'button cancel';
-        nodeRoadeEditorClose.textContent = 'cancel';
-        nodeRoadeEditorClose.onclick = model.close.bind(model);
-        this.nodeRoadeEditor.appendChild(nodeRoadeEditorClose);
+        const nodeRoadeEditorCancel  = document.createElement('div');
+        nodeRoadeEditorCancel.className = 'button cancel';
+        nodeRoadeEditorCancel.textContent = 'cancel';
+        nodeRoadeEditorCancel.onclick = model._onCancel.bind(model);
+        this.nodeRoadeEditor.appendChild(nodeRoadeEditorCancel);
 
         const nodeEraseEditorConfirm  = document.createElement('div');
         nodeEraseEditorConfirm.className = 'button confirm';

@@ -63,7 +63,7 @@ class ScreenWorldmap {
             }
         });
 
-        this.editorPanel.onClose(() => {
+        this.editorPanel.onCancel(() => {
             this.positioner.unselectEnity();
             this.worldmapMenu.stopConstructMode();
             ee.emit('onUpdate', 'positioner', this.positioner);
