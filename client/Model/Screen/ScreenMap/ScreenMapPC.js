@@ -127,7 +127,6 @@ class ScreenMap {
             this.positioner.unselectEnity();
         }
         removeMode = false;
-        this.buildingMenu.close();
         ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         ee.emit('onUpdate', 'positioner', this.positioner);
     }

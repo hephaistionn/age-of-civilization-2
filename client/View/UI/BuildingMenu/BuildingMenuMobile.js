@@ -8,6 +8,10 @@ module.exports = class BuildingMenu {
         this.node = document.createElement('div');
         this.node.className = 'buildingMenu mobile';
 
+        this.nodeOverlay = document.createElement('div');
+        this.nodeOverlay.className = 'nodeOverlay hide';
+        this.node.appendChild(this.nodeOverlay);
+
         this.nodeCategoriesContainer = document.createElement('div');
         this.nodeCategoriesContainer.className = 'categoriesContainer';
         this.node.appendChild(this.nodeCategoriesContainer);
@@ -40,41 +44,6 @@ module.exports = class BuildingMenu {
         this.nodeButtonClose.onclick = model._onClickClose.bind(model);
         this.node.appendChild(this.nodeButtonClose);
 
-        this.nodeEditor = document.createElement('div');
-        this.nodeEditor.className = 'editor hide';
-        this.node.appendChild(this.nodeEditor);
-
-        this.nodeButtonConstruct = document.createElement('div');
-        this.nodeButtonConstruct.className = 'button construct';
-        this.nodeButtonConstruct.textContent = 'ok';
-        this.nodeButtonConstruct.onclick = model._onConstructEditor.bind(model);
-        this.nodeEditor.appendChild(this.nodeButtonConstruct);
-
-        this.nodeCancelConstruct = document.createElement('div');
-        this.nodeCancelConstruct.className = 'button cancel';
-        this.nodeCancelConstruct.textContent = 'X';
-        this.nodeCancelConstruct.onclick = model._onCancelEditor.bind(model);
-        this.nodeEditor.appendChild(this.nodeCancelConstruct);
-
-        this.nodeRotationConstruct = document.createElement('div');
-        this.nodeRotationConstruct.className = 'button rotate';
-        this.nodeRotationConstruct.textContent = 'Rotate';
-        this.nodeRotationConstruct.onclick = model._onRotationEditor.bind(model);
-        this.nodeEditor.appendChild(this.nodeRotationConstruct);
-
-
-        this.nodeButtonRoad = document.createElement('div');
-        this.nodeButtonRoad.className = 'button road';
-        this.nodeButtonRoad.textContent = 'ok';
-        this.nodeButtonRoad.onclick = model._onCancelEditor.bind(model);
-        this.node.appendChild(this.nodeButtonRoad);
-
-        this.nodeButtonErase = document.createElement('div');
-        this.nodeButtonErase.className = 'button erase';
-        this.nodeButtonErase.textContent = 'ok';
-        this.nodeButtonErase.onclick = model._onCancelEditor.bind(model);
-        this.node.appendChild(this.nodeButtonErase);
-
         this.updateState(model);
 
     }
@@ -84,29 +53,10 @@ module.exports = class BuildingMenu {
         this.hideNode(this.nodeButtonOpen);
         this.hideNode(this.nodeBuildingsContainer);
         this.hideNode(this.nodeButtonClose);
-        this.hideNode(this.nodeEditor);
-        this.hideNode(this.nodeButtonRoad);
-        this.hideNode(this.nodeButtonErase);
-
-        if(model.entityEditor) {
-            this.showNode(this.nodeEditor);
-            return;
-        }
-
-        if(model.roadEditor) {
-            this.showNode(this.nodeButtonRoad);
-            return;
-        }
-
-        if(model.eraseEditor) {
-            this.showNode(this.nodeButtonErase);
-            return;
-        }
 
         if(model.displayed) {
-            this.hideNode(this.nodeEditor);
-            this.hideNode(this.nodeButtonRoad);
             this.hideNode(this.nodeButtonOpen);
+            this.showNode(this.nodeOverlay);
             this.showNode(this.nodeButtonClose);
             if(model.currentCategory.length) {
                 this.computeCurrentCategory(model.currentCategory, model);
@@ -121,8 +71,7 @@ module.exports = class BuildingMenu {
             this.showNode(this.nodeButtonOpen);
             this.hideNode(this.nodeButtonClose);
             this.hideNode(this.nodeCategoriesContainer);
-            this.hideNode(this.nodeEditor);
-            this.hideNode(this.nodeButtonRoad);
+            this.hideNode(this.nodeOverlay);
         }
     }
 

@@ -3,6 +3,7 @@ const ee = require('../../../services/eventEmitter');
 const BuildingMenu = require('../../UI/BuildingMenu');
 const MonitoringPanel = require('../../UI/MonitoringPanel');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
+const EditorPanel = require('../../UI/EditorPanel');
 
 const Map = require('../../Engine/Map');
 const Light = require('../../Engine/Light');
@@ -31,6 +32,7 @@ class ScreenMap {
         this.buildingMenu = new BuildingMenu();
         this.monitoringPanel = new MonitoringPanel();
         this.entityManagerPanel = new EntityManagerPanel();
+        this.editorPanel = new EditorPanel();
 
         this.map = new Map(mapProperties, model.map);
 
@@ -41,20 +43,20 @@ class ScreenMap {
         this.buildingMenu.onClickBuilding(entityId => {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
+            this.editorPanel.open();
             removeMode = false;
             rotation = 0;
 
             if(entityId === 'Destroy') {
-                this.buildingMenu.showDeletionEditor();
+                this.editorPanel.showDeletionEditor();
                 removeMode = true;
             } else if(entityId === 'Road') {
                 this.roadPositioner.selectEnity(2);
-                this.buildingMenu.showRoadEditor();
+                this.editorPanel.showRoadeEditor();
             } else {
                 this.positioner.selectEnity(entityId);
                 this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, rotation, this.map);
-                this.buildingMenu.showEntityEditor();
-                this.buildingMenu.showRoadEditor();
+                this.editorPanel.showEntityEditor();
             }
             this.buildingMenu.close();
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
@@ -62,7 +64,7 @@ class ScreenMap {
 
         });
 
-        this.buildingMenu.onConstructEditor(() => {
+        this.editorPanel.onConfirm(() => {
             if(this.positioner.selected && !this.positioner.undroppable) {
                 const entity = this.positioner.selected;
                 const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
@@ -71,7 +73,6 @@ class ScreenMap {
                 this.positioner.unselectEnity();
                 entity.onConstruct();
                 this.map.newEntity(params);
-                this.buildingMenu.hideEditor();
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'positioner', this.positioner);
                 ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
@@ -79,14 +80,13 @@ class ScreenMap {
             }
         });
 
-        this.buildingMenu.onCancelEditor(() => {
+        this.editorPanel.onClose(() => {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
-            this.buildingMenu.hideEditor();
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
-        this.buildingMenu.onRotationEditor(() => {
+        this.editorPanel.onRotate(() => {
             rotation += rotation >= Math.PI * 2 ? -rotation : Math.PI / 2;
             var x = this.positioner.x;
             var z = this.positioner.z;

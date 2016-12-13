@@ -10,6 +10,7 @@ const COMPONENTS = {
     RoadPositioner: require('./../Engine/RoadPositioner'),
     Worldmap: require('../Engine/Worldmap'),
     BuildingMenu: require('../UI/BuildingMenu'),
+    EditorPanel: require('../UI/EditorPanel'),
     MonitoringPanel: require('../UI/MonitoringPanel'),
     WorldmapMenu: require('../UI/WorldmapMenu'),
     EntityManagerPanel: require('../UI/EntityManagerPanel'),

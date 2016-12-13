@@ -23,9 +23,6 @@ module.exports = class BuildingMenu {
         this.currentCategoryId = '';
         this.currentFocus = null;
         this.displayed = false;
-        this.entityEditor = false;
-        this.roadEditor = false;
-        this.eraseEditor = false;
 
         this.type = 'UI';
     }
@@ -63,48 +60,12 @@ module.exports = class BuildingMenu {
         return Entity.available();
     }
 
-    showEntityEditor() {
-        this.entityEditor = true;
-        ee.emit('onUpdate', 'buildingMenu', this);
-    }
-
-    showRoadEditor() {
-        this.roadEditor = true;
-        ee.emit('onUpdate', 'buildingMenu', this);
-    }
-
-    showDeletionEditor() {
-        this.eraseEditor = true;
-        ee.emit('onUpdate', 'buildingMenu', this);
-    }
-
-    hideEditor() {
-        this.entityEditor = false;
-        this.roadEditor = false;
-        this.eraseEditor = false;
-        ee.emit('onUpdate', 'buildingMenu', this);
-    }
-
-    onConstructEditor(fct) {
-        this._onConstructEditor = () => {
-            fct();
-        };
-    }
-
-    onCancelEditor(fct) {
-        this._onCancelEditor = fct;
-    }
-
     onClickBuilding(fct) {
         this._onClickBuilding = entityId => {
             this.currentFocus === entityId ? this.currentFocus = null : this.currentFocus = entityId;
             fct(entityId);
             ee.emit('onUpdate', 'buildingMenu', this);
         };
-    }
-
-    onRotationEditor(fct) {
-        this._onRotationEditor = fct;
     }
 
     onClose(fct) {

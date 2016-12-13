@@ -15,8 +15,8 @@
 
   .button.close {
     position: fixed;
-    top: 16px;
-    right: 20px;
+    top: 67px;
+    right: 101px;
     width: 40px;
     height: 40px;
     line-height: 40px;
@@ -90,55 +90,13 @@
     display: none;
   }
 
-  .editor {
+  .nodeOverlay {
     position: fixed;
-    left: 0;
     top: 0;
-    width: 0;
-    height: 0;
-    .button.construct {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-    }
-
-    .button.cancel {
-      position: fixed;
-      bottom: 30px;
-      left: 30px;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-    }
-
-    .button.rotate {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-    }
-  }
-
-  .button.road {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-  }
-  .button.erase {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.45);
   }
 
 }
