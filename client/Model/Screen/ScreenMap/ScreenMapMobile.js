@@ -41,6 +41,7 @@ class ScreenMap {
         this.buildingMenu.onClickBuilding(entityId => {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
+            removeMode = false;
             rotation = 0;
 
             if(entityId === 'Destroy') {
@@ -54,7 +55,6 @@ class ScreenMap {
                 this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, rotation, this.map);
                 this.buildingMenu.showEntityEditor();
                 this.buildingMenu.showRoadEditor();
-                removeMode = false;
             }
             this.buildingMenu.close();
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
@@ -133,7 +133,11 @@ class ScreenMap {
 
     touchStartOnMap(x, z, model) {
         if(removeMode) {
-            this.map.clearTile(x, z, model);
+            if(model) {
+                this.map.clearTile(x, z, model);
+            }else{
+                this.map.updateEntity('EntityRoad',null, {tiles:[Math.floor(x),Math.floor(z)],walkable:[1],length:1});
+            }
             ee.emit('onUpdate', 'map', this.map);
         }else if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
