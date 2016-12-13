@@ -4,7 +4,7 @@ const stateManager = require('../../../services/stateManager');
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
-const CityPositioner = require('../../Engine/CityPositioner');
+const Positioner = require('../../Engine/Positioner');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
@@ -40,7 +40,7 @@ class ScreenWorldmap {
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
 
-        this.cityPositioner = new CityPositioner(mapProperties);
+        this.positioner = new Positioner(mapProperties);
 
         this.worldmap = new Worldmap(mapProperties);
         model.cities.map(cityId => {
@@ -48,9 +48,9 @@ class ScreenWorldmap {
             this.worldmap.addCity(city);
         });
 
-        this.worldmapMenu.onConstructMode((enabled) => {
-            enabled ? this.cityPositioner.enable() : this.cityPositioner.disable();
-            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+        this.worldmapMenu.onConstructMode(() => {
+            this.positioner.selectEnity('EntityCity');
+            ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
         if(!stateManager.getCurrentLeader()) {
@@ -116,18 +116,28 @@ class ScreenWorldmap {
     }
 
     mouseMoveOnMap(x, z) {
-        if(this.cityPositioner.enabled) {
-            this.cityPositioner.moveCity(x, z);
-            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+        if(this.positioner.selected) {
+            this.positioner.moveEntity(x, z, 0, this.worldmap);
+            ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }
 
+    mouseDownRight() {
+        if(this.positioner.selected) {
+            this.positioner.unselectEnity();
+            this.worldmapMenu.stopConstructMode();
+        }
+        ee.emit('onUpdate', 'positioner', this.positioner);
+    }
+
     mouseClick(x, z, model) {
-        if(this.cityPositioner.enabled && this.cityPositioner.buildable) {
-            const y = this.worldmap.getHeightTile(x, z);
-            this.newCity(x, y, z, 1, 'myCity', stateManager.getCurrentLeader().id);
-            this.worldmapMenu.switchConstrucMode();
+        if(this.positioner.selected && !this.positioner.undroppable) {
+            const entity = this.positioner.selected;
+            this.newCity(entity.x, entity.y, entity.z, 1, 'myCity', stateManager.getCurrentLeader().id);
+            this.positioner.unselectEnity();
+            this.worldmapMenu.stopConstructMode();
             ee.emit('onUpdate', 'worldmap', this.worldmap);
+            ee.emit('onUpdate', 'positioner', this.positioner);
         } else if(model) {
             this.entityManagerPanel.open(model);
         }

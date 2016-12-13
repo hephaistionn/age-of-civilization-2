@@ -1,4 +1,4 @@
-const City = require('../City');
+const EntityCity = require('../Entity/Building/EntityCity');
 
 module.exports = Worldmap=> {
 
@@ -11,9 +11,8 @@ module.exports = Worldmap=> {
 
             let cityView = citiesView[i];
             let cityModel = citiesModel[i];
-
             if(!cityView) {
-                let newCityView = new City(cityModel);
+                let newCityView = new EntityCity(cityModel);
                 citiesView[i] = newCityView;
                 this.element.add(newCityView.element);
 

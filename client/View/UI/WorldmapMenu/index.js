@@ -19,7 +19,7 @@ module.exports = class WorldmapMenu {
         this.nodeButtonConstruct = document.createElement('div');
         this.nodeButtonConstruct.className = 'button construct';
         this.nodeButtonConstruct.textContent = 'Construct';
-        this.nodeButtonConstruct.onclick = model.switchConstrucMode.bind(model);
+        this.nodeButtonConstruct.onclick = model.onConstructModeFct.bind(model);
         this.node.appendChild(this.nodeButtonConstruct);
 
         this.updateState(model);
@@ -27,14 +27,14 @@ module.exports = class WorldmapMenu {
 
     updateState(model) {
 
-        if(stateManager.currentCity){
+        if(stateManager.currentCity) {
             this.showNode(this.nodeButtonBack);
-        }else{
+        } else {
             this.hideNode(this.nodeButtonBack);
         }
 
         if(model.constructMode) {
-            this.nodeButtonConstruct.className = 'button construct focus';
+            this.nodeButtonConstruct.className = 'button construct hide';
         } else {
             this.nodeButtonConstruct.className = 'button construct';
         }

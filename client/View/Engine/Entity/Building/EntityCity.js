@@ -1,16 +1,16 @@
-const config = require('./config');
+const config = require('../../config');
 const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;
 const THREE = require('three');
-const material = require('./Material/materialA');
+const material = require('../../Material/materialA');
 
-module.exports = class City {
+module.exports = class EntityCity {
 
-    constructor(model) {
+    constructor(model, materialForce) {
         this.model = model;
         let path = 'obj/cities/@1@2.obj';
         path = path.replace('@1', model.type).replace('@2', model.level);
-        this.element = THREE.getMesh(path, material);
+        this.element = THREE.getMesh(path, materialForce || material);
         this.element.userData.model = model;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;

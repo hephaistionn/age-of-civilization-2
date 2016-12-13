@@ -4,7 +4,7 @@ const stateManager = require('../../../services/stateManager');
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
-const CityPositioner = require('../../Engine/CityPositioner');
+//const CityPositioner = require('../../Engine/CityPositioner');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
@@ -45,7 +45,7 @@ class ScreenWorldmap {
         this.worldmapMenu.onConstructMode((enabled) => {
             enabled ? this.cityPositioner.enable() : this.cityPositioner.disable();
             this.cityPositioner.placeCity(this.camera.targetX, this.camera.targetZ, this.worldmap);
-            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+            ee.emit('onUpdate', 'positioner', positioner);
         });
 
 
@@ -101,7 +101,7 @@ class ScreenWorldmap {
     touchDragg(x, z, screenX, screenY) {
         if(this.cityPositioner.selected) {
             this.cityPositioner.moveEntity(x, z, this.worldmap);
-            ee.emit('onUpdate', 'cityPositioner', this.cityPositioner);
+            ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }
 

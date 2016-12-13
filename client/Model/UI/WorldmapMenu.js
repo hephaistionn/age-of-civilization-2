@@ -8,8 +8,6 @@ module.exports = class WorldmapMenu {
         this.constructMode = false;
         this.onConstructModeFct = ()=> {
         };
-        this.onConstructFct = ()=> {
-        };
     }
 
     goCity() {
@@ -21,14 +19,17 @@ module.exports = class WorldmapMenu {
         ee.emit('openScreen', 'ScreenMap', model);
     }
 
-    switchConstrucMode(status) {
-        this.constructMode = !this.constructMode;
-        this.onConstructModeFct(this.constructMode);
+    stopConstructMode(){
+        this.constructMode = false;
         ee.emit('onUpdate', 'worldmapMenu', this);
     }
 
     onConstructMode(fct) {
-        this.onConstructModeFct = fct;
+        this.onConstructModeFct = ()=> {
+            this.constructMode = true;
+            fct();
+            ee.emit('onUpdate', 'worldmapMenu', this);
+        };
     }
 
 };

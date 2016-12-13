@@ -1,5 +1,5 @@
 const pathfinding = require('../../services/pathfinding');
-const City = require('./Entity/City');
+const EntityCity = require('./Entity/Building/EntityCity');
 
 class Worldmap {
 
@@ -17,11 +17,12 @@ class Worldmap {
         this.tilesType = config.tilesType;
         this.cities = [];
         this.updatedCity = [];
-
+        this.tiltMax = 40;
+        this.heightMin = 0.16;
     }
 
     addCity(params) {
-        const city = new City(params);
+        const city = new EntityCity(params);
         this.cities.push(city);
     }
 
@@ -38,6 +39,31 @@ class Worldmap {
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
         return this.tilesHeight[index] / 255;
+    }
+
+    isWalkable(x, z) {
+        if(x.length) {
+            for(let i = 0; i < x.length; i += 2) {
+                const index = Math.floor(x[i + 1]) * this.nbTileX + Math.floor(x[i]);
+                const tilt = this.tilesTilt[index];
+                const y = this.tilesHeight[index] / 255;
+                if(tilt > this.tiltMax) {
+                    return false;
+                } else if(y < this.heightMin) {
+                    return false;
+                }
+            }
+        } else {
+            const index = Math.floor(z) * this.nbTileX + Math.floor(x);
+            const tilt = this.tilesTilt[index];
+            const y = this.tilesHeight[index] / 255;
+            if(tilt > this.tiltMax) {
+                return false;
+            } else if(y < this.heightMin) {
+                return false;
+            }
+        }
+        return true;
     }
 
     update(dt) {

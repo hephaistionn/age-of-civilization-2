@@ -24,7 +24,7 @@ module.exports = class Positioner {
     }
 
     selectEnity(id) {
-        this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: this.rotation});
+        this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: 0});
     }
 
     unselectEnity() {
