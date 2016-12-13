@@ -112,10 +112,6 @@ class ScreenMap {
     mouseDown(x, z) {
         if(this.roadPositioner.selected)return;
         if(removeMode)return;
-        if(!this.roadPositioner.selected && !this.positioner.selected) {
-            this.mouseDownRight();
-        }
-
         ee.emit('onUpdate', 'camera', this.camera);
     }
 
@@ -126,6 +122,8 @@ class ScreenMap {
         if(this.positioner.selected) {
             this.positioner.unselectEnity();
         }
+
+        this.buildingMenu.collapse();
         removeMode = false;
         ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         ee.emit('onUpdate', 'positioner', this.positioner);
@@ -152,8 +150,9 @@ class ScreenMap {
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             entity.onConstruct();
             this.map.newEntity(params);
+            this.positioner.unselectEnity();
             ee.emit('onUpdate', 'map', this.map);
-            ee.emit('onUpdate', 'map', this.map);
+            ee.emit('onUpdate', 'positioner', this.positioner);
             ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             this.buildingMenu.updateCurrentCategory();
             ee.emit('onUpdate', 'buildingMenu', this.buildingMenu);
@@ -166,7 +165,6 @@ class ScreenMap {
                 if(this.map.entityGroups['EntityRoad'].length===0){
                     this.map.newEntity({entityId: 'EntityRoad'});
                 }
-                this.map.updateEntity('EntityRoad', null, params);
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
                 ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);

@@ -58,6 +58,7 @@ class ScreenMap {
                 this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, rotation, this.map);
                 this.editorPanel.showEntityEditor();
             }
+
             this.buildingMenu.close();
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
             ee.emit('onUpdate', 'positioner', this.positioner);
@@ -73,6 +74,7 @@ class ScreenMap {
                 this.positioner.unselectEnity();
                 entity.onConstruct();
                 this.map.newEntity(params);
+                this.buildingMenu.open();
                 ee.emit('onUpdate', 'map', this.map);
                 ee.emit('onUpdate', 'positioner', this.positioner);
                 ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
@@ -83,6 +85,7 @@ class ScreenMap {
         this.editorPanel.onClose(() => {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
+            this.buildingMenu.open();
             ee.emit('onUpdate', 'positioner', this.positioner);
         });
 

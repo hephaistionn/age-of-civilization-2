@@ -29,9 +29,12 @@ module.exports = class BuildingMenu {
 
     updateState(model) {
 
-        if(this.displayed === true && this.displayed === model.displayed) {
+        /**if(this.displayed === true && this.displayed === model.displayed) {
             this.update
-        }
+        }*/
+
+        this.collapse( model.isCollapsed);
+
         model.displayed ? this.open() : this.close();
 
         if(model.currentCategory.length && model.displayed) {
@@ -103,6 +106,14 @@ module.exports = class BuildingMenu {
         this.nodeCategoriesContainer.childNodes.forEach((node)=> {
             node.className = node.className.replace(focus, empty);
         });
+    }
+
+    collapse(collapsed) {
+        if(collapsed){
+            this.node.className = 'buildingMenu pc collapse';
+        }else{
+            this.node.className = 'buildingMenu pc';
+        }
     }
 
     open() {

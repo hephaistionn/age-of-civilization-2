@@ -77,6 +77,14 @@
   }
 
   &.hide {
+    display: none;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  &.collapse {
     .categoriesContainer {
       transform: translateY(100px);
     }

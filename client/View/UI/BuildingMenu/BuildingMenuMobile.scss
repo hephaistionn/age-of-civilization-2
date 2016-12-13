@@ -3,7 +3,7 @@
   width: 100%;
   bottom: 0;
 
-  .button.open {
+  .button.expand {
     left: 10px;
     position: absolute;
     bottom: 10px;
@@ -13,7 +13,7 @@
     line-height: 40px;
   }
 
-  .button.close {
+  .button.collapse {
     position: fixed;
     top: 67px;
     right: 101px;
@@ -84,6 +84,10 @@
         display: inline-block;
       }
     }
+  }
+
+  &.hide {
+    display: none;
   }
 
   .hide {

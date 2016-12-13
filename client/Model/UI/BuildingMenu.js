@@ -22,28 +22,39 @@ module.exports = class BuildingMenu {
         this.currentCategory = [];
         this.currentCategoryId = '';
         this.currentFocus = null;
-        this.displayed = false;
+        this.displayed = true;
+        this.isCollapsed = true;
 
         this.type = 'UI';
     }
 
     open() {
-        if(this.displayed === true) return;
         this.displayed = true;
+        this.isCollapsed = true;
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
     close() {
-        if(this.displayed === false) return;
         this.displayed = false;
         this.currentCategory = [];
         if(this._close)this._close();
         ee.emit('onUpdate', 'buildingMenu', this);
     }
 
+    expand () {
+        this.isCollapsed = false;
+        ee.emit('onUpdate', 'buildingMenu', this);
+    }
+
+    collapse () {
+        this.currentCategory = [];
+        this.isCollapsed = true;
+        ee.emit('onUpdate', 'buildingMenu', this);
+    }
+
 
     openCategory(categoryId) {
-        this.displayed = true;
+        this.isCollapsed = false;
         this.currentCategoryId = categoryId;
         this.updateCurrentCategory();
         ee.emit('onUpdate', 'buildingMenu', this);
@@ -68,8 +79,12 @@ module.exports = class BuildingMenu {
         };
     }
 
-    onClose(fct) {
-        this._close = fct;
+    _onClickExpand() {
+        this.expand();
+    }
+
+    _onClickCollapse() {
+        this.collapse();
     }
 
     _onClickOpen() {

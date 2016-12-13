@@ -33,15 +33,15 @@ module.exports = class BuildingMenu {
         }
 
         this.nodeButtonOpen = document.createElement('div');
-        this.nodeButtonOpen.className = 'button open';
+        this.nodeButtonOpen.className = 'button expand';
         this.nodeButtonOpen.textContent = 'Build';
-        this.nodeButtonOpen.onclick = model._onClickOpen.bind(model);
+        this.nodeButtonOpen.onclick = model._onClickExpand.bind(model);
         this.node.appendChild(this.nodeButtonOpen);
 
         this.nodeButtonClose = document.createElement('div');
-        this.nodeButtonClose.className = 'button close';
+        this.nodeButtonClose.className = 'button collapse';
         this.nodeButtonClose.textContent = 'Close';
-        this.nodeButtonClose.onclick = model._onClickClose.bind(model);
+        this.nodeButtonClose.onclick = model._onClickCollapse.bind(model);
         this.node.appendChild(this.nodeButtonClose);
 
         this.updateState(model);
@@ -54,7 +54,13 @@ module.exports = class BuildingMenu {
         this.hideNode(this.nodeBuildingsContainer);
         this.hideNode(this.nodeButtonClose);
 
-        if(model.displayed) {
+        if(model.isCollapsed) {
+            this.hideNode(this.nodeBuildingsContainer);
+            this.showNode(this.nodeButtonOpen);
+            this.hideNode(this.nodeButtonClose);
+            this.hideNode(this.nodeCategoriesContainer);
+            this.hideNode(this.nodeOverlay);
+        } else {
             this.hideNode(this.nodeButtonOpen);
             this.showNode(this.nodeOverlay);
             this.showNode(this.nodeButtonClose);
@@ -66,13 +72,9 @@ module.exports = class BuildingMenu {
                 this.showNode(this.nodeCategoriesContainer);
                 this.hideNode(this.nodeBuildingsContainer);
             }
-        } else {
-            this.hideNode(this.nodeBuildingsContainer);
-            this.showNode(this.nodeButtonOpen);
-            this.hideNode(this.nodeButtonClose);
-            this.hideNode(this.nodeCategoriesContainer);
-            this.hideNode(this.nodeOverlay);
         }
+
+        model.displayed ? this.showNode(this.node) : this.hideNode(this.node);
     }
 
     computeCurrentCategory(modelBuildings, model) {
