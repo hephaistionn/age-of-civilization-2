@@ -9,8 +9,8 @@ module.exports = class Positioner {
         this.nbPointX = config.nbPointX;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.rotation = 0;
         this.undroppable = false;
+        this.rotation = 0;
         this.x = 0;
         this.z = 0;
     }
@@ -18,31 +18,21 @@ module.exports = class Positioner {
     placeSelectedEntity(x, z, map) {
         this.x = x;
         this.z = z;
-
-        const y = this.getHeightTile(x, z);
-
+        const y = this._getHeightTile(x, z);
         this.selected.move(x, y, z, this.rotation);
-
         const tiles = this.selected.getTiles();
+        this.undroppable = !map.isWalkable(tiles);
 
-        this.undroppable = false;
-
-        for(let i = 0; i < tiles.length; i += 2) {
-            if(!map.grid.isWalkableAt(tiles[i], tiles[i + 1])) {
-                this.undroppable = true;
-                return;
-            }
-        }
     }
 
-    getHeightTile(x, z) {
+    _getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
         return this.tilesHeight[index] / 255;
     }
 
     selectEnity(id) {
-        this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: this.rotation});
         this.rotation = 0;
+        this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: this.rotation});
     }
 
     unselectEnity() {
@@ -51,25 +41,11 @@ module.exports = class Positioner {
     }
 
     increaseRotation(map) {
-        this.rotation += Math.PI / 2;
-        if(this.rotation >= Math.PI * 2) {
-            this.rotation = 0;
-        }
-
-        const y = this.getHeightTile(this.x, this.z);
-
+        this.rotation += this.rotation >= Math.PI * 2 ? -this.rotation : Math.PI / 2;
+        const y = this._getHeightTile(this.x, this.z);
         this.selected.move(this.x, y, this.z, this.rotation);
-
         const tiles = this.selected.getTiles();
-
-        this.undroppable = false;
-
-        for(let i = 0; i < tiles.length; i += 2) {
-            if(!map.grid.isWalkableAt(tiles[i], tiles[i + 1])) {
-                this.undroppable = true;
-                return;
-            }
-        }
+        this.undroppable = !map.isWalkable(tiles);
     }
 
     dismount() {

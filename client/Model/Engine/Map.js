@@ -176,6 +176,19 @@ class Map {
         }
     }
 
+    isWalkable(x, z) {
+        if(x.length) {
+            for(let i = 0; i < x.length; i += 2) {
+                if(!this.grid.isWalkableAt(x[i], x[i + 1])) {
+                    return false;
+                }
+            }
+            return true;
+        }else{
+            return this.grid.isWalkableAt(x, z) ? true : false;
+        }
+    }
+
     syncState(model) {
         const hiddenProps = '_';
         for(let group in this.entityGroups) {
