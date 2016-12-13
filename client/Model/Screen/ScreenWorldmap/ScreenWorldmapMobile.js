@@ -4,12 +4,13 @@ const stateManager = require('../../../services/stateManager');
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
-//const CityPositioner = require('../../Engine/CityPositioner');
+const Positioner = require('../../Engine/Positioner');
 
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 const FirstStartPanel = require('../../UI/FirstStartPanel');
 const LeaderCreationPanel = require('../../UI/LeaderCreationPanel');
+const EditorPanel = require('../../UI/EditorPanel');
 
 class ScreenWorldmap {
 
@@ -34,7 +35,8 @@ class ScreenWorldmap {
 
         this.worldmapMenu = new WorldmapMenu();
         this.entityManagerPanel = new EntityManagerPanel();
-        this.cityPositioner = new CityPositioner(mapProperties);
+        this.editorPanel = new EditorPanel();
+        this.positioner = new Positioner(mapProperties);
 
         this.worldmap = new Worldmap(mapProperties);
         model.cities.map(cityId => {
@@ -42,22 +44,30 @@ class ScreenWorldmap {
             this.worldmap.addCity(city);
         });
 
-        this.worldmapMenu.onConstructMode((enabled) => {
-            enabled ? this.cityPositioner.enable() : this.cityPositioner.disable();
-            this.cityPositioner.placeCity(this.camera.targetX, this.camera.targetZ, this.worldmap);
-            ee.emit('onUpdate', 'positioner', positioner);
+        this.worldmapMenu.onConstructMode(() => {
+            this.positioner.selectEnity('EntityCity');
+            this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, 0, this.worldmap);
+            this.editorPanel.open();
+            this.editorPanel.showEntityEditor();
+            ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
-
-        this.worldmapMenu.onConstructEditor(() => {
-            if(this.cityPositioner.enabled && this.cityPositioner.buildable) {
-                const y = this.worldmap.getHeightTile(x, z);
-                this.newCity(x, y, z, 1, 'myCity', stateManager.getCurrentLeader().id);
-                this.worldmapMenu.switchConstrucMode();
+        this.editorPanel.onConfirm(() => {
+            if(this.positioner.selected && !this.positioner.undroppable) {
+                const entity = this.positioner.selected;
+                this.newCity(entity.x, entity.y, entity.z, 1, 'myCity', stateManager.getCurrentLeader().id);
+                this.positioner.unselectEnity();
+                this.worldmapMenu.stopConstructMode();
                 ee.emit('onUpdate', 'worldmap', this.worldmap);
+                ee.emit('onUpdate', 'positioner', this.positioner);
             }
         });
 
+        this.editorPanel.onClose(() => {
+            this.positioner.unselectEnity();
+            this.worldmapMenu.stopConstructMode();
+            ee.emit('onUpdate', 'positioner', this.positioner);
+        });
 
         if(!stateManager.getCurrentLeader()) {
             this.firstStartPanel = new FirstStartPanel();
@@ -99,8 +109,8 @@ class ScreenWorldmap {
     }
 
     touchDragg(x, z, screenX, screenY) {
-        if(this.cityPositioner.selected) {
-            this.cityPositioner.moveEntity(x, z, this.worldmap);
+        if(this.positioner.selected) {
+            this.positioner.moveEntity(x, z, rotation, this.worldmap);
             ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }

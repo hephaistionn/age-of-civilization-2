@@ -32,12 +32,13 @@ module.exports = class EditorPanel {
         nodeEntityEditorClose.onclick = model.close.bind(model);
         this.nodeEntityEditor.appendChild(nodeEntityEditorClose);
 
-        const nodeEntityEditorRotate  = document.createElement('div');
-        nodeEntityEditorRotate.className = 'button rotate';
-        nodeEntityEditorRotate.textContent = 'rotate';
-        nodeEntityEditorRotate.onclick = model._onRotate.bind(model);
-        this.nodeEntityEditor.appendChild(nodeEntityEditorRotate);
-
+        if(model._onRotate) {
+            const nodeEntityEditorRotate = document.createElement('div');
+            nodeEntityEditorRotate.className = 'button rotate';
+            nodeEntityEditorRotate.textContent = 'rotate';
+            nodeEntityEditorRotate.onclick = model._onRotate.bind(model);
+            this.nodeEntityEditor.appendChild(nodeEntityEditorRotate);
+        }
 
         const nodeRoadeEditorConfirm  = document.createElement('div');
         nodeRoadeEditorConfirm.className = 'button confirm';
