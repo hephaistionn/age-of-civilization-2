@@ -39,19 +39,16 @@ class ScreenMap {
         this.roadPositioner = new RoadPositioner(mapProperties);
 
         this.buildingMenu.onClickBuilding(entityId => {
+            this.positioner.unselectEnity();
+            this.roadPositioner.unselectEnity();
+            removeMode = false;
+
             if(entityId === 'Destroy') {
-                this.positioner.unselectEnity();
-                this.roadPositioner.unselectEnity();
                 removeMode = true;
             } else if(entityId === 'Road') {
-                this.positioner.unselectEnity();
                 this.roadPositioner.selectEnity(2);
-                removeMode = false;
-
             } else {
-                this.roadPositioner.unselectEnity();
                 this.positioner.selectEnity(entityId);
-                removeMode = false;
             }
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
             ee.emit('onUpdate', 'positioner', this.positioner);
@@ -78,7 +75,7 @@ class ScreenMap {
     }
 
     mouseMoveOnMap(x, z) {
-        if(this.positioner && this.positioner.selected) {
+        if(this.positioner.selected) {
             this.positioner.placeSelectedEntity(x, z, this.map);
             ee.emit('onUpdate', 'positioner', this.positioner);
         } else if(this.roadPositioner && this.roadPositioner.selected) {
@@ -108,7 +105,6 @@ class ScreenMap {
     }
 
     mouseDown(x, z) {
-        if(!this.roadPositioner || !this.positioner)return;
         if(this.roadPositioner.selected)return;
         if(removeMode)return;
         if(!this.roadPositioner.selected && !this.positioner.selected) {

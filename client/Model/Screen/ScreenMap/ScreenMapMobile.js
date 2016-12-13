@@ -38,18 +38,16 @@ class ScreenMap {
         this.roadPositioner = new RoadPositioner(mapProperties);
 
         this.buildingMenu.onClickBuilding(entityId => {
+            this.positioner.unselectEnity();
+            this.roadPositioner.unselectEnity();
+
             if(entityId === 'Destroy') {
                 this.buildingMenu.showDeletionEditor();
-                this.positioner.unselectEnity();
-                this.roadPositioner.unselectEnity();
                 removeMode = true;
             } else if(entityId === 'Road') {
-                this.positioner.unselectEnity();
                 this.roadPositioner.selectEnity(2);
                 this.buildingMenu.showRoadEditor();
-                removeMode = false;
             } else {
-                this.roadPositioner.unselectEnity();
                 this.positioner.selectEnity(entityId);
                 this.positioner.placeSelectedEntity(this.camera.targetX, this.camera.targetZ, this.map);
                 this.buildingMenu.showEntityEditor();
@@ -141,6 +139,9 @@ class ScreenMap {
         if(params) {
             const built = Road.construction(params);
             if(!built) return; //not enough resources
+            if(this.map.entityGroups['EntityRoad'].length===0){
+                this.map.newEntity({entityId: 'EntityRoad'});
+            }
             this.map.updateEntity('EntityRoad', null, params);
             ee.emit('onUpdate', 'map', this.map);
             ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
