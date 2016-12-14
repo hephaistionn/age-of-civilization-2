@@ -87,7 +87,8 @@ class ScreenMap {
     }
 
     mouseRotate() {
-        rotation += rotation >= Math.PI * 2 ? -rotation : Math.PI / 2;
+        rotation += Math.PI / 2;
+        if(rotation >= Math.PI * 2) rotation = 0;
         var x = this.positioner.x;
         var z = this.positioner.z;
         this.positioner.moveEntity(x, z, rotation, this.map);
