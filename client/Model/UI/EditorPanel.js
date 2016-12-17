@@ -7,7 +7,7 @@ module.exports = class EditorPanel {
         this.entityEditor = false;
         this.roadeEditor = false;
         this.eraseEditor = false;
-        this.updated = true;
+        this.updated = false;
         this.type = 'UI';
 
     }

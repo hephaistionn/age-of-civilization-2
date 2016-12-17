@@ -44,7 +44,7 @@ class Light {
         this.offsetX *= factor;
         this.offsetY *= factor;
         this.offsetZ *= factor;
-        this.updated = true;
+        this.updated = false;
     }
 
     dismount() {

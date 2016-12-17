@@ -24,7 +24,7 @@ module.exports = class BuildingMenu {
         this.currentFocus = null;
         this.displayed = true;
         this.isCollapsed = true;
-        this.updated = true;
+        this.updated = false;
         this.type = 'UI';
     }
 

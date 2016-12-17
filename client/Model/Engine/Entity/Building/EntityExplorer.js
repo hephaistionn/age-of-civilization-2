@@ -12,10 +12,18 @@ class EntityExplorer extends Entity {
         stateManager.updateExplorers(this.explorers);
     }
 
+    onAction() {
+        const states = stateManager.getCurrentCity().states;
+        if(states.explorers >= this.explorers){
+            //stateManager.updatePopulation(-this.explorers);
+        }
+    }
+
 }
 
 EntityExplorer.selectable = true;
 EntityExplorer.description = 'This building trains explorers';
+EntityExplorer.actionLabel = 'explore';
 EntityExplorer.tile_x = 1;
 EntityExplorer.tile_z = 1;
 EntityExplorer.walkable = false;

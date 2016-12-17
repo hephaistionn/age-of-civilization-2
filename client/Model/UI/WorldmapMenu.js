@@ -6,7 +6,7 @@ module.exports = class WorldmapMenu {
     constructor(config) {
         this.type = 'UI';
         this.constructMode = false;
-        this.updated = true;
+        this.updated = false;
         this.onConstructModeFct = ()=> {
         };
     }

@@ -12,7 +12,7 @@ module.exports = class Positioner {
         this.undroppable = false;
         this.x = 0;
         this.z = 0;
-        this.updated = true;
+        this.updated = false;
     }
 
     moveEntity(x, z, a, map) {

@@ -9,12 +9,14 @@ module.exports = class EntityManagerPanel {
         this.type = 'UI';
         this.description = '';
         this.currentEntity = null;
-        this.updated = true;
+        this.updated = false;
     }
 
     open(entity) {
         if(!entity.constructor.selectable) return;
         this.description = entity.constructor.description;
+        this.onAction = entity.onAction.bind(entity);
+        this.actionLabel = entity.constructor.actionLabel;
         this.opened = true;
         this.yourCity = entity.leader === stateManager.getCurrentLeader().id;
         this.currentEntity = entity;

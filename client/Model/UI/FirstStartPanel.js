@@ -8,7 +8,7 @@ module.exports = class FirstStartPanel {
         this.message = "welcome to Age of Civilization";
         this.picture = '';
         this.fct = null;
-        this.updated = true;
+        this.updated = false;
     }
 
     onClose(fct) {

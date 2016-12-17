@@ -23,7 +23,7 @@ class Map {
         this.codeToEntities = {};
         this.isResource = {};
         this.entityDynamicList = [];
-        this.updated = true;
+        this.updated = false;
 
         for(let id in ENTITIES) {
             this.entityGroups[id] = [];

@@ -19,7 +19,7 @@ class Worldmap {
         this.updatedCity = [];
         this.tiltMax = 40;
         this.heightMin = 0.16;
-        this.updated = true;
+        this.updated = false;
     }
 
     addCity(params) {

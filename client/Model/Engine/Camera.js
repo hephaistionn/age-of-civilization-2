@@ -30,7 +30,7 @@ class Camera {
         this.zoomMax = config.zoomMax || 30;
         this.zoomMin = config.zoomMin || 5;
         this.AngleXZ = Math.atan2(-this.offsetZ, -this.offsetX);
-        this.updated = true;
+        this.updated = false;
     }
 
     move(x, y, z) {

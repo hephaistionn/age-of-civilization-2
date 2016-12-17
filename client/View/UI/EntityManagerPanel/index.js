@@ -30,11 +30,13 @@ module.exports = class EntityManagerPanel {
         if(model.opened) {
             if(model.description) this.createDescription(model);
             if(model.yourCity) this.createVisiteButton(model);
+            if(model.onAction) this.createActionButton(model);
             this.node.className = this.node.className.replace(' hide', '');
         } else {
             this.node.className += ' hide';
             if(this.nodeDescription) this.nodePanel.removeChild(this.nodeDescription);
             if(this.nodeVisitButton) this.nodePanel.removeChild(this.nodeVisitButton);
+            if(this.nodeActionButton) this.nodePanel.removeChild(this.nodeActionButton);
         }
     }
 
@@ -51,6 +53,14 @@ module.exports = class EntityManagerPanel {
         this.nodeVisitButton.textContent = 'Go to';
         this.nodeVisitButton.onclick = model.visit.bind(model);
         this.nodePanel.appendChild(this.nodeVisitButton);
+    }
+
+    createActionButton(model) {
+        this.nodeActionButton = document.createElement('div');
+        this.nodeActionButton.className = 'button action';
+        this.nodeActionButton.textContent = model.actionLabel;
+        this.nodeActionButton.onclick = model.onAction.bind(model);
+        this.nodePanel.appendChild(this.nodeActionButton);
     }
 
     update() {
