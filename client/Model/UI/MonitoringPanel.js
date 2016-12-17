@@ -7,25 +7,25 @@ module.exports = class MonitoringPanel {
         this.opened = false;
         this.type = 'UI';
         this.previewes = ['wood', 'stone', 'meat'];
-
+        this.updated = true;
         this.stateManager = stateManager;
     }
 
     open() {
         if(this.opened === true) return;
         this.opened = true;
-        ee.emit('onUpdate', 'monitoringPanel', this);
+        this.updated = true;
     }
 
     close() {
         if(this.opened === false) return;
         this.opened = false;
-        ee.emit('onUpdate', 'monitoringPanel', this);
+        this.updated = true;
     }
 
     switchTrade(id) {
         this.stateManager.switchTrade(id);
-        ee.emit('onUpdate', 'monitoringPanel', this);
+        this.updated = true;
     }
 
     goWorldmap() {

@@ -7,27 +7,29 @@ module.exports = class EditorPanel {
         this.entityEditor = false;
         this.roadeEditor = false;
         this.eraseEditor = false;
+        this.updated = true;
         this.type = 'UI';
+
     }
 
     open() {
         this.displayed = true;
-        ee.emit('onUpdate', 'editorPanel', this);
+        this.updated = true;
     }
 
     showEntityEditor() {
         this.entityEditor = true;
-        ee.emit('onUpdate', 'editorPanel', this);
+        this.updated = true;
     }
 
     showDeletionEditor() {
         this.eraseEditor = true;
-        ee.emit('onUpdate', 'editorPanel', this);
+        this.updated = true;
     }
 
     showRoadeEditor() {
         this.roadeEditor = true;
-        ee.emit('onUpdate', 'editorPanel', this);
+        this.updated = true;
     }
 
     onConfirm(fct) {
@@ -53,7 +55,7 @@ module.exports = class EditorPanel {
         this.entityEditor = false;
         this.roadeEditor = false;
         this.eraseEditor = false;
-        ee.emit('onUpdate', 'editorPanel', this);
+        this.updated = true;
     }
 
 

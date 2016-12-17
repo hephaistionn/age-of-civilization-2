@@ -50,21 +50,17 @@ class ScreenWorldmap {
 
         this.worldmapMenu.onConstructMode(() => {
             this.positioner.selectEnity('EntityCity');
-            ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
         if(!stateManager.getCurrentLeader()) {
             this.firstStartPanel = new FirstStartPanel();
             this.firstStartPanel.onClose(()=> {
                 delete this.firstStartPanel;
-                ee.emit('onUpdate', 'firstStartPanel');
                 this.leaderCreationPanel = new LeaderCreationPanel();
-                ee.emit('onUpdate', 'leaderCreationPanel', this.leaderCreationPanel);
                 this.leaderCreationPanel.onClose(params => {
                     stateManager.newLeader(params);
                     //clean map => new worldmap;
                     delete this.leaderCreationPanel;
-                    ee.emit('onUpdate', 'leaderCreationPanel');
                 });
             });
         }
@@ -77,7 +73,6 @@ class ScreenWorldmap {
             type: 'mesopotamia', leader: leaderId
         });
         this.worldmap.addCity(params);
-        ee.emit('onUpdate', 'worldmap', this.worldmap);
     }
 
     update(dt) {
@@ -88,16 +83,12 @@ class ScreenWorldmap {
         if(moveDx !== 0 || moveDz !== 0) {
             this.camera.moveTo(moveDx, moveDz, dt);
             this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            ee.emit('onUpdate', 'camera', this.camera);
-            ee.emit('onUpdate', 'light', this.light);
         }
     }
 
     mouseMovePress(x, z) {
         this.camera.dragg(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        ee.emit('onUpdate', 'camera', this.camera);
-        ee.emit('onUpdate', 'light', this.light);
     }
 
     mouseUp() {
@@ -118,7 +109,6 @@ class ScreenWorldmap {
     mouseMoveOnMap(x, z) {
         if(this.positioner.selected) {
             this.positioner.moveEntity(x, z, 0, this.worldmap);
-            ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }
 
@@ -127,7 +117,6 @@ class ScreenWorldmap {
             this.positioner.unselectEnity();
             this.worldmapMenu.stopConstructMode();
         }
-        ee.emit('onUpdate', 'positioner', this.positioner);
     }
 
     mouseClick(x, z, model) {
@@ -136,8 +125,6 @@ class ScreenWorldmap {
             this.newCity(entity.x, entity.y, entity.z, 1, 'myCity', stateManager.getCurrentLeader().id);
             this.positioner.unselectEnity();
             this.worldmapMenu.stopConstructMode();
-            ee.emit('onUpdate', 'worldmap', this.worldmap);
-            ee.emit('onUpdate', 'positioner', this.positioner);
         } else if(model) {
             this.entityManagerPanel.open(model);
         }
@@ -147,8 +134,6 @@ class ScreenWorldmap {
         this.camera.mouseWheel(delta);
         this.light.scaleOffset(-this.camera.offsetY);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        ee.emit('onUpdate', 'camera', this.camera);
-        ee.emit('onUpdate', 'light', this.light);
     }
 
     dismount() {

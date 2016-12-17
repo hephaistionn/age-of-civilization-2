@@ -8,6 +8,7 @@ module.exports = class LeaderCreationPanel {
         this.inputName = 'SARGON';
         this.labelName = 'leader name';
         this.valide = null;
+        this.updated = true;
     }
 
     onClose(fct) {

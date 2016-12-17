@@ -24,32 +24,32 @@ module.exports = class BuildingMenu {
         this.currentFocus = null;
         this.displayed = true;
         this.isCollapsed = true;
-
+        this.updated = true;
         this.type = 'UI';
     }
 
     open() {
         this.displayed = true;
         this.isCollapsed = true;
-        ee.emit('onUpdate', 'buildingMenu', this);
+        this.updated = true;
     }
 
     close() {
         this.displayed = false;
         this.currentCategory = [];
         if(this._close)this._close();
-        ee.emit('onUpdate', 'buildingMenu', this);
+        this.updated = true;
     }
 
     expand () {
         this.isCollapsed = false;
-        ee.emit('onUpdate', 'buildingMenu', this);
+        this.updated = true;
     }
 
     collapse () {
         this.currentCategory = [];
         this.isCollapsed = true;
-        ee.emit('onUpdate', 'buildingMenu', this);
+        this.updated = true;
     }
 
 
@@ -57,7 +57,7 @@ module.exports = class BuildingMenu {
         this.isCollapsed = false;
         this.currentCategoryId = categoryId;
         this.updateCurrentCategory();
-        ee.emit('onUpdate', 'buildingMenu', this);
+        this.updated = true;
     }
 
     updateCurrentCategory() {
@@ -75,7 +75,7 @@ module.exports = class BuildingMenu {
         this._onClickBuilding = entityId => {
             this.currentFocus === entityId ? this.currentFocus = null : this.currentFocus = entityId;
             fct(entityId);
-            ee.emit('onUpdate', 'buildingMenu', this);
+            this.updated = true;
         };
     }
 

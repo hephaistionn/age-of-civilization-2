@@ -23,6 +23,7 @@ class Map {
         this.codeToEntities = {};
         this.isResource = {};
         this.entityDynamicList = [];
+        this.updated = true;
 
         for(let id in ENTITIES) {
             this.entityGroups[id] = [];
@@ -50,6 +51,7 @@ class Map {
         if(entity.update) {
             this.entityDynamicList.push(entity);
         }
+        this.updated = true;
     }
 
     removeEntity(entity) {
@@ -73,7 +75,7 @@ class Map {
         entityGroup[indexOfEntity].updateState(params);
         this.updatedEntity.push(indexOfEntity);
         this.updatedEntity.push(entityId);
-
+        this.updated = true;
     }
 
     setWalkableTile(entity, walkableStatus) {
@@ -89,12 +91,14 @@ class Map {
                 this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkableStatus);
             }
         }
+        this.updated = true;
     }
 
     clearTile(x, z, model) {
         if(model) {
             this.removeEntity(model)
         }
+        this.updated = true;
     }
 
     getTile(tiles, x, z) {

@@ -13,6 +13,7 @@ class Light {
         this.targetY = 0;
         this.targetZ = 0;
         this.shadow = config.shadow || false;
+        this.updated = true;
         this.move(config.x || this.x, config.z || this.y, config.z || this.z);
     }
 
@@ -22,6 +23,7 @@ class Light {
         this.z = z;
         this.targetX = this.offsetX + this.x;
         this.targetZ = this.offsetZ + this.x;
+        this.updated = true;
     }
 
     moveTarget(x, y, z) {
@@ -31,6 +33,7 @@ class Light {
         this.x = this.targetX - this.offsetX;
         this.y = this.targetY - this.offsetY;
         this.z = this.targetZ - this.offsetZ;
+        this.updated = true;
     }
 
     scaleOffset(factor) {
@@ -41,6 +44,7 @@ class Light {
         this.offsetX *= factor;
         this.offsetY *= factor;
         this.offsetZ *= factor;
+        this.updated = true;
     }
 
     dismount() {

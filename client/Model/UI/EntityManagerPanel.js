@@ -9,24 +9,23 @@ module.exports = class EntityManagerPanel {
         this.type = 'UI';
         this.description = '';
         this.currentEntity = null;
+        this.updated = true;
     }
 
     open(entity) {
-        if(this.opened === true) return;
         if(!entity.constructor.selectable) return;
         this.description = entity.constructor.description;
         this.opened = true;
         this.yourCity = entity.leader === stateManager.getCurrentLeader().id;
         this.currentEntity = entity;
-        ee.emit('onUpdate', 'entityManagerPanel', this);
+        this.updated = true;
     }
 
     close() {
-        if(this.opened === false) return;
         this.description = '';
         this.opened = false;
         this.currentEntity = null;
-        ee.emit('onUpdate', 'entityManagerPanel', this);
+        this.updated = true;
     }
 
     visit() {

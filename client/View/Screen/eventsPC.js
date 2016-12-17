@@ -35,8 +35,6 @@ module.exports = Screen => {
         document.addEventListener('keyup', this.events.__keyup);
         this.events.__resize = this._resize.bind(this);
         window.addEventListener('resize', this.events.__resize, false);
-        this.events.__updateComponent = this.updateComponent.bind(this);
-        ee.on('onUpdate', this.events.__updateComponent);
     };
 
     Screen.prototype.removeObservers = function removeObservers() {
@@ -49,7 +47,6 @@ module.exports = Screen => {
         document.removeEventListener('keydown', this.events.__keypress);
         document.removeEventListener('keyup', this.events.__keyup);
         window.removeEventListener('resize', this.events.__resize);
-        ee.off('onUpdate', this.events.__updateComponent);
     };
 
     Screen.prototype._resize = function _resize(e) {

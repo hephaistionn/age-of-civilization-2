@@ -30,6 +30,7 @@ class Camera {
         this.zoomMax = config.zoomMax || 30;
         this.zoomMin = config.zoomMin || 5;
         this.AngleXZ = Math.atan2(-this.offsetZ, -this.offsetX);
+        this.updated = true;
     }
 
     move(x, y, z) {
@@ -40,6 +41,7 @@ class Camera {
         this.targetX = this.x + this.offsetX;
         this.targetY = this.y + this.offsetY;
         this.targetZ = this.z + this.offsetZ;
+        this.updated = true;
     }
 
     moveTo(dx, dz, dt) {
@@ -52,6 +54,7 @@ class Camera {
         this.limiter();
         this.targetX = this.x + this.offsetX;
         this.targetZ = this.z + this.offsetZ;
+        this.updated = true;
     }
 
     update() {
@@ -60,7 +63,7 @@ class Camera {
 
     dragg(x, z) {
         //Transformation of space. Apply a rotation of PI/4 at  direction vector.
-        //screen space to camera space
+        //screen space to camera spaceè
         if(!this.moveReady) {
             this.initMove(x, z);
         }
@@ -122,6 +125,7 @@ class Camera {
 
         this.computeBorder();
         this.move(x, y, z);
+        this.updated = true;
     }
 
     setMapBorder(dataMap) {

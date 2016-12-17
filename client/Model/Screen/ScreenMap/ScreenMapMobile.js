@@ -60,9 +60,6 @@ class ScreenMap {
             }
 
             this.buildingMenu.close();
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-            ee.emit('onUpdate', 'positioner', this.positioner);
-
         });
 
         this.editorPanel.onConfirm(() => {
@@ -74,19 +71,14 @@ class ScreenMap {
                 this.positioner.unselectEnity();
                 entity.onConstruct();
                 this.map.newEntity(params);
-                this.buildingMenu.open();
-                ee.emit('onUpdate', 'map', this.map);
-                ee.emit('onUpdate', 'positioner', this.positioner);
-                ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
-                ee.emit('onUpdate', 'buildingMenu', this.buildingMenu);
             }
+            this.buildingMenu.open();
         });
 
         this.editorPanel.onCancel(() => {
             this.positioner.unselectEnity();
             this.roadPositioner.unselectEnity();
             this.buildingMenu.open();
-            ee.emit('onUpdate', 'positioner', this.positioner);
         });
 
         this.editorPanel.onRotate(() => {
@@ -95,7 +87,6 @@ class ScreenMap {
             var x = this.positioner.x;
             var z = this.positioner.z;
             this.positioner.moveEntity(x, z, rotation, this.map);
-            ee.emit('onUpdate', 'positioner', this.positioner);
         });
     }
 
@@ -113,21 +104,17 @@ class ScreenMap {
         if(this.roadPositioner && this.roadPositioner.selected) return;
         this.camera.dragg(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        ee.emit('onUpdate', 'camera', this.camera);
-        ee.emit('onUpdate', 'light', this.light);
     }
 
     touchMoveOnMap(x, z) {
         if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.rolloutSelectedEntity(x, z, this.map);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
     }
 
     touchDragg(x, z, screenX, screenY) {
         if(this.positioner.selected) {
             this.positioner.moveEntity(x, z, rotation, this.map);
-            ee.emit('onUpdate', 'positioner', this.positioner);
         }
     }
 
@@ -139,10 +126,9 @@ class ScreenMap {
         if(removeMode) {
             if(model) {
                 this.map.clearTile(x, z, model);
-            }else{
+            }else if(this.map.entityGroups['EntityRoad'].length!==0) {
                 this.map.updateEntity('EntityRoad',null, {tiles:[Math.floor(x),Math.floor(z)],walkable:[1],length:1});
             }
-            ee.emit('onUpdate', 'map', this.map);
         }else if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
         } else if (model){
@@ -162,9 +148,6 @@ class ScreenMap {
                 this.map.newEntity({entityId: 'EntityRoad'});
             }
             this.map.updateEntity('EntityRoad', null, params);
-            ee.emit('onUpdate', 'map', this.map);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-            ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
         }
     }
 
@@ -172,19 +155,15 @@ class ScreenMap {
         this.camera.scale(delta);
         this.light.scaleOffset(-this.camera.offsetY);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        ee.emit('onUpdate', 'camera', this.camera);
-        ee.emit('onUpdate', 'light', this.light);
     }
 
     newEntity(params) {
         params.map = this.map;
         this.map.newEntity(params);
-        ee.emit('onUpdate', 'map', this.map);
     }
 
     removeEntity(entity) {
         this.map.removeEntity(entity);
-        ee.emit('onUpdate', 'map', this.map);
     }
 
     syncState(model) {

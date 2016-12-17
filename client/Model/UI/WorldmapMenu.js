@@ -6,6 +6,7 @@ module.exports = class WorldmapMenu {
     constructor(config) {
         this.type = 'UI';
         this.constructMode = false;
+        this.updated = true;
         this.onConstructModeFct = ()=> {
         };
     }
@@ -21,14 +22,14 @@ module.exports = class WorldmapMenu {
 
     stopConstructMode(){
         this.constructMode = false;
-        ee.emit('onUpdate', 'worldmapMenu', this);
+        this.updated = true;
     }
 
     onConstructMode(fct) {
         this.onConstructModeFct = ()=> {
             this.constructMode = true;
             fct();
-            ee.emit('onUpdate', 'worldmapMenu', this);
+            this.updated = true;
         };
     }
 

@@ -12,6 +12,7 @@ module.exports = class Positioner {
         this.undroppable = false;
         this.x = 0;
         this.z = 0;
+        this.updated = true;
     }
 
     moveEntity(x, z, a, map) {
@@ -21,14 +22,17 @@ module.exports = class Positioner {
         this.selected.move(x, y, z, a);
         const tiles = this.selected.getTiles();
         this.undroppable = !map.isWalkable(tiles);
+        this.updated = true;
     }
 
     selectEnity(id) {
         this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: 0});
+        this.updated = true;
     }
 
     unselectEnity() {
         this.selected = null;
+        this.updated = true;
     }
 
     dismount() {

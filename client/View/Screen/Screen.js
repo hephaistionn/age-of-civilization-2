@@ -30,7 +30,8 @@ class Screen {
         this.raycaster = new THREE.Raycaster();
         this.pressX = 0;
         this.pressZ = 0;
-        this.events = {}
+        this.events = {};
+        this.components = {};
     }
 
     mount(model) {
@@ -53,13 +54,13 @@ class Screen {
         for(let id in models) {
             model = models[id];
             if(model.type === 'UI') {
-                this.dom.removeChild(this[id].node)
+                this.dom.removeChild(this.components[id].node)
             }
         }
     }
 
     show(models) {
-        const map = this.map || this.worldmap;
+        const map = this.components.map || this.components.worldmap;
         if(map) {
             map.refreshTexture();
         }
@@ -68,66 +69,71 @@ class Screen {
         for(let id in models) {
             model = models[id];
             if(model.type === 'UI') {
-                this.dom.appendChild(this[id].node);
+                this.dom.appendChild(this.components[id].node);
             }
         }
         this.initObservers();
     }
 
     newComponent(id, model) {
-        this[id] = new COMPONENTS[model.constructor.name](model);
+        this.components[id] = new COMPONENTS[model.constructor.name](model);
 
         if(model.type === 'UI') {
-            this.dom.appendChild(this[id].node);
+            this.dom.appendChild(this.components[id].node);
         } else {
-            this.render.addChild(this[id]);
+            this.render.addChild(this.components[id]);
         }
     }
 
     removeComponent(id) {
-        if(this[id].type === 'UI') {
-            if(this[id].node.parentNode) {
-                this.dom.removeChild(this[id].node)
+        if(this.components[id].type === 'UI') {
+            if(this.components[id].node.parentNode) {
+                this.dom.removeChild(this.components[id].node)
             }
         } else {
-            this[id].remove();
-            this.render.removeChild(this[id])
+            this.components[id].remove();
+            this.render.removeChild(this.components[id])
         }
-        delete this[id];
+        delete this.components[id];
     }
 
-    updateComponent(id, model) {
-        if(this[id]) {
-            if(model !== undefined) {
-                this[id].updateState(model);
-            } else {
+    update(dt, models) {
+
+        const views = this.components;
+
+        for(let id in views) {
+            if(models[id] === undefined) {
                 this.removeComponent(id);
             }
-        } else {
-            this.newComponent(id, model);
         }
-    }
 
-    update(dt, model) {
-        for(let id in model) {
-            this[id].update(dt);
+        for(let id in models) {
+            if(views[id]) {
+                if(models[id].updated === true){
+                    views[id].updateState(models[id]);
+                    models[id].updated = false;
+                }
+                views[id].update(dt);
+            } else {
+                this.newComponent(id, models[id]);
+            }
         }
         this.render.update();
     }
 
     getPointOnMap(screenX, screenY, recursive) {
-        if(!this.map && !this.worldmap)return;
+        var components = this.components;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        this.raycaster.setFromCamera(this.mouse, components.camera.element);
         let intersects;
         let tileSize;
-        if(this.map) {
-            intersects = this.raycaster.intersectObjects(this.map.chunksList, recursive);
-            tileSize = this.map.tileSize;
+        if(components.map) {
+            intersects = this.raycaster.intersectObjects(components.map.chunksList, recursive);
+            tileSize = components.map.tileSize;
         } else {
-            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, recursive);
-            tileSize = this.worldmap.tileSize;
+            intersects = this.raycaster.intersectObjects(components.worldmap.touchSurface, recursive);
+            tileSize = components.worldmap.tileSize;
         }
         if(intersects.length) {
             const point = intersects[0].point;
@@ -150,37 +156,35 @@ class Screen {
     }
 
     getPointOnMapCameraRelative(screenX, screenY, recursive) {
-        if(!this.map && !this.worldmap)return;
+        var components = this.components;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        const camera = this.camera.element;
-        this.raycaster.setFromCamera(this.mouse, this.camera.element);
+        const camera = components.camera.element;
+        this.raycaster.setFromCamera(this.mouse, components.camera.element);
         let intersects;
         let tileSize;
-        if(this.map) {
-            intersects = this.raycaster.intersectObjects(this.map.chunksList, recursive);
-            tileSize = this.map.tileSize;
-        }
-        else {
-            intersects = this.raycaster.intersectObjects(this.worldmap.touchSurface, recursive);
-            tileSize = this.worldmap.tileSize;
+        if(components.map) {
+            intersects = this.raycaster.intersectObjects(components.map.chunksList, recursive);
+            tileSize = components.map.tileSize;
+        } else {
+            intersects = this.raycaster.intersectObjects(components.worldmap.touchSurface, recursive);
+            tileSize = components.worldmap.tileSize;
         }
         if(intersects.length) {
             const point = intersects[0].point;
             point.x /= tileSize;
             point.z /= tileSize;
-            point.x -= camera.matrixWorld.elements[12] / this.camera.tileSize;
-            point.z -= camera.matrixWorld.elements[14] / this.camera.tileSize;
+            point.x -= camera.matrixWorld.elements[12] / components.camera.tileSize;
+            point.z -= camera.matrixWorld.elements[14] / components.camera.tileSize;
             return point;
         }
     }
 
     touchSelected(screenX, screenY) {
-        if(!this.map || !this.camera || !this.positioner.element)return false;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, this.camera.element);
-        const intersects = this.raycaster.intersectObjects([this.positioner.element], true);
+        this.raycaster.setFromCamera(this.mouse, this.components.camera.element);
+        const intersects = this.raycaster.intersectObjects([this.components.positioner.element], true);
         if(intersects.length) {
             return true;
         } else {

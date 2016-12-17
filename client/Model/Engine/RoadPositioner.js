@@ -13,6 +13,7 @@ module.exports = class RoadPositioner {
         this.startX = 0;
         this.startZ = 0;
         this.maxTile = 30;
+        this.updated = true;
         this.road = {
             tiles: new Uint16Array(2 * this.maxTile),
             walkable: new Uint8Array(this.maxTile),
@@ -30,6 +31,7 @@ module.exports = class RoadPositioner {
             this.road.walkable[0] = 0;
         }
         this.road.length = 1;
+        this.updated = true;
     }
 
     rolloutSelectedEntity(x, z, map) {
@@ -79,6 +81,7 @@ module.exports = class RoadPositioner {
             }
         }
         this.road.length = length;
+        this.updated = true;
     }
 
     mouseDown(x, z) {
@@ -94,6 +97,7 @@ module.exports = class RoadPositioner {
                 length: this.road.length
             };
             this.road.length = 0;
+            this.updated = true;
             return result;
         }
     }
@@ -104,11 +108,13 @@ module.exports = class RoadPositioner {
         } else {
             this.selected = null;
         }
+        this.updated = true;
     }
 
     unselectEnity() {
         this.road.length = 0;
         this.selected = null;
+        this.updated = true;
     }
 
 

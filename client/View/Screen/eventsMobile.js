@@ -16,8 +16,6 @@ module.exports = Screen => {
         this.canvas.addEventListener('touchmove', this.events.__touchMove);
         this.events.__resize = this._resize.bind(this);
         window.addEventListener('resize', this.__resize, false);
-        this.events.__updateComponent = this.updateComponent.bind(this);
-        ee.on('onUpdate', this.events.__updateComponent);
         this.selected = false;
         this.startSpace = 0;
         this.timer = null;
@@ -30,7 +28,6 @@ module.exports = Screen => {
         this.canvas.removeEventListener('touchleave', this.events.__touchleave);
         this.canvas.removeEventListener('touchmove', this.events.__touchMove);
         window.removeEventListener('resize', this.events.__resize);
-        ee.off('onUpdate', this.events.__updateComponent);
     };
 
     Screen.prototype._resize = function _resize(e) {

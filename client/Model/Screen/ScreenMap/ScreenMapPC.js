@@ -52,9 +52,6 @@ class ScreenMap {
             } else {
                 this.positioner.selectEnity(entityId);
             }
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-            ee.emit('onUpdate', 'positioner', this.positioner);
-
         });
 
     }
@@ -67,8 +64,6 @@ class ScreenMap {
         if(moveDx !== 0 || moveDz !== 0) {
             this.camera.moveTo(moveDx, moveDz, dt);
             this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-            ee.emit('onUpdate', 'camera', this.camera);
-            ee.emit('onUpdate', 'light', this.light);
         }
     }
 
@@ -79,10 +74,8 @@ class ScreenMap {
     mouseMoveOnMap(x, z) {
         if(this.positioner.selected) {
             this.positioner.moveEntity(x, z, rotation, this.map);
-            ee.emit('onUpdate', 'positioner', this.positioner);
         } else if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.moveEntity(x, z, this.map);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
     }
 
@@ -92,13 +85,11 @@ class ScreenMap {
         var x = this.positioner.x;
         var z = this.positioner.z;
         this.positioner.moveEntity(x, z, rotation, this.map);
-        ee.emit('onUpdate', 'positioner', this.positioner);
     }
 
     mouseMoveOnMapPress(x, z) {
         if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.rolloutSelectedEntity(x, z, this.map);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
         }
     }
 
@@ -106,14 +97,11 @@ class ScreenMap {
         if(this.roadPositioner.selected) return;
         this.camera.dragg(x, z);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        ee.emit('onUpdate', 'camera', this.camera);
-        ee.emit('onUpdate', 'light', this.light);
     }
 
     mouseDown(x, z) {
         if(this.roadPositioner.selected)return;
         if(removeMode)return;
-        ee.emit('onUpdate', 'camera', this.camera);
     }
 
     mouseDownRight() {
@@ -126,8 +114,6 @@ class ScreenMap {
 
         this.buildingMenu.collapse();
         removeMode = false;
-        ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-        ee.emit('onUpdate', 'positioner', this.positioner);
     }
 
     mouseDownOnMap(x, z) {
@@ -143,7 +129,6 @@ class ScreenMap {
             }else{
                 this.map.updateEntity('EntityRoad',null, {tiles:[Math.floor(x),Math.floor(z)],walkable:[1],length:1});
             }
-            ee.emit('onUpdate', 'map', this.map);
         } else if(this.positioner.selected && !this.positioner.undroppable) {
             const entity = this.positioner.selected;
             const built = entity.constructor.construction();
@@ -152,11 +137,7 @@ class ScreenMap {
             entity.onConstruct();
             this.map.newEntity(params);
             this.positioner.unselectEnity();
-            ee.emit('onUpdate', 'map', this.map);
-            ee.emit('onUpdate', 'positioner', this.positioner);
-            ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             this.buildingMenu.updateCurrentCategory();
-            ee.emit('onUpdate', 'buildingMenu', this.buildingMenu);
         } else if(this.roadPositioner.selected) {
             this.roadPositioner.moveEntity(x, z, this.map);
             const params = this.roadPositioner.getNewRoad();
@@ -166,9 +147,6 @@ class ScreenMap {
                 if(this.map.entityGroups['EntityRoad'].length===0){
                     this.map.newEntity({entityId: 'EntityRoad'});
                 }
-                ee.emit('onUpdate', 'map', this.map);
-                ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-                ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
             }
         } else if(model) {
             this.entityManagerPanel.open(model);
@@ -186,9 +164,6 @@ class ScreenMap {
                 this.map.newEntity({entityId: 'EntityRoad'});
             }
             this.map.updateEntity('EntityRoad', null, params);
-            ee.emit('onUpdate', 'map', this.map);
-            ee.emit('onUpdate', 'roadPositioner', this.roadPositioner);
-            ee.emit('onUpdate', 'monitoringPanel', this.monitoringPanel);
         }
     }
 
@@ -207,20 +182,16 @@ class ScreenMap {
         this.camera.mouseWheel(delta);
         this.light.scaleOffset(-this.camera.offsetY);
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        ee.emit('onUpdate', 'camera', this.camera);
-        ee.emit('onUpdate', 'light', this.light);
     }
 
     newEntity(params) {
         params.map = this.map;
         params.map = this.map;
         this.map.newEntity(params);
-        ee.emit('onUpdate', 'map', this.map);
     }
 
     removeEntity(entity) {
         this.map.removeEntity(entity);
-        ee.emit('onUpdate', 'map', this.map);
     }
 
     syncState(model) {
