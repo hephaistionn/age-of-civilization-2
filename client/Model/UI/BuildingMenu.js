@@ -15,7 +15,7 @@ module.exports = class BuildingMenu {
                 'EntityHouse',
                 'EntityChurch',
                 'Road',
-                'Destroy',
+                'EntityExplorer',
                 'Destroy',
                 'Destroy']
         };

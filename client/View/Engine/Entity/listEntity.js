@@ -1,6 +1,7 @@
 module.exports = {
     EntityHouse: require('./Building/EntityHouse'),
     EntityChurch: require('./Building/EntityChurch'),
+    EntityExplorer: require('./Building/EntityExplorer'),
     EntityCity: require('./Building/EntityCity'),
     EntityTree: require('./Resource/EntityTree'),
     EntityPeon: require('./Character/EntityPeon'),

@@ -14,7 +14,8 @@ module.exports = StateManager => {
             mapId: 'map',
             states: {
                 population: 0,
-                workers: 0
+                workers: 0,
+                explorers: 0
             },
             resources: {
                 wood: 200,
@@ -86,6 +87,12 @@ module.exports = StateManager => {
     StateManager.prototype.updateWorkers = function updateWorkers(value) {
         this.currentCity.states.workers += value;
     };
+
+    StateManager.prototype.updateExplorers = function updateExplorers(value) {
+        this.currentCity.states.explorers += value;
+    };
+
+
 
     StateManager.prototype.updateTrade = function updateTrade(id) {
         const trade = this.currentCity.trade;
