@@ -78,6 +78,12 @@ class Map {
         this.updated = true;
     }
 
+    addFlag(params){
+        const entityId = params.entityId;
+        //Add point explore in a array and update visible map
+        this.updated = true;
+    }
+
     setWalkableTile(entity, walkableStatus) {
         const tiles = entity.getTiles();
         if(this.entityGroups.EntityRoad.length){

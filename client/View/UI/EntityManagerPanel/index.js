@@ -30,7 +30,7 @@ module.exports = class EntityManagerPanel {
         if(model.opened) {
             if(model.description) this.createDescription(model);
             if(model.yourCity) this.createVisiteButton(model);
-            if(model.onAction) this.createActionButton(model);
+            if(model.currentAction) this.createActionButton(model);
             this.node.className = this.node.className.replace(' hide', '');
         } else {
             this.node.className += ' hide';
@@ -59,7 +59,7 @@ module.exports = class EntityManagerPanel {
         this.nodeActionButton = document.createElement('div');
         this.nodeActionButton.className = 'button action';
         this.nodeActionButton.textContent = model.actionLabel;
-        this.nodeActionButton.onclick = model.onAction.bind(model);
+        this.nodeActionButton.onclick = model.onActionHandler.bind(model);
         this.nodePanel.appendChild(this.nodeActionButton);
     }
 

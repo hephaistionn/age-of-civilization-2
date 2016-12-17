@@ -122,14 +122,25 @@ class Entity {
 Entity.construction = function construction() {
     const cost = this.cost;
     const resources = stateManager.currentCity.resources;
+    const states = stateManager.currentCity.states;
 
     for(var resourceId in cost) {
         const valueRequired = cost[resourceId];
-        const value = resources[resourceId];
-        if(valueRequired > value) {
-            return false;
+
+        if(resources[resourceId] !== undefined) {
+            const value = resources[resourceId];
+            if(valueRequired > value) {
+                return false;
+            }
+            resources[resourceId] -= valueRequired;
         }
-        resources[resourceId] -= valueRequired;
+        if(states[resourceId] !== undefined) {
+            const value = states[resourceId];
+            if(valueRequired > value) {
+                return false;
+            }
+            states[resourceId] -= valueRequired;
+        }
     }
     return true;
 };

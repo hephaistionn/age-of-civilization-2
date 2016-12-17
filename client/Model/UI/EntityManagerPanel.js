@@ -10,12 +10,17 @@ module.exports = class EntityManagerPanel {
         this.description = '';
         this.currentEntity = null;
         this.updated = false;
+        this._onBuild = null;
     }
 
     open(entity) {
         if(!entity.constructor.selectable) return;
         this.description = entity.constructor.description;
-        this.onAction = entity.onAction.bind(entity);
+        if( entity.onAction) {
+            this.currentAction = entity.onAction.bind(entity);
+        }else {
+            this.currentAction = null;
+        }
         this.actionLabel = entity.constructor.actionLabel;
         this.opened = true;
         this.yourCity = entity.leader === stateManager.getCurrentLeader().id;
@@ -28,6 +33,17 @@ module.exports = class EntityManagerPanel {
         this.opened = false;
         this.currentEntity = null;
         this.updated = true;
+    }
+
+    onActionHandler() {
+        if(this.currentAction) {
+            const entityId = this.currentAction();
+            if(entityId) this._onBuild(entityId);
+        }
+    }
+
+    onBuild(fct) {
+        this._onBuild = fct;
     }
 
     visit() {

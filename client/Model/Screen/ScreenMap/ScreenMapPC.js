@@ -54,6 +54,13 @@ class ScreenMap {
             }
         });
 
+        this.entityManagerPanel.onBuild(entityId => {
+            this.positioner.unselectEnity();
+            removeMode = false;
+            rotation = 0;
+            this.positioner.selectEnity(entityId);
+            this.entityManagerPanel.close();
+        })
     }
 
     update(dt) {
@@ -135,7 +142,11 @@ class ScreenMap {
             if(!built) return; //not enough resources
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
             entity.onConstruct();
-            this.map.newEntity(params);
+            if(entity.constructor.flag){
+                this.map.addFlag(params);
+            }else{
+                this.map.newEntity(params);
+            }
             this.positioner.unselectEnity();
             this.buildingMenu.updateCurrentCategory();
         } else if(this.roadPositioner.selected) {

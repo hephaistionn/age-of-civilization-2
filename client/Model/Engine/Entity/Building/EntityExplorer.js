@@ -15,7 +15,7 @@ class EntityExplorer extends Entity {
     onAction() {
         const states = stateManager.getCurrentCity().states;
         if(states.explorers >= this.explorers){
-            //stateManager.updatePopulation(-this.explorers);
+            return 'EntityFlag';
         }
     }
 

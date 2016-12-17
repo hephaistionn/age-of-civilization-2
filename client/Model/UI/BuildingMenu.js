@@ -62,6 +62,7 @@ module.exports = class BuildingMenu {
 
     updateCurrentCategory() {
         const category = this.categories[this.currentCategoryId];
+        if(!category) return;
         this.currentCategory = category.filter(this.filterEnableBuilding);
     }
 
