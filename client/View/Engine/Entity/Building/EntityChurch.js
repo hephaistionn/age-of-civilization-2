@@ -14,6 +14,7 @@ module.exports = class EntityChurch {
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
+        this.element.name = 'EntityChurch';
         this.updateState();
     }
 

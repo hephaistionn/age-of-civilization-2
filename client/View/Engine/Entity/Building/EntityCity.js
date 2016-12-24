@@ -16,7 +16,7 @@ module.exports = class EntityCity {
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
-
+        this.element.name = 'EntityCity';
         this.updateState();
     }
 

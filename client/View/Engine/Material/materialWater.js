@@ -1,10 +1,14 @@
 const THREE = require('./../../../services/threejs');
 
 const vertShader = "" +
+    "attribute float revealed; \n" +
     "varying vec3 vAbsolutePosition; \n" +
+    "varying float vRevealed; \n"+
     "void main() { \n" +
-    "vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
+    "vec3 positionPlan = vec3(position.x,.0,position.z); \n" +
+    "vec4 worldPosition = modelMatrix * vec4(positionPlan, 1.0 ); \n" +
     "vAbsolutePosition = worldPosition.xyz; \n" +
+    "vRevealed = revealed; \n"+
     "gl_Position = projectionMatrix * viewMatrix * worldPosition; \n" +
     "} ";
 
@@ -14,6 +18,7 @@ const fragShader = "" +
     "uniform float progress; \n" +
     "uniform float size; \n" +
     "varying vec3 vAbsolutePosition; \n" +
+    "varying float vRevealed; \n"+
     "uniform sampler2D textureA; \n" +
     "uniform vec3 ambientLightColor; \n" +
     "#if NUM_DIR_LIGHTS > 0 \n" +
@@ -63,7 +68,7 @@ const fragShader = "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +
     "gl_FragColor.xyz = colorFinal * sumLights; \n" +
-    "gl_FragColor.a = opacity; \n" +
+    "gl_FragColor.a = vRevealed; \n" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([

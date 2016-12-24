@@ -16,6 +16,8 @@ class Map {
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
         this.tilesType = config.tilesType;
+        this.flags = cityModel.flags || [];
+        this.updatedFlags = false;
         this.entityGroupUpdated = [];
         this.updatedEntity = [];
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
@@ -33,7 +35,7 @@ class Map {
             }
         }
 
-        this.initEntitiesCity(cityModel);
+        this.initEntitiesCity(cityModel.entities);
         this.initEntitiesResource(config.tilesResource);
         this.initGridByHeight(this.tilesTilt);
     }
@@ -78,21 +80,27 @@ class Map {
         this.updated = true;
     }
 
-    addFlag(params){
+    addFlag(params) {
         const entityId = params.entityId;
-        //Add point explore in a array and update visible map
+        var point = {
+            x: params.x,
+            y: params.y,
+            z: params.z
+        };
+        this.flags.push(point);
+        this.updatedFlags = true;
         this.updated = true;
     }
 
     setWalkableTile(entity, walkableStatus) {
         const tiles = entity.getTiles();
-        if(this.entityGroups.EntityRoad.length){
-            const walkable = new Uint8Array(tiles.length/2);
+        if(this.entityGroups.EntityRoad.length) {
+            const walkable = new Uint8Array(tiles.length / 2);
             for(let i = 0; i < walkable.length; i++) {
                 walkable[i] = walkableStatus;
             }
-            this.updateEntity('EntityRoad',null, {tiles:tiles,walkable:walkable,length:walkable.length});
-        }else{
+            this.updateEntity('EntityRoad', null, {tiles: tiles, walkable: walkable, length: walkable.length});
+        } else {
             for(let i = 0; i < tiles.length; i += 2) {
                 this.grid.setWalkableAt(tiles[i], tiles[i + 1], walkableStatus);
             }
@@ -174,9 +182,9 @@ class Map {
         }
     }
 
-    initEntitiesCity(cityModel) {
-        for(let group in cityModel) {
-            const list = cityModel[group];
+    initEntitiesCity(cityModelEntities) {
+        for(let group in cityModelEntities) {
+            const list = cityModelEntities[group];
             for(let i = 0; i < list.length; i++) {
                 const params = list[i];
                 params.map = this; //use by road;
@@ -194,7 +202,7 @@ class Map {
                 }
             }
             return true;
-        }else{
+        } else {
             return this.grid.isWalkableAt(x, z) ? true : false;
         }
     }
@@ -206,8 +214,10 @@ class Map {
 
     syncState(model) {
         const hiddenProps = '_';
+        model.entities = {};
+        const entities = model.entities;
         for(let group in this.entityGroups) {
-            model[group] = [];
+            entities[group] = [];
             const list = this.entityGroups[group];
             for(let i = 0; i < list.length; i++) {
                 const entity = list[i];
@@ -215,17 +225,18 @@ class Map {
                 if(this.isResource[group] && !entity.exp) {
                     continue;
                 }
-                model[group][i] = entityState;
+                entities[group][i] = entityState;
                 for(let props in entity) {
-                    if(props[0]===hiddenProps)continue;
-                    if(entity[props] instanceof Uint16Array || entity[props] instanceof Uint8Array ){
+                    if(props[0] === hiddenProps)continue;
+                    if(entity[props] instanceof Uint16Array || entity[props] instanceof Uint8Array) {
                         entityState[props] = Array.from(entity[props])
-                    }else{
+                    } else {
                         entityState[props] = entity[props];
                     }
                 }
             }
         }
+        model.flags = this.flags;
     }
 }
 

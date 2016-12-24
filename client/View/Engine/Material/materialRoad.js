@@ -2,10 +2,12 @@ const THREE = require('./../../../services/threejs');
 
 const vertShader = "" +
     "attribute float type; \n" +
+    "attribute float revealed; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying vec2 vUv; \n" +
     "varying vec3 vecNormal; \n" +
     "varying float vType; \n" +
+    "varying float vRevealed; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
     "		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHTS ]; \n" +
@@ -25,6 +27,7 @@ const vertShader = "" +
     "#endif \n" +
     "vUv = uv; \n" +
     "vType = type; \n" +
+    "vRevealed = revealed; \n" +
     "gl_Position = projectionMatrix * viewMatrix * worldPosition; \n" +
     "} ";
 
@@ -71,6 +74,7 @@ const fragShader = "" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying float vType; \n" +
+    "varying float vRevealed; \n" +
     "uniform sampler2D textureLayout; \n" +
     "uniform sampler2D textureA; \n" +
     "uniform sampler2D textureB; \n" +
@@ -81,7 +85,7 @@ const fragShader = "" +
     "vec2 UVT = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/10.0; \n" +
     "vec3 filter = texture2D( textureLayout, vUv ).xyz; \n" +
     "vec3 colorFinal = texture2D( textureA, UVT ).xyz; \n" +
-    " if(vType>2.5){ \n"+
+    " if(vType>2.5){ \n" +
     "   colorFinal = texture2D( textureB, UVT ).xyz; \n" +
     "}" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
@@ -99,7 +103,7 @@ const fragShader = "" +
     "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +
-    "gl_FragColor = vec4(colorFinal * sumLights , filter.x); \n" +
+    "gl_FragColor = vec4(colorFinal * sumLights , filter.x * vRevealed); \n" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([

@@ -24,7 +24,7 @@ class Map {
         }
 
         this.initGround(model);
-        this.updateState(model)
+        //this.updateState(model);//called by update(dt) of screen
     }
 
     updateState(model) {
@@ -36,6 +36,8 @@ class Map {
         while(model.updatedEntity.length !== 0) {
             this.updateStateOfOneEntities(model.updatedEntity.pop(), model.updatedEntity.pop());
         }
+
+        this.updateVisibleTile(model);
     }
 
     update(dt) {
@@ -45,6 +47,11 @@ class Map {
 
     remove() {
 
+    }
+
+    updateVisibleTile(model) {
+        this.updateVisibleEntity(model);
+        this.updateVisibleMap(model);
     }
 }
 

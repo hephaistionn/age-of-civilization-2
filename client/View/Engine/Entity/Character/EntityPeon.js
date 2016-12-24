@@ -21,6 +21,7 @@ class EntityPeon {
         this.element.userData.parent = this;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
+        this.element.name = 'EntityPeon';
         this.element.castShadow = true;
         this.absolute = true; //parent is word not chunk
         this.animations = animations;

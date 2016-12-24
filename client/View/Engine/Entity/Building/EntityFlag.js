@@ -13,7 +13,7 @@ module.exports = class EntityFlag {
         this.element.userData.parent = this;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
-
+        this.element.name = 'EntityFlag';
         this.updateState();
     }
 

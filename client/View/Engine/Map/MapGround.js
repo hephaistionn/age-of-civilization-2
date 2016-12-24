@@ -30,7 +30,7 @@ module.exports = Map=> {
                 chunksTiles[chunksTiles.length - 1]++;
             }
         }
-
+        this.chunksTiles = chunksTiles;
         const length = chunksTiles.length;
         let x, z, offsetXTiles, offsetZTiles, nbXTiles, nbZTiles;
 
@@ -40,6 +40,7 @@ module.exports = Map=> {
 
         this.chunks = [];
         this.chunksList = [];
+        this.offsetList = [];
         for(x = 0; x < length; x++) {
             this.chunks[x] = [];
             for(z = 0; z < length; z++) {
@@ -49,7 +50,6 @@ module.exports = Map=> {
 
                 offsetXTiles = x * this.tileByChunk;
                 offsetZTiles = z * this.tileByChunk;
-
                 let chunkMesh = this.createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
 
                 chunkMesh.position.set(offsetXTiles * this.tileSize, 0, offsetZTiles * this.tileSize);
@@ -61,14 +61,16 @@ module.exports = Map=> {
 
                 this.chunks[x][z] = chunkMesh;
                 this.chunksList.push(chunkMesh);
+                this.offsetList.push(offsetXTiles);
+                this.offsetList.push(offsetZTiles);
 
             }
         }
 
     };
 
-    Map.prototype.createWater = function createWater(xSize, zSize) {
-        const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
+    Map.prototype.createWater = function createWater(chunkMesh) {
+        const waterGeometry = chunkMesh.geometry;
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
         waterMesh.position.set(0, 3, 0);
         waterMesh.updateMatrix();
@@ -104,7 +106,7 @@ module.exports = Map=> {
         const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
         chunkGeo.computeBoundingBox();
         if(chunkGeo.boundingBox.min.y <= 3) {
-            const waterMesh = this.createWater(nbXTiles * this.tileSize, nbZTiles * this.tileSize, chunkMesh);
+            const waterMesh = this.createWater(chunkMesh);
             chunkMesh.add(waterMesh);
         }
         return chunkMesh;
@@ -121,6 +123,7 @@ module.exports = Map=> {
         const length = position.count;
         const normalArray = new Float32Array(length * 3);
         const groundArry = new Float32Array(length);
+        const revealedArray = new Float32Array(length);
 
         for(let i = 0; i < length; i++) {
             let tileX = offsetXTiles + posArray[i * 3] / this.tileSize;
@@ -143,6 +146,7 @@ module.exports = Map=> {
         }
 
         chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(groundArry, 1));
+        chunkGeometry.addAttribute('revealed', new THREE.BufferAttribute(revealedArray, 1));
         chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
         chunkGeometry.attributes.position.needsUpdate = true;
         return chunkGeometry;
@@ -153,6 +157,46 @@ module.exports = Map=> {
         this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0.jpg");
         this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/grass_1.jpg");
         this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg");
+    };
+
+    Map.prototype.updateVisibleMap = function updateVisibleMap(model) {
+        const flags = model.flags;
+        const nbFlag = flags.length;
+        let i, l, j, k, geometry, revealed, array, position;
+        let px, pz, fx, fz;
+
+        for(k = 0; k < this.chunksList.length; k++) {
+
+            geometry = this.chunksList[k].geometry;
+            revealed = geometry.attributes.revealed;
+            position = geometry.attributes.position.array;
+
+            revealed.needsUpdate = true;
+            array = revealed.array;
+            l = array.length;
+
+            let offsetXTiles = this.offsetList[k * 2];
+            let offsetZTiles = this.offsetList[k * 2 + 1];
+
+            for(i = 0; i < l; i++) {
+
+                px = position[i * 3] + offsetXTiles * this.tileSize;
+                pz = position[i * 3 + 2] + offsetZTiles * this.tileSize;
+
+                for(j = 0; j < nbFlag; j++) {
+                    fx = flags[j].x * this.tileSize;
+                    fz = flags[j].z * this.tileSize;
+
+                    let dx = px - fx;
+                    let dz = pz - fz;
+
+                    if(Math.sqrt(dx * dx + dz * dz) < 40) {
+                        array[i] = 1;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 

@@ -18,6 +18,8 @@ function unstake(meshesTemp, meshRef) {
         meshEnded.matrixAutoUpdate = meshTemp.matrixAutoUpdate;
         meshEnded.castShadow = meshTemp.castShadow;
         meshEnded.userData.model = meshTemp.userData.model;
+        meshEnded.name = meshTemp.name;
+        meshEnded.visible = meshTemp.visible; 
         meshEnded.matrixWorld = meshTemp.matrixWorld;
         parentView = meshTemp.userData.parent;
         parentMesh = meshTemp.parent;

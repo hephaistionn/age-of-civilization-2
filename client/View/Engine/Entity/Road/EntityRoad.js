@@ -15,8 +15,8 @@ class EntityRoad {
         this.nbTileX = this.model._map.nbTileX;
         this.nbTileZ = this.model._map.nbTileZ;
         this.tileHeight = config.tileHeight;
-        this.nbPointX = this.model._map.nbTileX+1;
-        this.nbPointZ = this.model._map.nbTileZ+1;
+        this.nbPointX = this.model._map.nbTileX + 1;
+        this.nbPointZ = this.model._map.nbTileZ + 1;
         this.pointsHeights = this.model._map.pointsHeights;
         this.pointsNormal = this.model._map.pointsNormal;
         this.MAX_TILES = 75;
@@ -28,6 +28,7 @@ class EntityRoad {
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = false;
+        this.element.name = 'EntityRoad';
         this.initChunks(model);
         this.updateState();
     }
@@ -72,9 +73,12 @@ class EntityRoad {
         const uv = new Float32Array(this.MAX_VERTEX * 2);
         const type = new Float32Array(this.MAX_VERTEX * 1);
         const normal = new Float32Array(this.MAX_VERTEX * 3);
+        const revealed = new Float32Array(this.MAX_VERTEX * 1);
+
         geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.addAttribute('uv', new THREE.BufferAttribute(uv, 2));
         geometry.addAttribute('type', new THREE.BufferAttribute(type, 1));
+        geometry.addAttribute('revealed', new THREE.BufferAttribute(revealed, 1));
         geometry.addAttribute('normal', new THREE.BufferAttribute(normal, 3));
         geometry.setDrawRange(0, 3);
         const mesh = new THREE.Mesh(geometry, this.materialRoad);
@@ -277,5 +281,39 @@ class EntityRoad {
 
     }
 
+    updateVisible(model) {
+        this.element.visible = true;
+        const flags = model.flags;
+        const nbFlag = flags.length;
+        const chunks = this.chunks;
+        const xLength = chunks.length;
+        const zLength = chunks[0].length;
+
+        for(let x = 0; x < xLength; x++) {
+            for(let z = 0; z < zLength; z++) {
+
+                const roadGeometry = chunks[x][z];
+
+                const position = roadGeometry.attributes.position.array;
+                const revealed = roadGeometry.attributes.revealed.array;
+                roadGeometry.attributes.revealed.needsUpdate = true;
+
+                const l = revealed.length;
+                for(let k = 0; k < l; k++) {
+                    const px = position[k * 3];
+                    const pz = position[k * 3 + 2];
+                    for(let j = 0; j < nbFlag; j++) {
+                        const fx = flags[j].x * this.tileSize;
+                        const fz = flags[j].z * this.tileSize;
+                        const dx = px - fx;
+                        const dz = pz - fz;
+                        if(Math.sqrt(dx * dx + dz * dz) < 40) {
+                            revealed[k] = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 module.exports = EntityRoad;

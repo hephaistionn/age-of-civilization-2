@@ -2,8 +2,10 @@ const THREE = require('./../../../services/threejs');
 
 const vertShader = "" +
     "attribute float grounds; \n" +
+    "attribute float revealed; \n" +
     "varying vec4 vGrounds; \n" +
     "varying vec3 vecNormal; \n" +
+    "varying float vRevealed; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
@@ -27,6 +29,7 @@ const vertShader = "" +
     "} \n" +
     "vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
     "vAbsolutePosition = worldPosition.xyz; \n" +
+    "vRevealed = revealed; \n" +
     "vecNormal = (modelMatrix * vec4(normal, 0.0)).xyz; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
@@ -81,6 +84,7 @@ const fragShader = "" +
     "varying vec4 vGrounds; \n" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
+    "varying float vRevealed; \n" +
     "uniform sampler2D textureA; \n" +
     "uniform sampler2D textureB; \n" +
     "uniform sampler2D textureC; \n" +
@@ -115,7 +119,7 @@ const fragShader = "" +
     "if(vAbsolutePosition.y<3.0){ \n" +
     "   colorFinal = mix(vec3(0.2,0.6,0.7), colorFinal, vAbsolutePosition.y/3.0); \n" +
     "}" +
-    "gl_FragColor = vec4(colorFinal , 1.0); \n" +
+    "    gl_FragColor = vec4(colorFinal * vRevealed , 1.0); \n" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([
