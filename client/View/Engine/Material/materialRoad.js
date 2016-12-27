@@ -81,7 +81,7 @@ const fragShader = "" +
     "uniform vec3 ambientLightColor; \n" +
     "" +
     "void main(void) { \n" +
-    "" +
+    "if(vRevealed > 0.1) {" +
     "vec2 UVT = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/10.0; \n" +
     "vec3 filter = texture2D( textureLayout, vUv ).xyz; \n" +
     "vec3 colorFinal = texture2D( textureA, UVT ).xyz; \n" +
@@ -103,7 +103,10 @@ const fragShader = "" +
     "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +
-    "gl_FragColor = vec4(colorFinal * sumLights , filter.x * vRevealed); \n" +
+    "gl_FragColor = vec4(colorFinal * sumLights , filter.x); \n" +
+    "}else{" +
+    "gl_FragColor = vec4(0.0); \n" +
+    "}" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([

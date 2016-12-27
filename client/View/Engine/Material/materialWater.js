@@ -34,6 +34,7 @@ const fragShader = "" +
     "#endif \n" +
     "" +
     "void main(void) { \n" +
+    "if(vRevealed > 0.1){" +
     "float offset = size/4.0;  \n" +
     "vec2 UV1 = vec2(vAbsolutePosition.x, vAbsolutePosition.z+progress)/size; \n" +
     "vec2 UV2 = vec2(vAbsolutePosition.x+offset, vAbsolutePosition.z+offset+progress)/size; \n" +
@@ -68,7 +69,10 @@ const fragShader = "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +
     "gl_FragColor.xyz = colorFinal * sumLights; \n" +
-    "gl_FragColor.a = vRevealed; \n" +
+    "gl_FragColor.a = opacity; \n" +
+    "}else{" +
+    "gl_FragColor = vec4(0.0); \n" +
+    "}" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([

@@ -92,35 +92,37 @@ const fragShader = "" +
     "" +
     "uniform vec3 ambientLightColor; \n" +
     "void main(void) { \n" +
-    "" +
-    "vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/40.0; \n" +
-    "vec3 colorA = texture2D( textureA, UV ).xyz; \n" +
-    "vec3 colorB = texture2D( textureB, UV ).xyz; \n" +
-    "vec3 colorC = texture2D( textureC, UV ).xyz; \n" +
-    "vec3 colorD = texture2D( textureD, UV ).xyz; \n" +
-    "vec3 colorFinal = vec3(0.0); \n" +
-    "colorFinal += colorA * vGrounds.x; \n" +
-    "colorFinal += colorB * vGrounds.y; \n" +
-    "colorFinal += colorC * vGrounds.z; \n" +
-    "colorFinal += colorD * vGrounds.w; \n" +
-    "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
-    "DirectionalLight directionalLight;" +
-    "for(int i = 0; i < NUM_DIR_LIGHTS; i++) \n" +
-    "{ \n" +
-    "    directionalLight = directionalLights[ i ]; \n" +
-    "    sumLights += dot(directionalLight.direction, vecNormal)* directionalLight.color; \n" +
-    "    #ifdef USE_SHADOWMAP \n" +
-    "    float shadowFactor = bool( directionalLight.shadow ) ? getShadow( directionalShadowMap[ i ], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[ i ] ) : 1.0; \n" +
-    "    sumLights *= shadowFactor; \n" +
-    "    #endif \n" +
-    "} \n" +
-    "sumLights = ambientLightColor + sumLights; \n" +
-    "colorFinal *= sumLights; \n" +
-    "if(vAbsolutePosition.y<3.0){ \n" +
-    "   colorFinal = mix(vec3(0.2,0.6,0.7), colorFinal, vAbsolutePosition.y/3.0); \n" +
-    "}" +
-    "    gl_FragColor = vec4(colorFinal * vRevealed , 1.0); \n" +
-    "} ";
+    "   if(vRevealed > 0.1) {" +
+    "       vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/40.0; \n" +
+    "       vec3 colorA = texture2D( textureA, UV ).xyz; \n" +
+    "       vec3 colorB = texture2D( textureB, UV ).xyz; \n" +
+    "       vec3 colorC = texture2D( textureC, UV ).xyz; \n" +
+    "       vec3 colorD = texture2D( textureD, UV ).xyz; \n" +
+    "       vec3 colorFinal = vec3(0.0); \n" +
+    "       colorFinal += colorA * vGrounds.x; \n" +
+    "       colorFinal += colorB * vGrounds.y; \n" +
+    "       colorFinal += colorC * vGrounds.z; \n" +
+    "       colorFinal += colorD * vGrounds.w; \n" +
+    "       vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
+    "       DirectionalLight directionalLight;" +
+    "       for(int i = 0; i < NUM_DIR_LIGHTS; i++) {\n" +
+    "           directionalLight = directionalLights[ i ]; \n" +
+    "           sumLights += dot(directionalLight.direction, vecNormal)* directionalLight.color; \n" +
+    "           #ifdef USE_SHADOWMAP \n" +
+    "               float shadowFactor = bool( directionalLight.shadow ) ? getShadow( directionalShadowMap[ i ], directionalLight.shadowMapSize, directionalLight.shadowBias, directionalLight.shadowRadius, vDirectionalShadowCoord[ i ] ) : 1.0; \n" +
+    "               sumLights *= shadowFactor; \n" +
+    "           #endif \n" +
+    "       } \n" +
+    "       sumLights = ambientLightColor + sumLights; \n" +
+    "       colorFinal *= sumLights; \n" +
+    "       if(vAbsolutePosition.y<3.0){ \n" +
+    "           colorFinal = mix(vec3(0.2,0.6,0.7), colorFinal, vAbsolutePosition.y/3.0); \n" +
+    "       }" +
+    "       gl_FragColor = vec4(colorFinal , 1.0); \n" +
+    "   } else {" +
+    "       gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); \n" +
+    "   }" +
+    "}";
 
 const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['lights'],
