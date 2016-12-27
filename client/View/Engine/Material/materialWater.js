@@ -5,7 +5,7 @@ const vertShader = "" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying float vRevealed; \n"+
     "void main() { \n" +
-    "vec3 positionPlan = vec3(position.x,.0,position.z); \n" +
+    "vec3 positionPlan = vec3(position.x,3.0,position.z); \n" +
     "vec4 worldPosition = modelMatrix * vec4(positionPlan, 1.0 ); \n" +
     "vAbsolutePosition = worldPosition.xyz; \n" +
     "vRevealed = revealed; \n"+

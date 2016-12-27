@@ -43,7 +43,7 @@ module.exports = Worldmap => {
         const zSize = nbTileZ * this.tileSize * 2;
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
-        waterMesh.position.set(-xSize / 4, 3, -zSize / 4);
+        waterMesh.position.set(-xSize / 4, 0, -zSize / 4);
         waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();
         waterMesh.matrixAutoUpdate = false;

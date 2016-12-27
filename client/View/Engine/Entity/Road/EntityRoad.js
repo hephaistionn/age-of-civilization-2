@@ -283,7 +283,7 @@ class EntityRoad {
 
     updateVisible(model) {
         this.element.visible = true;
-        const flags = model.flags;
+        const flags = model.entityGroups.EntityExplorer;
         const nbFlag = flags.length;
         const chunks = this.chunks;
         const xLength = chunks.length;
@@ -300,15 +300,18 @@ class EntityRoad {
 
                 const l = revealed.length;
                 for(let k = 0; k < l; k++) {
-                    const px = position[k * 3];
-                    const pz = position[k * 3 + 2];
+                    const px = position[k * 3] / this.tileSize;
+                    const pz = position[k * 3 + 2] / this.tileSize;
                     for(let j = 0; j < nbFlag; j++) {
-                        const fx = flags[j].x * this.tileSize;
-                        const fz = flags[j].z * this.tileSize;
+                        const fx = flags[j].x;
+                        const fz = flags[j].z;
                         const dx = px - fx;
                         const dz = pz - fz;
-                        if(Math.sqrt(dx * dx + dz * dz) < 40) {
+                        if(Math.sqrt(dx * dx + dz * dz) < flags[j].radius) {
                             revealed[k] = 1;
+                            break;
+                        } else {
+                            revealed[k] = 0;
                         }
                     }
                 }

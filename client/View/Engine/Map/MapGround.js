@@ -72,7 +72,7 @@ module.exports = Map=> {
     Map.prototype.createWater = function createWater(chunkMesh) {
         const waterGeometry = chunkMesh.geometry;
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
-        waterMesh.position.set(0, 3, 0);
+        waterMesh.position.set(0, 0, 0);
         waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();
         waterMesh.matrixAutoUpdate = false;
@@ -104,9 +104,11 @@ module.exports = Map=> {
     Map.prototype.createSurfaceMesh = function createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
         const chunkGeo = this.createSurfaceGeo(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
         const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
+        chunkMesh.name = 'chunck.' + offsetXTiles + '.' + offsetZTiles;
         chunkGeo.computeBoundingBox();
         if(chunkGeo.boundingBox.min.y <= 3) {
             const waterMesh = this.createWater(chunkMesh);
+            waterMesh.name = 'water.' + offsetXTiles + '.' + offsetZTiles;
             chunkMesh.add(waterMesh);
         }
         return chunkMesh;
@@ -160,7 +162,7 @@ module.exports = Map=> {
     };
 
     Map.prototype.updateVisibleMap = function updateVisibleMap(model) {
-        const flags = model.flags;
+        const flags = model.entityGroups.EntityExplorer;
         const nbFlag = flags.length;
         let i, l, j, k, geometry, revealed, array, position;
         let px, pz, fx, fz;
@@ -180,19 +182,21 @@ module.exports = Map=> {
 
             for(i = 0; i < l; i++) {
 
-                px = position[i * 3] + offsetXTiles * this.tileSize;
-                pz = position[i * 3 + 2] + offsetZTiles * this.tileSize;
+                px = position[i * 3] / this.tileSize + offsetXTiles;
+                pz = position[i * 3 + 2] / this.tileSize + offsetZTiles;
 
                 for(j = 0; j < nbFlag; j++) {
-                    fx = flags[j].x * this.tileSize;
-                    fz = flags[j].z * this.tileSize;
+                    fx = flags[j].x;
+                    fz = flags[j].z;
 
                     let dx = px - fx;
                     let dz = pz - fz;
 
-                    if(Math.sqrt(dx * dx + dz * dz) < 40) {
+                    if(Math.sqrt(dx * dx + dz * dz) < flags[j].radius) {
                         array[i] = 1;
                         break;
+                    } else {
+                        array[i] = 0;
                     }
                 }
             }

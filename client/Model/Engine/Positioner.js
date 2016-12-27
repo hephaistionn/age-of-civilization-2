@@ -21,7 +21,7 @@ module.exports = class Positioner {
         const y = map.getHeightTile(x, z);
         this.selected.move(x, y, z, a);
         const tiles = this.selected.getTiles();
-        this.undroppable = !map.isWalkable(tiles);
+        this.undroppable = !map.isWalkable(tiles) || !map.isRevealed(tiles);
         this.updated = true;
     }
 

@@ -66,7 +66,7 @@ module.exports = Map=> {
 
     Map.prototype.updateVisibleEntity = function updateVisibleEntity(model) {
 
-        const flags = model.flags;
+        const flags = model.entityGroups.EntityExplorer;
         const nbFlag = flags.length;
 
         for(let key in this.entityGroups) {
@@ -89,9 +89,11 @@ module.exports = Map=> {
                     const dx = modelEntity.x - fx;
                     const dz = modelEntity.z - fz;
 
-                    if(Math.sqrt(dx * dx + dz * dz) < 10) {
+                    if(Math.sqrt(dx * dx + dz * dz) < flags[j].radius) {
                         element.visible = true;
                         break;
+                    } else {
+                        element.visible = false;
                     }
                 }
 

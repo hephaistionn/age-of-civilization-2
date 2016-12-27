@@ -6,6 +6,7 @@ class EntityExplorer extends Entity {
     constructor(params) {
         super(params);
         this.explorers = params.explorers || 1;
+        this.radius = 10;
     }
 
     onConstruct() {
@@ -14,7 +15,7 @@ class EntityExplorer extends Entity {
 
     onAction() {
         const states = stateManager.getCurrentCity().states;
-        if(states.explorers >= this.explorers){
+        if(states.explorers >= this.explorers) {
             return 'EntityFlag';
         }
     }
@@ -29,4 +30,5 @@ EntityExplorer.tile_z = 1;
 EntityExplorer.walkable = false;
 EntityExplorer.cost = {wood: 20};
 EntityExplorer.require = {};
+EntityExplorer.code = 255;
 module.exports = EntityExplorer;

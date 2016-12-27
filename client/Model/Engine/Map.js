@@ -16,8 +16,6 @@ class Map {
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
         this.tilesType = config.tilesType;
-        this.flags = cityModel.flags || [];
-        this.updatedFlags = false;
         this.entityGroupUpdated = [];
         this.updatedEntity = [];
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
@@ -31,7 +29,7 @@ class Map {
             this.entityGroups[id] = [];
             if(ENTITIES[id].code) {
                 this.codeToEntities[ENTITIES[id].code] = id;
-                this.isResource[id] = true;
+                this.isResource[id] = ENTITIES[id].resource;
             }
         }
 
@@ -74,21 +72,10 @@ class Map {
     updateEntity(entityId, model, params) {
         const entityGroup = this.entityGroups[entityId];
         const indexOfEntity = model ? entityGroup.indexOf(model) : 0;
+        if(!entityGroup[indexOfEntity]) return;
         entityGroup[indexOfEntity].updateState(params);
         this.updatedEntity.push(indexOfEntity);
         this.updatedEntity.push(entityId);
-        this.updated = true;
-    }
-
-    addFlag(params) {
-        const entityId = params.entityId;
-        var point = {
-            x: params.x,
-            y: params.y,
-            z: params.z
-        };
-        this.flags.push(point);
-        this.updatedFlags = true;
         this.updated = true;
     }
 
@@ -175,7 +162,7 @@ class Map {
             params.z = Math.floor(i / this.nbTileX);
             params.x = i % this.nbTileX;
             params.y = this.tilesHeight[i] / 255;
-            params.a = Math.random() * Math.PI;
+            params.a = Math.floor(Math.random() * 3.99) * Math.PI;
             if(this.grid.isWalkableAt(params.x, params.z)) {
                 this.newEntity(params);
             }
@@ -207,6 +194,34 @@ class Map {
         }
     }
 
+    isRevealed(x, z) {
+        if(x.length) {
+            for(let i = 0; i < x.length; i += 2) {
+                if(!this.isRevealedTile(x[i], x[i + 1])) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return this.isRevealedTile(x, z);
+        }
+    }
+
+    isRevealedTile(x, z) {
+        const flags = this.entityGroups.EntityExplorer;
+        const nbFlag = flags.length;
+        for(let j = 0; j < nbFlag; j++) {
+            const dx = flags[j].x - x;
+            const dz = flags[j].z - z;
+            if(Math.sqrt(dx * dx + dz * dz) < flags[j].radius) {
+                return true;
+                break;
+            }
+        }
+        return false;
+
+    }
+
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
         return this.tilesHeight[index] / 255;
@@ -236,7 +251,6 @@ class Map {
                 }
             }
         }
-        model.flags = this.flags;
     }
 }
 

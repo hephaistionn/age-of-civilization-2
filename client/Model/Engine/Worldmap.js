@@ -70,6 +70,10 @@ class Worldmap {
         return true;
     }
 
+    isRevealed(x, z) {
+        return true;
+    }
+
     update(dt) {
 
     }
